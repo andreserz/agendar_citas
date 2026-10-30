@@ -15,13 +15,16 @@ Los agentes (pi, Claude) deben respetar todo lo que esté en **Decisiones acorda
 
 | # | Pregunta | Para | Fecha límite |
 | --- | --- | --- | --- |
-| P1 |  P1. ¿Qué nos entregan: (A) solo la base de datos y nosotros escribimos las consultas, (B) una API propia que nosotros llamamos por HTTP, o (C) la base de datos con procedimientos almacenados | backend | vie 30 oct |
+| P1 | ¿Qué nos entregan: (A) solo la base de datos y nosotros escribimos las consultas, (B) una API propia que nosotros llamamos por HTTP, o (C) la base de datos con procedimientos almacenados | backend | vie 30 oct |
 | P2 | ¿Qué motor de BD usarán y cómo la entregan para correrla localmente: Docker Compose (recomendado), scripts SQL (`schema.sql`, `seed.sql`) o archivo SQLite? ¿Qué datos de conexión usamos (host, puerto, nombre de la BD)? Se comparten en un `.env.example`, nunca con contraseñas reales. | backend | vie 30 oct |
 | P3 | ¿Quién carga los datos iniciales (eventos, funciones, asientos, precios)? | backend | vie 30 oct |
 | P4 | ¿Qué negocio es web_2 y qué datos necesita (asientos numerados, zonas, cupo general)? | web2 | vie 30 oct |
 | P5 | ¿Las cuentas de usuario (registro e inicio de sesión) las maneja el servicio o cada sitio? | web1, web2 | vie 30 oct |
 | P6 | ¿Dónde está documentado el esquema (diccionario de datos, diagrama o `schema.sql`)? Si necesitamos una columna nueva, ¿quién la agrega y cómo nos avisan? | backend | vie 30 oct |
 | P7 | Para la demo del lunes, ¿se corre todo en una sola laptop o cada equipo muestra su parte en la suya? | todos | dom 1 nov |
+| P8 | ¿En qué zona horaria se expresan los horarios de las funciones? Propuesta del servicio: guardar en UTC y entregar con zona `America/Mexico_City`. | web1, web2, backend | vie 30 oct |
+| P9 | Si se piden varios asientos en una reserva y alguno ya no está disponible, ¿se rechaza toda la reserva o se apartan sólo los libres? Propuesta del servicio: rechazar toda la reserva con `409` e indicar qué asientos fallaron. | web1, web2 | vie 30 oct |
+| P10 | ¿Cómo elige el sitio el resultado del pago simulado: datos de prueba (por ejemplo, tarjetas que siempre aprueban o rechazan) o un campo en la petición? | web1, web2 | vie 30 oct |
 
 
 ## Propuestas del servicio (pendientes de confirmar)

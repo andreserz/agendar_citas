@@ -76,8 +76,8 @@ El chat no lo leen los agentes; el archivo sí. Lo que no esté en `ACUERDOS.md`
 
 | Rol | Quién | Responsabilidad |
 | --- | --- | --- |
-| Líder de contrato | Osvaldo Sánchez| Docs de etapas, `openapi.yaml`, coordinación con webs, revisión de PR |
-| Juan Carlos Martínez| Persona 2 | Apartar, liberar, expirar y comprar; concurrencia; límite por persona y función |
+| Líder de contrato | Osvaldo Sánchez | Docs de etapas, `openapi.yaml`, coordinación con webs, revisión de PR |
+| Dominio de reservas | Juan Carlos Martínez | Apartar, liberar, expirar y comprar; concurrencia; límite por persona y función |
 | Datos e integración | Isaac Tenorio | Interfaces de repositorio, versión en memoria, contrato de datos, enlace con backend y adaptador real |
 | QA / pruebas | Persona 4 | Pruebas Jest + Supertest guiadas por criterios de aceptación, colección Postman, mock para webs |
 
