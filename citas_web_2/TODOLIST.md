@@ -23,7 +23,7 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 - [x] Definir con el cliente la política de butacas ocupadas: rechazar la selección completa, mostrar el mapa actualizado y pedir una nueva elección.
 - [x] Recibir los datos de salas y precios: 10 salas de 80 butacas (800 en total); $100 MXN en 2D y $150 MXN en 3D por boleto.
 - [x] Confirmar la cartelera: por ahora *Spider-Man* es la única película.
-- [x] Recibir los horarios: 30 funciones diarias, tres por sala (1–5 y 6–10 con horarios distintos).
+- [x] Recibir los horarios: 30 funciones diarias de lunes a domingo, salas 1–5 en 2D y 6–10 en 3D, dos horas por función.
 - [x] Redactar la respuesta a P4 con el negocio y los datos del cineclub en `docs/RESPUESTA_P4.md`.
 - [x] Validar el anteproyecto con el equipo y aprobar el negocio. **Cerrado por el equipo el 3 nov 2026.**
 
@@ -31,8 +31,6 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 
 ### Definición
 
-- [ ] Asignar formato 2D o 3D a cada una de las 30 funciones diarias.
-- [ ] Confirmar la duración real de cada función y los días de operación.
 - [ ] Definir cómo se recupera un boleto sin cuenta (folio, código o correo).
 - [ ] Precisar el conteo diario: si incluye reservas vencidas y si se desglosa por sala o función.
 

@@ -71,18 +71,14 @@ Entregados el 3 de noviembre de 2026, después de aplicar el cuestionario.
 
 También del 3 de noviembre de 2026. Cada sala ofrece tres funciones al día.
 
-| Salas | Función 1 | Función 2 | Función 3 |
-| --- | --- | --- | --- |
-| 1–5 | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
-| 6–10 | 12:30–13:30 | 14:30–16:30 | 18:30–21:30 |
+| Salas | Formato | Función 1 | Función 2 | Función 3 |
+| --- | --- | --- | --- | --- |
+| 1–5 | 2D ($100 MXN) | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
+| 6–10 | 3D ($150 MXN) | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 |
 
-Total: **30 funciones diarias** y **2,400 butacas-día**.
+Todas las funciones son por la tarde, duran dos horas y el cineclub opera **de lunes a domingo**.
 
-Observaciones que requieren confirmación:
-
-- Las duraciones no son uniformes: 2 horas en las salas 1–5, y de 1, 2 y 3 horas en las 6–10.
-- No se indicó qué funciones son 2D y cuáles 3D.
-- No se indicaron los días de operación.
+Total: **30 funciones diarias**, **210 por semana** y **2,400 butacas-día**.
 
 El precio depende del **formato de la función**, no de la butaca. No contradice la respuesta 2: todas las butacas de una misma función cuestan lo mismo.
 
@@ -95,8 +91,5 @@ El precio depende del **formato de la función**, no de la butaca. No contradice
 
 ## Preguntas de seguimiento para el cliente
 
-1. ¿Las horas indican inicio y fin de la función, y a qué se debe que las salas 6–10 tengan duraciones distintas?
-2. ¿Qué funciones son 2D y cuáles 3D?
-3. ¿Qué días de la semana opera el cineclub?
-4. Sin cuentas, ¿cómo recupera una persona su boleto si cierra el navegador o cambia de dispositivo?
-5. ¿El conteo diario incluye sólo compras pagadas o también reservas que vencieron?
+1. Sin cuentas, ¿cómo recupera una persona su boleto si cierra el navegador o cambia de dispositivo?
+2. ¿El conteo diario incluye sólo compras pagadas o también reservas que vencieron?
