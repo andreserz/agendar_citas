@@ -44,6 +44,23 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 - Por ahora *Spider-Man* es la **única película en cartelera**; cada función se ofrece en 2D o 3D. La portada y la cartelera muestran esa película y sus funciones.
 - Se descarta la propuesta anterior de zonas VIP, general y frente.
 
+## Cartelera y horarios
+
+*Spider-Man* es la única película. Cada sala ofrece tres funciones al día:
+
+| Salas | Función 1 | Función 2 | Función 3 |
+| --- | --- | --- | --- |
+| 1–5 | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
+| 6–10 | 12:30–13:30 | 14:30–16:30 | 18:30–21:30 |
+
+Resultado: **30 funciones diarias** (10 salas × 3) y **2,400 butacas disponibles por día** (30 × 80).
+
+Por confirmar con el cliente:
+
+- **La duración no es uniforme:** las salas 1–5 tienen funciones de 2 horas, mientras que las 6–10 tienen una de 1 hora, una de 2 y una de 3. Hay que confirmar si las horas indican inicio y fin, y a qué se debe la diferencia.
+- **No se indicó qué funciones son 2D y cuáles 3D**, dato necesario porque el precio depende del formato.
+- **No se indicó qué días opera el cineclub.**
+
 ## Alcance
 
 **Incluye**
@@ -92,7 +109,7 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 | Dos personas confirman las mismas butacas casi al mismo tiempo | Sólo una conserva el apartado | El servicio responde con conflicto y el sitio aplica la regla acordada: rechazar la selección completa y pedir una nueva |
 | Sin cuentas no hay forma de recuperar un boleto perdido | La persona pierde su compra | Entregar folio o código y permitir la consulta del boleto con ese dato |
 | Sin cuentas no se puede aplicar el límite de diez butacas | Una persona podría acaparar butacas | Aceptar el riesgo con el cliente o limitar por transacción, no por persona |
-| Faltan los horarios de las funciones | No se puede cargar el catálogo inicial | Cerrarlos con el cliente antes de la Construcción |
+| Las duraciones de función no son uniformes | El calendario podría no reflejar la realidad | Confirmar con el cliente antes de cargar los datos |
 | La cartelera depende de una sola película | Si *Spider-Man* sale de cartelera, el sitio queda sin contenido | Modelo de evento genérico del servicio: agregar películas no requiere cambios |
 | P4 sin responder: no hay negocio ni datos de web_2 en el servicio | La demo no puede usar datos reales | Enviar la respuesta a P4 con estas definiciones y avanzar con datos de prueba |
 | Paleta y marca sin definir | Decisiones visuales detenidas | Proponer opciones en la etapa de Propuesta |
@@ -104,7 +121,8 @@ Ninguno bloquea el cierre del anteproyecto. Cada uno tiene etapa y responsable.
 
 | Pendiente | Etapa o destino |
 | --- | --- |
-| Horarios de las funciones; la cartelera es sólo *Spider-Man* | Definición (cartelera inicial) |
+| Qué funciones son 2D y cuáles 3D | Definición (cartelera inicial) |
+| Duración real de cada función y días de operación | Definición (cartelera inicial) |
 | Cómo se recupera un boleto sin cuenta: folio, código o correo | Definición |
 | Precisar el conteo diario: si incluye reservas vencidas y si se desglosa por sala o función | Definición |
 | Enviar la respuesta a P4 y registrar P5 y P9 en `ACUERDOS.md` | Coordinación con `citas_service` |
@@ -115,7 +133,7 @@ Ninguno bloquea el cierre del anteproyecto. Cada uno tiene etapa y responsable.
 
 ## Cierre de la etapa
 
-Cerrado el 3 de noviembre de 2026. El anteproyecto define el negocio, el alcance, las reglas heredadas del servicio, los riesgos y los pendientes con su etapa. El cliente confirmó el negocio, las **10 salas de 80 butacas**, los precios por formato y que *Spider-Man* es por ahora la única película. Lo que falta son los horarios y la coordinación con otros equipos, que se atienden en las etapas siguientes por los responsables de cada área.
+Cerrado el 3 de noviembre de 2026. El anteproyecto define el negocio, el alcance, las reglas heredadas del servicio, los riesgos y los pendientes con su etapa. El cliente confirmó el negocio, las **10 salas de 80 butacas**, los precios por formato, la película (*Spider-Man*) y los horarios de las 30 funciones diarias. Lo que falta es afinar los formatos y duraciones de cada función y coordinar con otros equipos; se atiende en las etapas siguientes por los responsables de cada área.
 
 ## Referencias
 

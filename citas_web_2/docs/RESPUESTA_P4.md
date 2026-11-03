@@ -14,6 +14,8 @@ Documento de trabajo del equipo web 2. Su destino es `citas_service/docs/specs/A
 >
 > **Cupo:** 10 salas de 80 butacas cada una; 800 butacas en total.
 >
+> **Funciones:** 30 al día, tres por sala. Salas 1–5 a las 13:00–15:00, 16:00–18:00 y 20:00–22:00; salas 6–10 a las 12:30–13:30, 14:30–16:30 y 18:30–21:30.
+>
 > **Cuentas:** web_2 **no requiere registro ni inicio de sesión**. La compra es como invitado y el sitio se identifica ante el servicio en cada petición; no se identifica a la persona.
 >
 > **Consolidación:** el cliente pide por ahora sólo el conteo de reservas por día. No requiere detalle de comprador, montos ni exportación.
@@ -60,10 +62,11 @@ El contrato actual (evento, función, zona, asiento) cubre estos datos sin cambi
 
 ## 5. Texto listo para el chat del grupo
 
-> Hola. Respondemos P4 de web_2. El negocio es un **cineclub con 10 salas en paralelo de 80 butacas cada una** (800 en total): cada función tiene película, sala, fecha, horario y formato, con **butacas numeradas en una sola zona**. Por ahora la única película es *Spider-Man*. El precio depende del formato: **$100 MXN en 2D y $150 MXN en 3D** por boleto. No usamos cuentas de usuario: la compra es como invitado, así que el límite de 10 butacas por persona no aplica para nosotros. De consolidación, el cliente sólo pide el **conteo de reservas por día**. Sobre P9, confirmamos **rechazar la reserva completa** si alguna butaca ya no está disponible. Sólo faltan los horarios. ¿Nos confirman si el servicio puede crear órdenes sin cuenta de usuario y si expone el conteo diario?
+> Hola. Respondemos P4 de web_2. El negocio es un **cineclub con 10 salas en paralelo de 80 butacas cada una** (800 en total) y **30 funciones diarias**, tres por sala: las salas 1–5 a las 13:00, 16:00 y 20:00; las salas 6–10 a las 12:30, 14:30 y 18:30. Por ahora la única película es *Spider-Man*, con **butacas numeradas en una sola zona**. El precio depende del formato: **$100 MXN en 2D y $150 MXN en 3D** por boleto. No usamos cuentas de usuario: la compra es como invitado, así que el límite de 10 butacas por persona no aplica para nosotros. De consolidación, el cliente sólo pide el **conteo de reservas por día**. Sobre P9, confirmamos **rechazar la reserva completa** si alguna butaca ya no está disponible. ¿Nos confirman si el servicio puede crear órdenes sin cuenta de usuario y si expone el conteo diario?
 
 ## 6. Pendiente del lado de web_2
 
-- Definir los horarios de las funciones de *Spider-Man*.
+- Asignar formato 2D o 3D a cada una de las 30 funciones diarias.
+- Confirmar la duración real de cada función y los días de operación.
 - Cómo se recupera un boleto sin cuenta: folio, código o correo.
 - Enviar esta respuesta al equipo de servicio para que la registre en `ACUERDOS.md`.
