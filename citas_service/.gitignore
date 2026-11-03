@@ -1,0 +1,6 @@
+# Sistema operativo
+.DS_Store
+
+# Dependencias y configuración local
+node_modules/
+.env
