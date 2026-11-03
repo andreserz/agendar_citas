@@ -63,7 +63,7 @@ Entregados el 3 de noviembre de 2026, después de aplicar el cuestionario.
 | Salas | 10 |
 | Precio en 2D | $100 MXN por boleto |
 | Precio en 3D | $150 MXN por boleto |
-| Película de referencia | *Spider-Man* (por confirmar si es la única en cartelera) |
+| Película en cartelera | *Spider-Man*, por ahora la única |
 | Capacidad por sala | 80 butacas numeradas (800 en total) |
 | Butacas | Numeradas, una sola zona por función |
 
@@ -78,6 +78,6 @@ El precio depende del **formato de la función**, no de la butaca. No contradice
 
 ## Preguntas de seguimiento para el cliente
 
-1. ¿La cartelera rota o se limita a *Spider-Man*, y en qué horarios?
+1. ¿En qué horarios se ofrecen las funciones de *Spider-Man* en cada sala?
 2. Sin cuentas, ¿cómo recupera una persona su boleto si cierra el navegador o cambia de dispositivo?
 3. ¿El conteo diario incluye sólo compras pagadas o también reservas que vencieron?

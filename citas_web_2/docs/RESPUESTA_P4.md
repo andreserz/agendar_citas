@@ -60,10 +60,10 @@ El contrato actual (evento, función, zona, asiento) cubre estos datos sin cambi
 
 ## 5. Texto listo para el chat del grupo
 
-> Hola. Respondemos P4 de web_2. El negocio es un **cineclub con 10 salas en paralelo de 80 butacas cada una** (800 en total): cada función tiene película, sala, fecha, horario y formato, con **butacas numeradas en una sola zona**. El precio depende del formato: **$100 MXN en 2D y $150 MXN en 3D** por boleto. No usamos cuentas de usuario: la compra es como invitado, así que el límite de 10 butacas por persona no aplica para nosotros. De consolidación, el cliente sólo pide el **conteo de reservas por día**. Sobre P9, confirmamos **rechazar la reserva completa** si alguna butaca ya no está disponible. Sólo falta confirmar la cartelera y los horarios. ¿Nos confirman si el servicio puede crear órdenes sin cuenta de usuario y si expone el conteo diario?
+> Hola. Respondemos P4 de web_2. El negocio es un **cineclub con 10 salas en paralelo de 80 butacas cada una** (800 en total): cada función tiene película, sala, fecha, horario y formato, con **butacas numeradas en una sola zona**. Por ahora la única película es *Spider-Man*. El precio depende del formato: **$100 MXN en 2D y $150 MXN en 3D** por boleto. No usamos cuentas de usuario: la compra es como invitado, así que el límite de 10 butacas por persona no aplica para nosotros. De consolidación, el cliente sólo pide el **conteo de reservas por día**. Sobre P9, confirmamos **rechazar la reserva completa** si alguna butaca ya no está disponible. Sólo faltan los horarios. ¿Nos confirman si el servicio puede crear órdenes sin cuenta de usuario y si expone el conteo diario?
 
 ## 6. Pendiente del lado de web_2
 
-- Confirmar si la cartelera rota o se limita a *Spider-Man*, y los horarios.
+- Definir los horarios de las funciones de *Spider-Man*.
 - Cómo se recupera un boleto sin cuenta: folio, código o correo.
 - Enviar esta respuesta al equipo de servicio para que la registre en `ACUERDOS.md`.

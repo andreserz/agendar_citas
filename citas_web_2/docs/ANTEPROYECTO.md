@@ -41,7 +41,7 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 - Cada sala tiene butacas numeradas en **una sola zona**: todas las butacas de una misma función cuestan lo mismo.
 - El precio depende del **formato de la función**, no de la butaca: **$100 MXN en 2D y $150 MXN en 3D**.
 - Cada función indica su formato, y el sitio muestra el precio correspondiente antes de elegir butacas.
-- La cartelera de referencia del cliente es *Spider-Man*; falta confirmar si es la única película o si la cartelera rota.
+- Por ahora *Spider-Man* es la **única película en cartelera**; cada función se ofrece en 2D o 3D. La portada y la cartelera muestran esa película y sus funciones.
 - Se descarta la propuesta anterior de zonas VIP, general y frente.
 
 ## Alcance
@@ -92,7 +92,8 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 | Dos personas confirman las mismas butacas casi al mismo tiempo | Sólo una conserva el apartado | El servicio responde con conflicto y el sitio aplica la regla acordada: rechazar la selección completa y pedir una nueva |
 | Sin cuentas no hay forma de recuperar un boleto perdido | La persona pierde su compra | Entregar folio o código y permitir la consulta del boleto con ese dato |
 | Sin cuentas no se puede aplicar el límite de diez butacas | Una persona podría acaparar butacas | Aceptar el riesgo con el cliente o limitar por transacción, no por persona |
-| Falta confirmar la cartelera y los horarios | No se puede cargar el catálogo inicial | Cerrarlo con el cliente antes de la Construcción |
+| Faltan los horarios de las funciones | No se puede cargar el catálogo inicial | Cerrarlos con el cliente antes de la Construcción |
+| La cartelera depende de una sola película | Si *Spider-Man* sale de cartelera, el sitio queda sin contenido | Modelo de evento genérico del servicio: agregar películas no requiere cambios |
 | P4 sin responder: no hay negocio ni datos de web_2 en el servicio | La demo no puede usar datos reales | Enviar la respuesta a P4 con estas definiciones y avanzar con datos de prueba |
 | Paleta y marca sin definir | Decisiones visuales detenidas | Proponer opciones en la etapa de Propuesta |
 | Poco tiempo y manejo desigual de git | Conflictos al integrar | Ramas por etapa y una sola persona que integra |
@@ -103,7 +104,7 @@ Ninguno bloquea el cierre del anteproyecto. Cada uno tiene etapa y responsable.
 
 | Pendiente | Etapa o destino |
 | --- | --- |
-| Si la cartelera rota o se limita a *Spider-Man*, y sus horarios | Definición (cartelera inicial) |
+| Horarios de las funciones; la cartelera es sólo *Spider-Man* | Definición (cartelera inicial) |
 | Cómo se recupera un boleto sin cuenta: folio, código o correo | Definición |
 | Precisar el conteo diario: si incluye reservas vencidas y si se desglosa por sala o función | Definición |
 | Enviar la respuesta a P4 y registrar P5 y P9 en `ACUERDOS.md` | Coordinación con `citas_service` |
@@ -114,7 +115,7 @@ Ninguno bloquea el cierre del anteproyecto. Cada uno tiene etapa y responsable.
 
 ## Cierre de la etapa
 
-Cerrado el 3 de noviembre de 2026. El anteproyecto define el negocio, el alcance, las reglas heredadas del servicio, los riesgos y los pendientes con su etapa. El cliente confirmó el negocio, las **10 salas de 80 butacas** y los precios por formato. Lo que falta es la cartelera, datos operativos y coordinación con otros equipos, que se atienden en las etapas siguientes por los responsables de cada área.
+Cerrado el 3 de noviembre de 2026. El anteproyecto define el negocio, el alcance, las reglas heredadas del servicio, los riesgos y los pendientes con su etapa. El cliente confirmó el negocio, las **10 salas de 80 butacas**, los precios por formato y que *Spider-Man* es por ahora la única película. Lo que falta son los horarios y la coordinación con otros equipos, que se atienden en las etapas siguientes por los responsables de cada área.
 
 ## Referencias
 
