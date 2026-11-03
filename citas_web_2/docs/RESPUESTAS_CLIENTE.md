@@ -28,7 +28,7 @@ Butacas numeradas en **una sola zona**, con el mismo precio para todas.
 
 - Se descarta la propuesta anterior de tres zonas.
 - El servicio puede seguir recibiendo una zona por función; la zona es única.
-- Pendiente: monto del precio único y moneda.
+- Resuelto después del cuestionario: $100 MXN por boleto en 2D y $150 MXN en 3D (ver «Datos complementarios»).
 
 ### 3. Cuentas — opción E
 
@@ -54,9 +54,24 @@ El cliente pide, por ahora, sólo el **conteo de reservas por día**.
 - No solicita detalle de comprador, montos ni exportación.
 - Pendiente: si el conteo incluye sólo compras pagadas o también reservas que no se pagaron, y si se desglosa por sala o función.
 
+## Datos complementarios del cliente
+
+Entregados el 3 de noviembre de 2026, después de aplicar el cuestionario.
+
+| Dato | Valor |
+| --- | --- |
+| Salas | 10 |
+| Precio en 2D | $100 MXN por boleto |
+| Precio en 3D | $150 MXN por boleto |
+| Película de referencia | *Spider-Man* (por confirmar si es la única en cartelera) |
+| Capacidad por sala | Pendiente |
+| Butacas | Numeradas, una sola zona por función |
+
+El precio depende del **formato de la función**, no de la butaca. No contradice la respuesta 2: todas las butacas de una misma función cuestan lo mismo.
+
 ## Efecto sobre el anteproyecto
 
-1. El negocio deja de ser una sala única con tres zonas: pasa a varias salas con una sola zona y precio único.
+1. El negocio deja de ser una sala única con tres zonas: pasa a **10 salas** con una sola zona y precio según el formato de la función (2D o 3D).
 2. La compra es como invitado; no hay cuentas de usuario.
 3. La consolidación se reduce al conteo diario.
 4. El manejo de butacas ocupadas queda definido: rechazar la selección completa, mostrar el mapa actualizado y pedir una nueva elección.
@@ -64,6 +79,6 @@ El cliente pide, por ahora, sólo el **conteo de reservas por día**.
 ## Preguntas de seguimiento para el cliente
 
 1. ¿Cuántas salas tiene el cineclub y cuántas butacas tiene cada una?
-2. ¿Cuál es el precio único por butaca y en qué moneda?
+2. ¿La cartelera rota o se limita a *Spider-Man*, y en qué horarios?
 3. Sin cuentas, ¿cómo recupera una persona su boleto si cierra el navegador o cambia de dispositivo?
 4. ¿El conteo diario incluye sólo compras pagadas o también reservas que vencieron?

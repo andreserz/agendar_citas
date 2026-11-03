@@ -1,6 +1,6 @@
 # Anteproyecto — citas_web_2: Cineclub con reserva de lugares
 
-Estado: negocio definido por el cliente el 3 de noviembre de 2026 a partir de las respuestas registradas en `RESPUESTAS_CLIENTE.md`. Quedan datos abiertos: capacidad de las salas y precio único. La identidad visual y la paleta siguen pendientes.
+Estado: **anteproyecto cerrado el 3 de noviembre de 2026.** El negocio quedó definido por el cliente: cineclub con 10 salas, butacas numeradas en una sola zona, precio por formato (2D y 3D) y compra sin cuenta. Los datos operativos y la coordinación con otros equipos se trasladan a las etapas siguientes (ver «Pendientes trasladados»). La identidad visual y la paleta corresponden a la etapa de Propuesta.
 
 ## Objetivo y contexto
 
@@ -19,7 +19,7 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 
 ## Oferta y usuarios
 
-- El cineclub tiene **varias salas en paralelo**, con películas distintas a la misma hora. Cada función pertenece a una sala y tiene película, fecha, horario, idioma y clasificación.
+- El cineclub tiene **10 salas en paralelo**, con películas distintas a la misma hora. Cada función pertenece a una sala y tiene película, fecha, horario, formato (2D o 3D), idioma y clasificación; el formato determina el precio.
 - Una persona puede consultar la cartelera y el mapa de butacas sin registrarse, y comprar sin crear cuenta: **no hay registro ni inicio de sesión**.
 - El sistema no puede identificar a la misma persona entre compras distintas, por lo que **no se aplica el límite de diez butacas por persona y función**.
 - El pago es **simulado**: no se integra una pasarela real.
@@ -37,16 +37,20 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 
 ## Salas, butacas y precios
 
-- Cada sala tiene butacas numeradas en **una sola zona, con el mismo precio**.
+- El cineclub tiene **10 salas**. La capacidad de cada una está por confirmar.
+- Cada sala tiene butacas numeradas en **una sola zona**: todas las butacas de una misma función cuestan lo mismo.
+- El precio depende del **formato de la función**, no de la butaca: **$100 MXN en 2D y $150 MXN en 3D**.
+- Cada función indica su formato, y el sitio muestra el precio correspondiente antes de elegir butacas.
+- La cartelera de referencia del cliente es *Spider-Man*; falta confirmar si es la única película o si la cartelera rota.
 - Se descarta la propuesta anterior de zonas VIP, general y frente.
-- Pendiente de definir con el cliente: número de salas, capacidad de cada una y monto del precio único.
+- Pendiente: capacidad de cada una de las 10 salas.
 
 ## Alcance
 
 **Incluye**
 
 - Cartelera y consulta de funciones por sala, fecha y horario.
-- Mapa de butacas por función, con estado de cada butaca y precio único.
+- Mapa de butacas por función, con el estado de cada butaca y el precio de la función según su formato.
 - Selección de butacas, apartado temporal y cuenta regresiva visible.
 - Pago simulado con escenarios de éxito y rechazo, y reintento mientras el apartado siga vigente.
 - Confirmación de compra con número de orden, boleto y código QR.
@@ -89,26 +93,34 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 | Dos personas confirman las mismas butacas casi al mismo tiempo | Sólo una conserva el apartado | El servicio responde con conflicto y el sitio aplica la regla acordada: rechazar la selección completa y pedir una nueva |
 | Sin cuentas no hay forma de recuperar un boleto perdido | La persona pierde su compra | Entregar folio o código y permitir la consulta del boleto con ese dato |
 | Sin cuentas no se puede aplicar el límite de diez butacas | Una persona podría acaparar butacas | Aceptar el riesgo con el cliente o limitar por transacción, no por persona |
-| Faltan número de salas, capacidad y precio | No se puede cargar el catálogo ni calcular totales | Cerrar los datos antes de la etapa de Definición |
+| Falta la capacidad de cada sala | No se puede dibujar el mapa ni calcular el aforo | Confirmarla con el cliente antes de la etapa de Definición |
 | P4 sin responder: no hay negocio ni datos de web_2 en el servicio | La demo no puede usar datos reales | Enviar la respuesta a P4 con estas definiciones y avanzar con datos de prueba |
 | Paleta y marca sin definir | Decisiones visuales detenidas | Proponer opciones en la etapa de Propuesta |
 | Poco tiempo y manejo desigual de git | Conflictos al integrar | Ramas por etapa y una sola persona que integra |
 
-## Pendientes para etapas posteriores
+## Pendientes trasladados a etapas posteriores
 
-1. Cerrar con el cliente: número de salas, capacidad de cada una y precio único con moneda.
-2. Registrar en `ACUERDOS.md` la política de butacas ocupadas (rechazar la selección completa y pedir una nueva elección) como respuesta a P9.
-3. Definir cómo se recupera un boleto sin cuenta (folio, código o correo).
-4. Precisar el conteo diario de reservas: si incluye reservas vencidas y si se desglosa por sala o función.
-5. Redactar la respuesta a P4 con el negocio y los datos del cineclub.
-6. Definir la paleta primario y acento, las tipografías y la marca en la etapa de Propuesta.
-7. Acordar la zona horaria de las funciones (P8) y el resultado del pago simulado (P10).
-8. Definir el formato del código de boleto para dibujar el QR (PR7).
-9. Redactar los criterios de aceptación en la etapa de Especificación.
+Ninguno bloquea el cierre del anteproyecto. Cada uno tiene etapa y responsable.
+
+| Pendiente | Etapa o destino |
+| --- | --- |
+| Capacidad de cada una de las 10 salas | Definición (aforo y mapa de butacas) |
+| Si la cartelera rota o se limita a *Spider-Man*, y sus horarios | Definición (cartelera inicial) |
+| Cómo se recupera un boleto sin cuenta: folio, código o correo | Definición |
+| Precisar el conteo diario: si incluye reservas vencidas y si se desglosa por sala o función | Definición |
+| Enviar la respuesta a P4 y registrar P5 y P9 en `ACUERDOS.md` | Coordinación con `citas_service` |
+| Zona horaria (P8) y resultado del pago simulado (P10) | Coordinación con `citas_service` |
+| Paleta primario y acento, tipografías y marca | Propuesta |
+| Formato del código de boleto para el QR (PR7) | Especificación |
+| Criterios de aceptación | Especificación |
+
+## Cierre de la etapa
+
+Cerrado el 3 de noviembre de 2026. El anteproyecto define el negocio, el alcance, las reglas heredadas del servicio, los riesgos y los pendientes con su etapa. El cliente ya confirmó el negocio, las 10 salas y los precios por formato. Lo que falta son datos operativos y coordinación con otros equipos, que se atienden en las etapas siguientes por los responsables de cada área.
 
 ## Referencias
 
 - `../AGENTS.md` y `../TODOLIST.md` de este sitio.
-- `RESPUESTAS_CLIENTE.md` y `CUESTIONARIO_PARA_RESERVA.md` en esta carpeta.
+- `RESPUESTAS_CLIENTE.md`, `CUESTIONARIO_PARA_RESERVA.md` y `RESPUESTA_P4.md` en esta carpeta.
 - `../../citas_service/docs/specs/ACUERDOS.md` para las preguntas P4, P5, P8, P9 y P10 y las propuestas PR4, PR5, PR7, PR8 y PR9.
 - `../../citas_web_1/docs/ANTEPROYECTO.md` como referencia de formato y de negocio vecino.
