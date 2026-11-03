@@ -17,7 +17,7 @@ Estado: listo para aplicar al cliente. Cinco preguntas de opción múltiple; nin
 
 - **A)** Una sala con una película por horario y tres funciones al día.
 - **B)** Una sala con varias películas alternadas durante el día.
-- **C)** Varias salas en paralelo, con películas distintas a la misma hora.
+- **C)** Varias salas en paralelo, con películas distintas a la misma hora.[x]
 - **D)** Ciclos o temporadas (por ejemplo, cine de autor los martes) además de la cartelera habitual.
 - **E)** Otra: ______________________________________________
 
@@ -25,7 +25,7 @@ Estado: listo para aplicar al cliente. Cinco preguntas de opción múltiple; nin
 
 **Desbloquea:** el mapa de butacas, las zonas y la tabla de precios.
 
-- **A)** Butacas numeradas en una sola zona, con el mismo precio para todas.
+- **A)** Butacas numeradas en una sola zona, con el mismo precio para todas.[x]
 - **B)** Butacas numeradas en zonas con precio distinto (por ejemplo, VIP, general y frente).
 - **C)** Butacas numeradas, más lugares reservados para personas con discapacidad y su acompañante.
 - **D)** Acceso general sin butaca asignada, con cupo por función.
@@ -39,7 +39,7 @@ Estado: listo para aplicar al cliente. Cinco preguntas de opción múltiple; nin
 - **B)** Compra como invitado con sólo el correo electrónico; la cuenta se crea después de comprar.
 - **C)** Cuenta obligatoria creada con un proveedor externo (por ejemplo, Google o Facebook).
 - **D)** Cuenta creada en el cineclub y también en taquilla, para que el historial sea el mismo en los dos canales.
-- **E)** Otra: ______________________________________________
+- **E)** Otra: _no es necesario la cuenta, simplemente que compre sus boletos_____________________________________________
 
 ## 4. Si alguien elige cinco butacas y, al confirmar, dos ya fueron tomadas por otra persona, ¿qué debe hacer el sistema?
 
@@ -48,8 +48,8 @@ Estado: listo para aplicar al cliente. Cinco preguntas de opción múltiple; nin
 - **A)** Rechazar las cinco butacas y pedir que se elija de nuevo.
 - **B)** Apartar sólo las tres libres y avisar cuáles no se pudieron conseguir.
 - **C)** Apartar las tres libres y ofrecer automáticamente butacas cercanas para completar la selección.
-- **D)** Mostrar el mapa actualizado y dejar que la persona vuelva a elegir desde cero, sin apartar nada todavía.
-- **E)** Otra: ______________________________________________
+- **D)** Mostrar el mapa actualizado y dejar que la persona vuelva a elegir desde cero, sin apartar nada todavía.[x]
+- **E)** Otra:____________________________________________
 
 ## 5. ¿Qué necesita consultar y exportar el cineclub de las reservas y compras ya registradas?
 
@@ -61,7 +61,7 @@ Estado: listo para aplicar al cliente. Cinco preguntas de opción múltiple; nin
 - **B)** Totales por día y por función, para el corte de caja.
 - **C)** Ocupación por película y horario, para decidir qué funciones mantener.
 - **D)** Exportación a archivo (CSV o Excel) para contabilidad.
-- **E)** Otra: ______________________________________________
+- **E)** Otra: __por ahora  solo el historial de resevación cuantas fueron al dia____________________________________________
 
 ---
 
