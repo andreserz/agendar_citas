@@ -24,7 +24,9 @@ Negocio definido: cineclub con varias salas y butacas numeradas en una sola zona
 - [ ] Registrar esa política en `ACUERDOS.md` como respuesta a P9.
 - [ ] Completar datos: número de salas, capacidad de cada una y precio único con moneda.
 - [ ] Definir cómo se recupera un boleto sin cuenta (folio, código o correo).
-- [ ] Redactar la respuesta a P4 con el negocio y los datos del cineclub, para que el servicio cargue los datos.
+- [x] Redactar la respuesta a P4 con el negocio y los datos del cineclub en `docs/RESPUESTA_P4.md`.
+- [ ] Enviar la respuesta a P4 al equipo de servicio para que la registre en `ACUERDOS.md`.
+- [ ] Confirmar con el servicio si puede crear órdenes sin cuenta de usuario y si expone el conteo diario de reservas.
 - [ ] Validar el anteproyecto con el equipo y aprobar el negocio.
 - [ ] Confirmar P4 con el equipo de servicio y recibir los datos del cineclub.
 - [ ] Aprobar la identidad visual y la paleta en la etapa de Propuesta.
