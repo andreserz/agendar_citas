@@ -19,7 +19,7 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 
 ## Oferta y usuarios
 
-- El cineclub tiene **10 salas en paralelo**, con películas distintas a la misma hora. Cada función pertenece a una sala y tiene película, fecha, horario, formato (2D o 3D), idioma y clasificación; el formato determina el precio.
+- El cineclub tiene **10 salas en paralelo de 80 butacas cada una**, con películas distintas a la misma hora. Cada función pertenece a una sala y tiene película, fecha, horario, formato (2D o 3D), idioma y clasificación; el formato determina el precio.
 - Una persona puede consultar la cartelera y el mapa de butacas sin registrarse, y comprar sin crear cuenta: **no hay registro ni inicio de sesión**.
 - El sistema no puede identificar a la misma persona entre compras distintas, por lo que **no se aplica el límite de diez butacas por persona y función**.
 - El pago es **simulado**: no se integra una pasarela real.
@@ -37,13 +37,12 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 
 ## Salas, butacas y precios
 
-- El cineclub tiene **10 salas**. La capacidad de cada una está por confirmar.
+- El cineclub tiene **10 salas de 80 butacas numeradas cada una**, 800 butacas en total.
 - Cada sala tiene butacas numeradas en **una sola zona**: todas las butacas de una misma función cuestan lo mismo.
 - El precio depende del **formato de la función**, no de la butaca: **$100 MXN en 2D y $150 MXN en 3D**.
 - Cada función indica su formato, y el sitio muestra el precio correspondiente antes de elegir butacas.
 - La cartelera de referencia del cliente es *Spider-Man*; falta confirmar si es la única película o si la cartelera rota.
 - Se descarta la propuesta anterior de zonas VIP, general y frente.
-- Pendiente: capacidad de cada una de las 10 salas.
 
 ## Alcance
 
@@ -93,7 +92,7 @@ Este anteproyecto corresponde únicamente a `citas_web_2`. La API, la base de da
 | Dos personas confirman las mismas butacas casi al mismo tiempo | Sólo una conserva el apartado | El servicio responde con conflicto y el sitio aplica la regla acordada: rechazar la selección completa y pedir una nueva |
 | Sin cuentas no hay forma de recuperar un boleto perdido | La persona pierde su compra | Entregar folio o código y permitir la consulta del boleto con ese dato |
 | Sin cuentas no se puede aplicar el límite de diez butacas | Una persona podría acaparar butacas | Aceptar el riesgo con el cliente o limitar por transacción, no por persona |
-| Falta la capacidad de cada sala | No se puede dibujar el mapa ni calcular el aforo | Confirmarla con el cliente antes de la etapa de Definición |
+| Falta confirmar la cartelera y los horarios | No se puede cargar el catálogo inicial | Cerrarlo con el cliente antes de la Construcción |
 | P4 sin responder: no hay negocio ni datos de web_2 en el servicio | La demo no puede usar datos reales | Enviar la respuesta a P4 con estas definiciones y avanzar con datos de prueba |
 | Paleta y marca sin definir | Decisiones visuales detenidas | Proponer opciones en la etapa de Propuesta |
 | Poco tiempo y manejo desigual de git | Conflictos al integrar | Ramas por etapa y una sola persona que integra |
@@ -104,7 +103,6 @@ Ninguno bloquea el cierre del anteproyecto. Cada uno tiene etapa y responsable.
 
 | Pendiente | Etapa o destino |
 | --- | --- |
-| Capacidad de cada una de las 10 salas | Definición (aforo y mapa de butacas) |
 | Si la cartelera rota o se limita a *Spider-Man*, y sus horarios | Definición (cartelera inicial) |
 | Cómo se recupera un boleto sin cuenta: folio, código o correo | Definición |
 | Precisar el conteo diario: si incluye reservas vencidas y si se desglosa por sala o función | Definición |
@@ -116,7 +114,7 @@ Ninguno bloquea el cierre del anteproyecto. Cada uno tiene etapa y responsable.
 
 ## Cierre de la etapa
 
-Cerrado el 3 de noviembre de 2026. El anteproyecto define el negocio, el alcance, las reglas heredadas del servicio, los riesgos y los pendientes con su etapa. El cliente ya confirmó el negocio, las 10 salas y los precios por formato. Lo que falta son datos operativos y coordinación con otros equipos, que se atienden en las etapas siguientes por los responsables de cada área.
+Cerrado el 3 de noviembre de 2026. El anteproyecto define el negocio, el alcance, las reglas heredadas del servicio, los riesgos y los pendientes con su etapa. El cliente confirmó el negocio, las **10 salas de 80 butacas** y los precios por formato. Lo que falta es la cartelera, datos operativos y coordinación con otros equipos, que se atienden en las etapas siguientes por los responsables de cada área.
 
 ## Referencias
 

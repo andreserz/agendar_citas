@@ -1,6 +1,6 @@
 # Lista de tareas — citas_web_2
 
-Negocio: cineclub con 10 salas y butacas numeradas en una sola zona, con precio por formato (2D $100 / 3D $150 MXN), compra sin cuenta y conteo diario de reservas. Respuestas en `docs/RESPUESTAS_CLIENTE.md` y `docs/RESPUESTA_P4.md`.
+Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una sola zona, con precio por formato (2D $100 / 3D $150 MXN), compra sin cuenta y conteo diario de reservas. Respuestas en `docs/RESPUESTAS_CLIENTE.md` y `docs/RESPUESTA_P4.md`.
 
 ## Etapas
 
@@ -21,7 +21,7 @@ Negocio: cineclub con 10 salas y butacas numeradas en una sola zona, con precio 
 - [x] Aplicar el cuestionario al cliente y registrar sus respuestas en `docs/RESPUESTAS_CLIENTE.md`.
 - [x] Actualizar el anteproyecto con el negocio confirmado: 10 salas, una zona con precio por formato y compra sin cuenta.
 - [x] Definir con el cliente la política de butacas ocupadas: rechazar la selección completa, mostrar el mapa actualizado y pedir una nueva elección.
-- [x] Recibir los datos de salas y precios: 10 salas; $100 MXN en 2D y $150 MXN en 3D por boleto.
+- [x] Recibir los datos de salas y precios: 10 salas de 80 butacas (800 en total); $100 MXN en 2D y $150 MXN en 3D por boleto.
 - [x] Redactar la respuesta a P4 con el negocio y los datos del cineclub en `docs/RESPUESTA_P4.md`.
 - [x] Validar el anteproyecto con el equipo y aprobar el negocio. **Cerrado por el equipo el 3 nov 2026.**
 
@@ -29,7 +29,6 @@ Negocio: cineclub con 10 salas y butacas numeradas en una sola zona, con precio 
 
 ### Definición
 
-- [ ] Confirmar la capacidad de cada una de las 10 salas.
 - [ ] Confirmar si la cartelera rota o se limita a *Spider-Man*, y sus horarios.
 - [ ] Definir cómo se recupera un boleto sin cuenta (folio, código o correo).
 - [ ] Precisar el conteo diario: si incluye reservas vencidas y si se desglosa por sala o función.

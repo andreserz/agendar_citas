@@ -20,7 +20,7 @@ El cineclub opera **varias salas en paralelo**, con películas distintas a la mi
 
 - Implica que cada función pertenece a una sala concreta y que el mapa de butacas es por función y sala.
 - El servicio ya modela evento, función y asiento, así que no requiere cambios de contrato.
-- Pendiente: cuántas salas hay, capacidad de cada una y si todas tienen el mismo horario.
+- Resuelto: 10 salas de 80 butacas cada una; falta confirmar si todas tienen el mismo horario.
 
 ### 2. Lugares y precios — opción A
 
@@ -64,7 +64,7 @@ Entregados el 3 de noviembre de 2026, después de aplicar el cuestionario.
 | Precio en 2D | $100 MXN por boleto |
 | Precio en 3D | $150 MXN por boleto |
 | Película de referencia | *Spider-Man* (por confirmar si es la única en cartelera) |
-| Capacidad por sala | Pendiente |
+| Capacidad por sala | 80 butacas numeradas (800 en total) |
 | Butacas | Numeradas, una sola zona por función |
 
 El precio depende del **formato de la función**, no de la butaca. No contradice la respuesta 2: todas las butacas de una misma función cuestan lo mismo.
@@ -78,7 +78,6 @@ El precio depende del **formato de la función**, no de la butaca. No contradice
 
 ## Preguntas de seguimiento para el cliente
 
-1. ¿Cuántas salas tiene el cineclub y cuántas butacas tiene cada una?
-2. ¿La cartelera rota o se limita a *Spider-Man*, y en qué horarios?
-3. Sin cuentas, ¿cómo recupera una persona su boleto si cierra el navegador o cambia de dispositivo?
-4. ¿El conteo diario incluye sólo compras pagadas o también reservas que vencieron?
+1. ¿La cartelera rota o se limita a *Spider-Man*, y en qué horarios?
+2. Sin cuentas, ¿cómo recupera una persona su boleto si cierra el navegador o cambia de dispositivo?
+3. ¿El conteo diario incluye sólo compras pagadas o también reservas que vencieron?
