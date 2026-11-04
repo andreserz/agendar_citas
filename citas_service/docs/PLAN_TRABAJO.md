@@ -1,6 +1,6 @@
 # Plan de trabajo — citas_service
 
-Estado: propuesto por el equipo de servicio. Entrega del ejercicio: **lunes 2 de noviembre de 2026**.
+Estado: propuesto por el equipo de servicio. Entrega del ejercicio: **lunes 9 de noviembre de 2026** (se cambió el 4 nov; antes era el lun 2 nov).
 
 ## Contexto
 
@@ -67,10 +67,10 @@ El chat no lo leen los agentes; el archivo sí. Lo que no esté en `ACUERDOS.md`
 
 - **Cambios de contrato:** se acuerdan en el chat con el equipo afectado, se registran en `ACUERDOS.md` y después se actualiza `openapi.yaml`.
 - **Sincronía:** 15 minutos diarios entre un enlace por equipo, de jueves a domingo.
-- **Fechas propuestas al backend:**
-  - Viernes 30: confirmar la BD y responder al contrato de datos.
-  - Sábado 31: esquema disponible.
-  - Si no llega, se entrega con el repositorio en memoria y el adaptador queda documentado como siguiente paso.
+- **Fechas propuestas al backend** (se cambiaron el 4 nov; la BD ya se confirmó: SQL Server con procedimientos almacenados, D4 y D5):
+  - Viernes 6 nov: responder P3, P6 y P11–P14.
+  - Sábado 7 nov: scripts del esquema y de los procedimientos disponibles.
+  - Si no llegan, se entrega con el repositorio en memoria y el adaptador queda documentado como siguiente paso (ADR-004).
 
 ## Reparto
 
@@ -79,7 +79,7 @@ El chat no lo leen los agentes; el archivo sí. Lo que no esté en `ACUERDOS.md`
 | Líder de contrato | Osvaldo Sánchez | Docs de etapas, `openapi.yaml`, coordinación con webs, revisión de PR |
 | Dominio de reservas | Juan Carlos Martínez | Apartar, liberar, expirar y comprar; concurrencia; límite por persona y función |
 | Datos e integración | Isaac Tenorio | Interfaces de repositorio, versión en memoria, contrato de datos, enlace con backend y adaptador real |
-| QA / pruebas | Persona 4 | Pruebas Jest + Supertest guiadas por criterios de aceptación, colección Postman, mock para webs |
+| QA / pruebas | Sin asignar (propuesta del 4 nov, falta confirmarla) | Juan Carlos: criterios de aceptación y pruebas del dominio · Isaac: pruebas de repositorios y autenticación · Osvaldo: pruebas de contrato, mock y colección Postman |
 
 ## Git mínimo para el equipo
 
@@ -99,12 +99,16 @@ git push                      # 4. Subirlos
 
 ## Calendario
 
+Se cambió el 4 nov: la entrega pasó del lun 2 al **lun 9 de noviembre de 2026**.
+
 | Día | Etapas | Salida |
 | --- | --- | --- |
-| Jue 29 oct | 1–3 | Docs de etapa, `AGENTS.md` corregido, contrato de datos enviado al backend |
-| Vie 30 oct | 4 | `openapi.yaml` v1 y `ESPECIFICACION.md` publicados; mock disponible |
-| Sáb 31 – Dom 1 | 5 | API Express con repositorio en memoria y Swagger UI en `/docs` |
-| Dom 1 – Lun 2 | 6 | Suite verde, pruebas de expiración y concurrencia; integración con BD si existe |
+| Jue 29 oct | 1–3 | Docs de etapa, `AGENTS.md` corregido, contrato de datos enviado al backend (en `main` con el PR #3) |
+| Mié 4 nov | 4 (inicio) y 5 (esqueleto) | Respuestas del backend registradas en `ACUERDOS.md`; arranca el esqueleto Express (D) |
+| Jue 5 nov | 4 | `openapi.yaml` v1 y `ESPECIFICACION.md` publicados; contrato de datos actualizado y ADR-004 |
+| Vie 6 – Sáb 7 nov | 5 | API Express con repositorio en memoria y Swagger UI en `/docs` |
+| Dom 8 nov | 6 | Suite verde, pruebas de expiración y concurrencia, colección Postman; integración con la BD si existe |
+| Lun 9 nov | — | Entrega y demo |
 
 ## Skills y loops
 
