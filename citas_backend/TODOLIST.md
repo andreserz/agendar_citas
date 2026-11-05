@@ -36,7 +36,7 @@ Entrega: **lun 9 nov 2026**.
 - ✅ `docs/architecture/adr/`: BCK ADR-001 a ADR-004 (S)
 - ✅ Verificación y aprobación del usuario (S)
 - ✅ Enviar al chat las preguntas QB1–QB5 (§8 de la definición; enviado el 5 nov 2026) (S)
-- 🔄 Commit, push y pull request a `main` (S)
+- ✅ Commit, push y pull request a `main` (PR #7, abierto el 5 nov 2026) (S)
 
 ## Etapa 4 — Especificación ⏳ (vie 6 nov)
 - ⏳ `docs/BCK_ESPECIFICACION.md`: firmas de SP01–SP17, parámetros, resultados y lista final de códigos `THROW` (H)
