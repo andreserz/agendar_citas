@@ -2,43 +2,58 @@
 
 Leyenda: ✅ terminado · 🔄 en curso · ⏳ pendiente · ⛔ bloqueado
 
+Responsables (ver `docs/BCK_PLAN_TRABAJO.md`): **S** = Sandra (líder), **A** = Alfredo (modelo y datos), **H** = Hugo (SP y pruebas). Por ahora S también puede ejecutar las tareas de A y H; en ese caso se anota `(A → ejecutó S)`. Sólo S edita este archivo.
+
 Regla de trabajo: al terminar cada etapa se avisa al usuario y **no se inicia la siguiente hasta que la verifique**.
 
+Entrega: **lun 9 nov 2026**.
+
 ## Etapa 1 — Anteproyecto ✅ (aprobado 4 nov 2026)
-- ✅ Crear el worktree `bck-anteproyecto` (rama `backend/anteproyecto`)
-- ✅ Crear el subagente `.claude/agents/sqlserver-dba.md`
-- ✅ Leer `citas_web_1/docs/PROPUESTA.md` y `DEFINICION.md`
-- ✅ Leer el contrato y los acuerdos de `citas_service`
-- ✅ Entrevista: decisiones E1–E8
-- ✅ Redactar `docs/BCK_ANTEPROYECTO.md`
-- ✅ Verificación y aprobación del usuario
-- ✅ Commit, push y pull request a `main` (PR #4, integrado)
+- ✅ Crear el worktree `bck-anteproyecto` (rama `backend/anteproyecto`) (S)
+- ✅ Crear el subagente `.claude/agents/sqlserver-dba.md` (S)
+- ✅ Leer `citas_web_1/docs/PROPUESTA.md` y `DEFINICION.md` (S)
+- ✅ Leer el contrato y los acuerdos de `citas_service` (S)
+- ✅ Entrevista: decisiones E1–E8 (S)
+- ✅ Redactar `docs/BCK_ANTEPROYECTO.md` (S)
+- ✅ Verificación y aprobación del usuario (S)
+- ✅ Commit, push y pull request a `main` (PR #4, integrado) (S)
 
-## Etapa 2 — Propuesta ✅ (aprobado 5 nov 2026, rama `backend/propuesta`)
-- ✅ Entrevista: decisiones E9–E13 (5 nov 2026)
-- ✅ Decidir el precio: por zona y función (E9, responde P14)
-- ✅ `docs/BCK_PROPUESTA.md`: modelo de datos, SP01–SP17, índices, trazabilidad con el contrato, rangos `THROW` y respuestas a P3, P6 y P11–P14
-- ✅ Mensaje para el chat del grupo (§8 de la propuesta)
-- ✅ Verificación y aprobación del usuario
-- ⏳ Enviar el mensaje al chat (lo hace el usuario; vence vie 6 nov)
-- ✅ Commit, push y pull request a `main` (PR #6, abierto el 5 nov 2026)
+## Etapa 2 — Propuesta ✅ (aprobado 5 nov 2026)
+- ✅ Entrevista: decisiones E9–E13 (5 nov 2026) (S)
+- ✅ Decidir el precio: por zona y función (E9, responde P14) (S)
+- ✅ `docs/BCK_PROPUESTA.md`: modelo de datos, SP01–SP17, índices, trazabilidad con el contrato, rangos `THROW` y respuestas a P3, P6 y P11–P14 (S)
+- ✅ Mensaje para el chat del grupo (§8 de la propuesta) (S)
+- ✅ Verificación y aprobación del usuario (S)
+- ✅ Enviar el mensaje al chat (enviado el 5 nov 2026) (S)
+- ✅ Commit, push y pull request a `main` (PR #6, integrado el 5 nov 2026) (S)
 
-## Etapa 3 — Definición ⏳
-- ⏳ `docs/BCK_DEFINICION.md`: requisitos, reglas de negocio y diccionario de datos (con equivalencias del contrato)
-- ⏳ `docs/architecture/`: diagrama entidad-relación y ADRs
+## Etapa 3 — Definición ✅ (aprobado 5 nov 2026, rama `backend/definicion`)
+- ✅ Plan de trabajo del equipo en `docs/BCK_PLAN_TRABAJO.md` (S)
+- ✅ Entrevista: decisiones E14–E18 (S)
+- ✅ `docs/BCK_DEFINICION.md`: requisitos RF-B01–RF-B19, requisitos no funcionales, reglas RN01–RN27 y códigos de error (S)
+- ✅ `docs/BCK_DEFINICION.md` §6–§7: diccionario de datos con equivalencias del contrato y datos iniciales (A → ejecutó S)
+- ✅ `docs/architecture/BCK_DIAGRAMA_ER.md`: diagrama entidad-relación (A → ejecutó S)
+- ✅ `docs/architecture/adr/`: BCK ADR-001 a ADR-004 (S)
+- ✅ Verificación y aprobación del usuario (S)
+- ⏳ Enviar al chat las preguntas QB1–QB5 (§8 de la definición) (S)
+- 🔄 Commit, push y pull request a `main` (S)
 
-## Etapa 4 — Especificación ⏳
-- ⏳ `docs/BCK_ESPECIFICACION.md`: firmas de los SPs, parámetros, resultados, códigos `THROW` e índices
-- ⏳ Aprobación de cada SP por el usuario
+## Etapa 4 — Especificación ⏳ (vie 6 nov)
+- ⏳ `docs/BCK_ESPECIFICACION.md`: firmas de SP01–SP17, parámetros, resultados y lista final de códigos `THROW` (H)
+- ⏳ `docs/BCK_ESPECIFICACION.md`: índices definitivos y algoritmo de datos iniciales (A)
+- ⏳ Aprobación de cada SP por el usuario (S)
 
-## Etapa 5 — Construcción ⏳ (subagente `sqlserver-dba`)
-- ⏳ `app/01_crear_bd.sql`
-- ⏳ `app/02_tablas.sql`
-- ⏳ `app/03_indices.sql`
-- ⏳ `app/04_sps.sql`
-- ⏳ `app/05_datos_iniciales.sql`
-- ⏳ `.env.example` (sólo con aviso previo y sin datos reales)
+## Etapa 5 — Construcción ⏳ (sáb 7 nov, subagente `sqlserver-dba`)
+- ⏳ `app/01_crear_bd.sql` (A)
+- ⏳ `app/02_tablas.sql` (A)
+- ⏳ `app/03_indices.sql` (A)
+- ⏳ `app/04_sps.sql`: prioridad SP06, SP07 y SP13 (H)
+- ⏳ `app/05_datos_iniciales.sql` (A)
+- ⏳ `.env.example` (sólo con aviso previo y sin datos reales) (S)
+- ⏳ Avisar en el chat que los scripts están disponibles (S)
 
-## Etapa 6 — Pruebas ⏳
-- ⏳ `tests/`: apartado concurrente, vencimiento con `@Ahora`, límite de 10, pago atómico, unicidad
-- ⏳ Revisión final con el subagente `sqlserver-dba`
+## Etapa 6 — Pruebas ⏳ (dom 8 nov)
+- ⏳ `tests/`: apartado concurrente, vencimiento con `@Ahora`, límite de 10, pago atómico, unicidad (H)
+- ⏳ Datos de prueba (A)
+- ⏳ Revisión final con el subagente `sqlserver-dba` (S)
+- ⏳ Demo y entrega el lun 9 nov (todos)
