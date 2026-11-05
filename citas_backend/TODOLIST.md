@@ -21,7 +21,7 @@ Regla de trabajo: al terminar cada etapa se avisa al usuario y **no se inicia la
 - ✅ Mensaje para el chat del grupo (§8 de la propuesta)
 - ✅ Verificación y aprobación del usuario
 - ⏳ Enviar el mensaje al chat (lo hace el usuario; vence vie 6 nov)
-- 🔄 Commit, push y pull request a `main`
+- ✅ Commit, push y pull request a `main` (PR #6, abierto el 5 nov 2026)
 
 ## Etapa 3 — Definición ⏳
 - ⏳ `docs/BCK_DEFINICION.md`: requisitos, reglas de negocio y diccionario de datos (con equivalencias del contrato)
