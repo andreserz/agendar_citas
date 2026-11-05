@@ -35,7 +35,7 @@ Entrega: **lun 9 nov 2026**.
 - ✅ `docs/architecture/BCK_DIAGRAMA_ER.md`: diagrama entidad-relación (A → ejecutó S)
 - ✅ `docs/architecture/adr/`: BCK ADR-001 a ADR-004 (S)
 - ✅ Verificación y aprobación del usuario (S)
-- ⏳ Enviar al chat las preguntas QB1–QB5 (§8 de la definición) (S)
+- ✅ Enviar al chat las preguntas QB1–QB5 (§8 de la definición; enviado el 5 nov 2026) (S)
 - 🔄 Commit, push y pull request a `main` (S)
 
 ## Etapa 4 — Especificación ⏳ (vie 6 nov)

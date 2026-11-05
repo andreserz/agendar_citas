@@ -77,7 +77,7 @@ Si el sábado 7 no están los scripts, el servicio entrega con datos en memoria 
 | Fecha | Mensaje | Estado |
 | --- | --- | --- |
 | 5 nov | Respuestas a P3, P6 y P11–P14 (`BCK_PROPUESTA.md` §8) | ✅ Enviado por S |
-| 6 nov | Preguntas abiertas de la Definición (`BCK_DEFINICION.md` §8) | ⏳ |
+| 5 nov | Preguntas QB1–QB5 de la Definición (`BCK_DEFINICION.md` §8) | ✅ Enviado por S |
 | 7 nov | Aviso de que los scripts están disponibles | ⏳ |
 
 ## 5. Criterio de terminado
