@@ -12,12 +12,16 @@ Regla de trabajo: al terminar cada etapa se avisa al usuario y **no se inicia la
 - ✅ Entrevista: decisiones E1–E8
 - ✅ Redactar `docs/BCK_ANTEPROYECTO.md`
 - ✅ Verificación y aprobación del usuario
-- 🔄 Commit, push y pull request a `main`
+- ✅ Commit, push y pull request a `main` (PR #4, integrado)
 
-## Etapa 2 — Propuesta ⏳
-- ⏳ `docs/BCK_PROPUESTA.md`: modelo de datos propuesto y lista de SPs a aprobar
-- ⏳ Decidir el precio por zona o por zona y función
-- ⏳ Mensaje para el chat del grupo con las respuestas a P1, P2, P3, P5, P6 y P8
+## Etapa 2 — Propuesta ✅ (aprobado 5 nov 2026, rama `backend/propuesta`)
+- ✅ Entrevista: decisiones E9–E13 (5 nov 2026)
+- ✅ Decidir el precio: por zona y función (E9, responde P14)
+- ✅ `docs/BCK_PROPUESTA.md`: modelo de datos, SP01–SP17, índices, trazabilidad con el contrato, rangos `THROW` y respuestas a P3, P6 y P11–P14
+- ✅ Mensaje para el chat del grupo (§8 de la propuesta)
+- ✅ Verificación y aprobación del usuario
+- ⏳ Enviar el mensaje al chat (lo hace el usuario; vence vie 6 nov)
+- ✅ Commit, push y pull request a `main` (PR #6, abierto el 5 nov 2026)
 
 ## Etapa 3 — Definición ⏳
 - ⏳ `docs/BCK_DEFINICION.md`: requisitos, reglas de negocio y diccionario de datos (con equivalencias del contrato)
