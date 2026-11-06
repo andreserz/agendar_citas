@@ -1,6 +1,6 @@
 # Especificación — citas_service
 
-Estado: **borrador de R (dominio de reservas)** para revisión de L. Cubre la parte del contrato que corresponde a reservas, expiración, pago y límite por persona; el catálogo (eventos, funciones, asientos) y la autenticación se especifican aparte.
+Estado: **borrador de R (dominio de reservas)** para revisión de L. Actualizado el 6 nov con D14 (pago con tarjetas de prueba) y con la respuesta de web_2 a P4. Cubre la parte del contrato que corresponde a reservas, expiración, pago y límite por persona; el catálogo (eventos, funciones, asientos) y la autenticación se especifican aparte.
 
 Base: `DEFINICION.md` (RF01–RF15, RN01–RN11), `specs/openapi.yaml` v0.1 y `architecture/adr/ADR-003-expiracion.md`. Cuando este documento y `openapi.yaml` difieran, **manda la spec** y se corrige aquí.
 
@@ -17,6 +17,8 @@ Las partes que dependen de otros equipos van marcadas como **[pendiente Pn]**. N
 | Pago simulado y orden (RF08, RF09) | Formato de los códigos de boleto y QR (PR7) |
 | Límite de 10 asientos por persona y función (RF11, RN04) | Consolidación del backoffice (RF15) |
 | Errores `400`, `401`, `404`, `409`, `410`, `422` y criterios de aceptación | Identificación del sitio en detalle (PR5) |
+
+**Alcance por sitio (P4, PR #8):** `web_1` compra con cuenta, así que el límite de 10 (RN04) y la propiedad de la reserva (RN09) le aplican. `web_2` es un cineclub de 10 salas que compra **como invitado, sin cuenta**, por lo que esas dos reglas no aplican ahí; el servicio solo identifica al sitio. Cómo se registra una reserva sin comprador está abierto en P15, y el conteo diario que pide web_2 en P18.
 
 ---
 
@@ -140,18 +142,26 @@ boletos comprados
 
 ### 3.7 Pago simulado (RF08, RN05–RN07)
 
-Entrada: `resultadoSimulado: aprobado | rechazado` **[propuesto, P10]**.
+Entrada (D14): `numeroTarjeta`, `titular`, `vencimiento` (`MM/AA`, no vencida) y `cvv` (3 dígitos).
+
+| Número de tarjeta | Resultado |
+| --- | --- |
+| `4242 4242 4242 4242` | Siempre **aprobado** |
+| `4000 0000 0000 0002` | Siempre **rechazado** |
+| Cualquier otro número | `400 SOLICITUD_INVALIDA` («usa una tarjeta de prueba») |
 
 | Caso | Respuesta | Efecto |
 | --- | --- | --- |
-| Reserva activa vigente + `aprobado` | `201` con `resultado: aprobado` | Reserva → `pagada`, se crea la **orden** y sus **boletos** en una sola operación |
-| Reserva activa vigente + `rechazado` | `201` con `resultado: rechazado` | Se registra el intento; la reserva sigue `activa` y `expiraEn` **no cambia** (RN06) |
+| Reserva activa vigente + tarjeta aprobada | `201` con `resultado: aprobado` | Reserva → `pagada`, se crea la **orden** y sus **boletos** en una sola operación |
+| Reserva activa vigente + tarjeta rechazada | `201` con `resultado: rechazado` | Se registra el intento; la reserva sigue `activa` y `expiraEn` **no cambia** (RN06) |
 | Reserva vencida | `410 RESERVA_VENCIDA` | No se cobra, no se crea orden ni boleto |
 | Reserva pagada | `409 RESERVA_PAGADA` | No se permite un segundo pago |
 | Reserva liberada | `410 RESERVA_LIBERADA` | Sin efecto |
+| Campos faltantes, formato inválido o número que no es de prueba | `400 SOLICITUD_INVALIDA` | No se registra el intento |
 
 - Ambos resultados responden `201` porque el **intento** queda registrado; el resultado viaja en el cuerpo.
 - `simulado: true` siempre; el sitio debe avisar al usuario que el pago es simulado.
+- **Datos de tarjeta (D14):** el servicio nunca guarda el número completo ni el `cvv`; el intento registra sólo los últimos 4 dígitos. La columna en `IntentosPago` está pedida al backend (P19); mientras no exista, el servicio los conserva sólo en memoria para armar la respuesta.
 - **RN07 — Atomicidad:** marcar pagada + crear orden + crear boletos ocurre todo o nada. Si falla cualquier paso, la reserva permanece `activa`.
 - Cada boleto recibe un código único y difícil de adivinar (RN10).
 
@@ -173,7 +183,7 @@ Formato único del cuerpo (igual en toda la API):
 
 | HTTP | `codigo` | Cuándo | `detalles` |
 | --- | --- | --- | --- |
-| `400` | `SOLICITUD_INVALIDA` | Cuerpo inválido, falta `X-Sitio`, asientos repetidos, más de 10 en una petición, asientos de funciones distintas | `campo` opcional |
+| `400` | `SOLICITUD_INVALIDA` | Cuerpo inválido, falta `X-Sitio`, asientos repetidos, más de 10 en una petición, asientos de funciones distintas, **o datos de tarjeta mal formados o con un número que no es de prueba (D14)** | `campo` opcional |
 | `401` | `NO_AUTENTICADO` | Falta el token del comprador o es inválido | — |
 | `404` | `NO_ENCONTRADO` | Función, asiento o reserva inexistente, o reserva de otro comprador | — |
 | `409` | `ASIENTO_NO_DISPONIBLE` | Al menos un asiento ya está `apartado` o `comprado` | `asientoIds: []` |
@@ -297,19 +307,19 @@ Convenciones: `ahora` es la hora del reloj simulado; `T0 = 2026-11-06T10:00:00-0
 
 ### RF08 — Pago
 
-**CA-19 · Pago aprobado**
+**CA-19 · Pago aprobado (D14)**
 - **Dado** una reserva activa con `A7`
-- **Cuando** se envía `{ resultadoSimulado: "aprobado" }`
+- **Cuando** se envía `{ numeroTarjeta: "4242 4242 4242 4242", titular: "ANA PEREZ", vencimiento: "12/28", cvv: "123" }`
 - **Entonces** responde `201` con `simulado: true`, la reserva queda `pagada`, se crea una orden con 1 boleto con código único y `A7` pasa a `comprado`
 
-**CA-20 · Pago rechazado no extiende el plazo (RN06)**
+**CA-20 · Pago rechazado no extiende el plazo (RN06, D14)**
 - **Dado** una reserva activa con `expiraEn = T0 + 300`
-- **Cuando** se envía `{ resultadoSimulado: "rechazado" }` en `T0 + 60`
+- **Cuando** se envía `{ numeroTarjeta: "4000 0000 0000 0002", titular: "ANA PEREZ", vencimiento: "12/28", cvv: "123" }` en `T0 + 60`
 - **Entonces** responde `201` con `resultado: rechazado`, la reserva sigue `activa` y `expiraEn` sigue igual
 
 **CA-21 · Reintento tras rechazo**
 - **Dado** el caso del CA-20
-- **Cuando** se reintenta con `aprobado` antes de vencer
+- **Cuando** se reintenta con `4242 4242 4242 4242` antes de vencer
 - **Entonces** responde `201`, la reserva pasa a `pagada` y existe **una sola** orden
 
 **CA-22 · Pago sobre reserva vencida (RN05)**
@@ -339,6 +349,11 @@ Convenciones: `ahora` es la hora del reloj simulado; `T0 = 2026-11-06T10:00:00-0
 - **Cuando** se inspecciona el cuerpo
 - **Entonces** tiene `error.codigo`, `error.mensaje` y, si aplica, `error.detalles`, sin datos de otros compradores
 
+**CA-27 · Datos de tarjeta inválidos (D14)**
+- **Dado** una reserva activa
+- **Cuando** se envía un `numeroTarjeta` distinto de las dos tarjetas de prueba, o un `vencimiento` ya pasado, o un `cvv` que no tiene 3 dígitos
+- **Entonces** responde `400 SOLICITUD_INVALIDA` con `detalles.campo` y **no** se registra el intento de pago
+
 ---
 
 ## 6. Matriz requisito → criterio
@@ -349,7 +364,7 @@ Convenciones: `ahora` es la hora del reloj simulado; `T0 = 2026-11-06T10:00:00-0
 | RF05 | CA-12, CA-13, CA-14 |
 | RF06 | CA-16, CA-17, CA-18 |
 | RF07 | CA-15 |
-| RF08 | CA-19 a CA-24 |
+| RF08 | CA-19 a CA-24, CA-27 |
 | RF09 | CA-19 (orden y boleto) |
 | RF11 | CA-08 a CA-11 |
 | RN01 | CA-02 |
@@ -369,10 +384,12 @@ Convenciones: `ahora` es la hora del reloj simulado; `T0 = 2026-11-06T10:00:00-0
 
 | Pendiente | Qué decide | Qué cambia aquí |
 | --- | --- | --- |
-| **P9** | Disponibilidad parcial | CA-04 y la tabla de errores (`409` con lista vs. apartado parcial) |
-| **P10** | Cómo se elige el resultado del pago | El cuerpo de `POST /reservas/{id}/pago` (campo vs. tarjetas de prueba) |
-| **P5** | Quién gestiona cuentas y cómo se identifica al comprador | RN09, RF10, CA-11, CA-14 y el `401` |
-| **P4** | Negocio y datos de web_2 | La moneda y el origen de los datos iniciales |
+| **P9** | Disponibilidad parcial | CA-04 y la tabla de errores. El backend ya lo implementa (RN08) y web_2 está de acuerdo (PR #8); **solo falta web_1** |
+| ~~P10~~ | **Resuelto en D14:** pago con dos tarjetas de prueba; el sitio envía `numeroTarjeta`, `titular`, `vencimiento` y `cvv` | Ya aplicado en §3.7 y CA-19 a CA-21. Obliga a reemplazar `resultadoSimulado` en `openapi.yaml` |
+| **P5** | Quién gestiona cuentas y cómo se identifica al comprador | RN09, RF10, CA-11, CA-14 y el `401`. web_2 ya respondió que no usa cuentas; falta web_1 |
+| **P4** | Negocio y datos de web_2 | **Respondido por web_2 (PR #8):** cineclub, 10 salas, una zona por función, precio por formato, compra sin cuenta. Ya reflejado en §1; sus consecuencias son P15–P18 |
+| **P15** | Cómo registrar una reserva sin comprador (`IdComprador` no admite nulos) | RN09, RF10 y el modelo de `Reserva`; hoy el contrato exige comprador |
+| **P19** | Columna para los últimos 4 dígitos en `IntentosPago` | §3.7: sin ella, los últimos 4 dígitos solo se pueden devolver en memoria |
 | **P8** | Zona horaria | Los ejemplos de `inicio` y `expiraEn`. El backend ya respondió (UTC en BD, el servicio convierte a `America/Mexico_City`); falta la confirmación de los webs (ver Anexo A) |
 | **PR3** | `409`/`410` como errores acordados | La tabla de errores |
 | **PR4** | Código del límite (hoy `422`) | CA-08 a CA-11 |
@@ -393,8 +410,8 @@ Convenciones: `ahora` es la hora del reloj simulado; `T0 = 2026-11-06T10:00:00-0
 
 ## 9. Revisión pendiente
 
-- **L:** validar la tabla de errores contra `openapi.yaml` y publicar los cambios de la spec.
-- **R:** una vez respondidos P9, P10 y P5, retirar las marcas **[pendiente]** y congelar la versión 1.0.
+- **L:** publicar en `openapi.yaml` los cambios de D14 (tarjetas de prueba en lugar de `resultadoSimulado`), el `pattern` del código de boleto de 12 caracteres y `ORD-000123`; y registrar **P14** en `ACUERDOS.md`.
+- **R:** faltan **P9** y **P5**, ambos de web_1, para congelar la versión 1.0; P10 ya está aplicado en §3.7.
 - **D:** confirmar que las interfaces `ReservasRepo` y `OrdenesRepo` reciben `ahora` y exponen lo necesario para CA-08 a CA-11 y CA-24.
 
 ---
@@ -403,7 +420,7 @@ Convenciones: `ahora` es la hora del reloj simulado; `T0 = 2026-11-06T10:00:00-0
 
 Fuentes revisadas: `citas_backend/docs/BCK_ANTEPROYECTO.md`, `BCK_PROPUESTA.md` (§4, §5, §7), `BCK_DEFINICION.md` (§5, §6, §8) y los ADR `BCK_ADR-001` a `BCK_ADR-004`.
 
-**Aviso:** estas respuestas ya están escritas por el backend y se enviaron al chat el 5 nov, pero **todavía no están registradas en `ACUERDOS.md`**. Hasta que L las registre no son acuerdos formales; este anexo sirve para que R pueda trabajar con ellas y para que L las transcriba.
+**Aviso:** estas respuestas ya están escritas por el backend y se enviaron al chat el 5 nov. L las registró como **D7–D14 en su PR #9** (abierto, sin fusionar); este anexo queda como sustento técnico y como referencia de las diferencias detectadas. Hasta que el PR #9 se fusione, la fuente oficial sigue siendo `ACUERDOS.md` en `main`.
 
 ### A.1 Pendientes con respuesta ya escrita
 
@@ -457,7 +474,7 @@ El servicio decide por el código numérico y nunca lo expone al cliente.
 | 2 | `openapi.yaml` ejemplifica `Orden.numero` como `ORD-2026-000123`; el backend genera `ORD-` + `Id` a 6 dígitos | El sitio mostraría un número distinto al real | Adoptar `ORD-000123` |
 | 3 | DEF RN12 permite liberar reservas vencidas; CA-17 responde `410` | Ninguno funcional: `SP11` no recibe `@Ahora` y el vencimiento es del servicio | El servicio responde `410` y no llama al SP; `SP17` queda sólo para limpieza |
 | 4 | En memoria el estado se calcula; con BD lo devuelve `spAsientos_ListarPorFuncion` | Dos fuentes de verdad | El adaptador mapea `Disponible`/`Apartado`/`Vendido` a `disponible`/`apartado`/`comprado`; ambas implementaciones deben usar la misma regla (`ExpiraEn > ahora`) |
-| 5 | `PreciosZonaFuncion.Moneda` admite `MXN` o `USD` | P4 sigue abierto para web_2 | Mantener `moneda` en el contrato; no asumir `MXN` fuera de web_1 |
+| 5 | `PreciosZonaFuncion.Moneda` admite `MXN` o `USD` | web_2 ya respondió que usa **MXN** (PR #8) | Mantener `moneda` en el contrato y no asumirla en el código: es un dato de la función |
 
 ### A.5 Implicación para el esqueleto (D)
 
