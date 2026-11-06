@@ -24,11 +24,12 @@ Las fechas límite se movieron el 4 nov porque la entrega ahora es el **lun 9 no
 | P7 | Para la demo del lunes 9 nov, ¿se corre todo en una sola laptop o cada equipo muestra su parte en la suya? | todos | sáb 7 nov |
 | P8 | ¿En qué zona horaria se expresan los horarios de las funciones? Propuesta del servicio: guardar en UTC y entregar con zona `America/Mexico_City`. **El backend la acepta (E6, 4 nov).** Falta que respondan web_1 y web_2. | web1, web2 | vie 6 nov |
 | P9 | Si se piden varios asientos en una reserva y alguno ya no está disponible, ¿se rechaza toda la reserva o se apartan sólo los libres? Propuesta del servicio: rechazar toda la reserva con `409` e indicar qué asientos fallaron. **El backend ya diseña `spReservas_Crear` así (4 nov).** | web1, web2 | vie 6 nov |
-| P10 | ¿Cómo elige el sitio el resultado del pago simulado: datos de prueba (por ejemplo, tarjetas que siempre aprueban o rechazan) o un campo en la petición? | web1, web2 | vie 6 nov |
+| P10 | ¿Cómo elige el sitio el resultado del pago simulado: datos de prueba (por ejemplo, tarjetas que siempre aprueban o rechazan) o un campo en la petición? **Propuesta del servicio (4 nov): dos tarjetas de prueba, ver PR10.** | web1, web2 | vie 6 nov |
 | P11 | Para listar los asientos de una función, ¿`spAsientos_ListarPorFuncion` recibe `@Ahora` y devuelve si cada asiento está disponible, apartado o vendido, o devuelve `ExpiraEn` y el servicio lo calcula? | backend | vie 6 nov |
 | P12 | ¿Qué códigos de error `THROW` (50000 o más) devuelve cada procedimiento? El servicio los necesita para responder `409` (no disponible), `410` (reserva vencida) o `422` (regla incumplida, por ejemplo el límite de 10). | backend | vie 6 nov |
 | P13 | Cuando `spReservas_Crear` falla porque algunos asientos no están disponibles, ¿cómo indica cuáles son: un conjunto de resultados, un parámetro `OUTPUT` o el texto del mensaje? | backend | vie 6 nov |
-| P14 | ¿El precio va por zona o por zona y función? Afecta el campo `precio` de la spec. | backend | vie 6 nov |
+
+P14 («¿el precio va por zona o por zona y función?») se retiró el 4 nov. El precio es una regla del negocio y web_1 ya lo definió en `citas_web_1/docs/DEFINICION.md`: Preferente $800, General $500 y Balcón $300 MXN, iguales en todas las funciones. Cómo guardarlo lo decide el backend; al servicio le basta con poder obtener el precio de un asiento en una función.
 
 
 ## Propuestas del servicio (pendientes de confirmar)
@@ -43,6 +44,7 @@ Las fechas límite se movieron el 4 nov porque la entrega ahora es el **lun 9 no
 | PR7 | El servicio devuelve un código de texto por boleto y cada sitio lo dibuja como QR. | web1, web2 | Pendiente |
 | PR8 | Puertos locales fijos para que todo pueda correr en la misma máquina: `citas_service` en `3000`, `citas_web_1` en `5501` y `citas_web_2` en `5502`. La URL de la API en los sitios es `http://localhost:3000/api/v1`. | web1, web2, backend | Pendiente |
 | PR9 | La API permite llamadas desde el navegador (CORS) para `http://localhost:5501` y `http://localhost:5502` (y sus equivalentes `127.0.0.1`), configurables por variable de entorno. | web1, web2 | Pendiente |
+| PR10 | (Responde P10) El pago simulado usa **dos tarjetas de prueba**: `4242 4242 4242 4242` siempre se **aprueba** y `4000 0000 0000 0002` siempre se **rechaza**, para poder reintentar mientras el apartado siga vigente. Con cualquier otro número el servicio responde `400` («usa una tarjeta de prueba»). El sitio envía `numeroTarjeta`, `titular`, `vencimiento` (`MM/AA`, no vencida) y `cvv` (3 dígitos); si el formato es incorrecto, también responde `400`. El servicio **nunca guarda el número completo ni el CVV**: el intento de pago registra sólo los últimos 4 dígitos. Al aceptarse, reemplaza el campo `resultadoSimulado` del borrador de `openapi.yaml`. | web1, web2; backend (guardar sólo los últimos 4 dígitos en `IntentosPago`) | Pendiente |
 
 ## Decisiones acordadas
 

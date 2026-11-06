@@ -15,8 +15,8 @@ Leyenda de estatus: ⬜ pendiente · 🔄 en progreso · ✅ hecho · 🚧 bloqu
 
 ## 2. Propuesta — jue 29 oct · 🔄 2/3
 - [x] Documentar alcance, endpoints borrador y dependencias en `docs/PROPUESTA.md` (L). **Integrado a `main` en el PR #3.**
-- [x] Crear `docs/specs/ACUERDOS.md` con preguntas abiertas y propuestas (L). **Hecho; P8–P10 agregadas el 29 oct y P11–P14 el 4 nov.**
-- [ ] 🔄 Compartir `ACUERDOS.md` en el chat del grupo y pedir respuestas a P1–P10 antes del viernes (L). **El 4 nov se registraron las respuestas del backend tomadas de `BCK_ANTEPROYECTO.md`: P1 y P2 pasaron a D4 y D5, y PR2 a D6. Falta avisar en el chat y pedir lo pendiente: P4, P5 y P7–P10 a web_1 y web_2, y P3 y P11–P14 al backend.**
+- [x] Crear `docs/specs/ACUERDOS.md` con preguntas abiertas y propuestas (L). **Hecho; P8–P10 agregadas el 29 oct y P11–P13 el 4 nov.**
+- [ ] 🔄 Compartir `ACUERDOS.md` en el chat del grupo y pedir respuestas a P1–P10 antes del viernes (L). **El 4 nov se registraron las respuestas del backend tomadas de `BCK_ANTEPROYECTO.md`: P1 y P2 pasaron a D4 y D5, y PR2 a D6. Falta avisar en el chat y pedir lo pendiente: P4, P5 y P7–P10 a web_1 y web_2, y P3 y P11–P13 al backend.**
 
 ## 3. Definición — jue 29 oct · 🔄 1/3
 - [ ] 🔄 Requisitos funcionales numerados (RF) y reglas de negocio en `docs/DEFINICION.md` (L, R). **Ya está en `main` (PR #3); falta la revisión de R.**
@@ -28,7 +28,7 @@ Leyenda de estatus: ⬜ pendiente · 🔄 en progreso · ✅ hecho · 🚧 bloqu
 - [ ] `docs/ESPECIFICACION.md`: estados, errores 409/410 y criterios de aceptación Given/When/Then (R). **Pendiente.**
 - [ ] Mock disponible para los webs a partir del OpenAPI (L). **Pendiente. Se puede omitir si los webs usan la API en memoria (PR6).**
 - [ ] Skills del proyecto: `etapa`, `endpoint-desde-spec`, `validar-contrato` (L). **Pendiente.**
-- [ ] Actualizar `docs/specs/contrato-datos-backend.md` con las respuestas del backend (SQL Server, procedimientos almacenados, `@Ahora`, nombres en español, hash calculado en el servicio) y enviarle P11–P14 (D). **Pendiente.**
+- [ ] Actualizar `docs/specs/contrato-datos-backend.md` con las respuestas del backend (SQL Server, procedimientos almacenados, `@Ahora`, nombres en español, hash calculado en el servicio) y enviarle P11–P13 (D). **Pendiente.**
 - [ ] ADR-004: adaptador a SQL Server mediante procedimientos almacenados, y cómo los errores `THROW` (50000 o más) se convierten en `409`/`410` (L, D). **Pendiente.**
 
 ## 5. Construcción — mié 4 – sáb 7 nov · ⬜ 0/6
