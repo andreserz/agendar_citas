@@ -46,7 +46,7 @@ Entrega: **lun 9 nov 2026**.
 - ⏳ Enviar a web_2 el aviso sobre `UQ_Funciones_IdEvento_FechaHoraInicio` (§10) y esperar QB6–QB8 (S)
 - ⏳ Llevar los cambios aprobados a `BCK_ESPECIFICACION.md` (columnas, SP18, SP19 y errores 53005–53007) (H, A)
 - ⏳ Confirmar en el chat: PR8 (puertos) y el formato del mensaje de `51001` (QB3 y D11) (S)
-- 🔄 Commit, push y pull request a `main` (rama `backend/respuestas-p15-p19`) (S)
+- ✅ Commit, push y pull request a `main` (PR #12, rama `backend/respuestas-p15-p19`, abierto el 6 nov 2026) (S)
 
 ## Etapa 4 — Especificación ⏳ (vie 6 nov)
 - ⏳ `docs/BCK_ESPECIFICACION.md`: firmas de SP01–SP17, parámetros, resultados y lista final de códigos `THROW` (H)
