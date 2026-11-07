@@ -33,7 +33,7 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 - [x] Decidir la recuperación del boleto sin cuenta: **folio de la orden** (RN05); correo descartado porque no hay cuentas ni envíos.
 - [x] Definir el conteo diario (RN06): **reservas creadas por día calendario en `America/Mexico_City`, sin importar su estado final y sin desglose por sala**.
 - [x] Mapear cada requisito y regla de web_2 contra el servicio, marcando lo condicional (folio de orden, conteo diario, P10).
-- [ ] Validar la `DEFINICION.md` con el equipo y cerrarla.
+- [x] Validar la `DEFINICION.md` con el equipo: confirmadas el 6 nov 2026 las decisiones de RN05 (folio) y RN06 (conteo diario). Falta cierre formal al confirmar el cliente.
 - [ ] Confirmar con el cliente que el folio y el conteo diario quedan como acordados; registrar la confirmación.
 - [ ] Confirmar con el servicio: consulta de orden por folio, órdenes sin comprador identificado y exposición del conteo diario (añadir a `ACUERDOS.md`).
 
