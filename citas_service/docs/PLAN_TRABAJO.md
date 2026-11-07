@@ -68,7 +68,7 @@ El chat no lo leen los agentes; el archivo sí. Lo que no esté en `ACUERDOS.md`
 - **Cambios de contrato:** se acuerdan en el chat con el equipo afectado, se registran en `ACUERDOS.md` y después se actualiza `openapi.yaml`.
 - **Sincronía:** 15 minutos diarios entre un enlace por equipo, de jueves a domingo.
 - **Fechas propuestas al backend** (se cambiaron el 4 nov; la BD ya se confirmó: SQL Server con procedimientos almacenados, D4 y D5):
-  - Viernes 6 nov: responder P3, P6 y P11–P14.
+  - Viernes 6 nov: responder P3, P6 y P11–P13.
   - Sábado 7 nov: scripts del esquema y de los procedimientos disponibles.
   - Si no llegan, se entrega con el repositorio en memoria y el adaptador queda documentado como siguiente paso (ADR-004).
 
