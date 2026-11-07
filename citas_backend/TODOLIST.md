@@ -38,6 +38,16 @@ Entrega: **lun 9 nov 2026**.
 - ✅ Enviar al chat las preguntas QB1–QB5 (§8 de la definición; enviado el 5 nov 2026) (S)
 - ✅ Commit, push y pull request a `main` (PR #7, abierto el 5 nov 2026) (S)
 
+## Respuestas a otros equipos (P15–P19, límite sáb 7 nov)
+- ✅ Revisar las preguntas pendientes en `citas_service/docs/specs/ACUERDOS.md` (6 nov 2026) (S)
+- ✅ `docs/BCK_RESPUESTAS_P15_P19.md`: propuesta de respuesta a P15–P19, preguntas nuevas QB6–QB8 para web_2 y mensaje para el chat (S)
+- ✅ Verificación y aprobación de la usuaria (6 nov 2026) (S)
+- ⏳ Enviar el mensaje al chat (§9) (S)
+- ⏳ Enviar a web_2 el aviso sobre `UQ_Funciones_IdEvento_FechaHoraInicio` (§10) y esperar QB6–QB8 (S)
+- ⏳ Llevar los cambios aprobados a `BCK_ESPECIFICACION.md` (columnas, SP18, SP19 y errores 53005–53007) (H, A)
+- ⏳ Confirmar en el chat: PR8 (puertos) y el formato del mensaje de `51001` (QB3 y D11) (S)
+- ✅ Commit, push y pull request a `main` (PR #12, rama `backend/respuestas-p15-p19`, abierto el 6 nov 2026) (S)
+
 ## Etapa 4 — Especificación ⏳ (vie 6 nov)
 - ⏳ `docs/BCK_ESPECIFICACION.md`: firmas de SP01–SP17, parámetros, resultados y lista final de códigos `THROW` (H)
 - ⏳ `docs/BCK_ESPECIFICACION.md`: índices definitivos y algoritmo de datos iniciales (A)
