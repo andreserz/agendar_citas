@@ -60,7 +60,7 @@ Entrega: **lun 9 nov 2026**.
 - ✅ Aprobación de cada SP por la usuaria (§12; SP01–SP19 aprobados el 6 nov 2026) (S)
 - ✅ Verificación y aprobación de la etapa completa por la usuaria (6 nov 2026) (S)
 - ⏳ Enviar al servicio el aviso de la §11 (cambios por H1–H7) (S)
-- 🔄 Commit, push y pull request a `main` (rama `backend/especificacion`) (S)
+- ✅ Commit, push y pull request a `main` (PR #15, rama `backend/especificacion`, abierto el 6 nov 2026) (S)
 
 ## Etapa 5 — Construcción ⏳ (sáb 7 nov, subagente `sqlserver-dba`)
 - ⏳ `app/01_crear_bd.sql` (A)
