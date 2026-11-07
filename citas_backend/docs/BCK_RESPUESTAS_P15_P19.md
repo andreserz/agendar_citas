@@ -212,3 +212,23 @@ Se pidió el 6 nov 2026 para que web_2 conozca el impacto en su modelo de datos.
 > 2. La cartelera recibe por función la `sala` (nombre), su `capacidad`, el `formato` (2D/3D) y el `idioma`, y por película la `clasificacion` y la `duracion`. El servicio les confirmará los nombres exactos en la API.
 > 3. Para cargar sus datos necesitamos QB6 (periodo; proponemos del 9 al 15 nov), QB7 (acomodo de las 80 butacas; proponemos 8 filas de 10) y QB8 (datos de Spider-Man), antes del **sáb 7 nov**.
 > Detalle en `citas_backend/docs/BCK_RESPUESTAS_P15_P19.md` §2.
+
+## 11. Ajuste tras la Definición de web_2 (PR #13, 6 nov 2026)
+
+`citas_web_2/docs/DEFINICION.md` se fusionó después de esta propuesta. Comparación:
+
+| Tema | web_2 | Decisión del backend (6 nov 2026) |
+| --- | --- | --- |
+| Conteo diario (RN06 de web_2) | Reservas creadas por día en `America/Mexico_City`, sin importar su estado final y sin desglose por sala | **Coincide** con `ReservasCreadas` de SP19. Responde la pregunta de P18. `ReservasPagadas` se conserva como dato adicional. |
+| Recuperación del boleto (RN05 de web_2) | Sólo con el folio de la orden | **Opción 1, aprobada por la usuaria:** el comprador escribe **folio y código del boleto**. El servicio llama a SP18 con el código y comprueba que el `Folio` devuelto coincida con el escrito; si no coincide, responde `404`. SP18 no cambia. |
+| Orden sin cuenta (RN05 de web_2) | «Comprador anónimo» por orden | Equivale a `IdComprador` nulo (P15). No se crea ningún comprador. |
+
+Mensaje para web_2:
+
+> **Backend → web_2 (sobre su Definición, PR #13):**
+> Gracias por la Definición. Dos ajustes con lo que propusimos en P15–P19 (PR #12):
+> **1. Conteo diario (RN06):** coincide con nuestro `spReservas_ContarPorDia`, que cuenta las reservas creadas por día en hora de CDMX, sin importar su estado. Con eso queda respondida P18. También devolvemos cuántas se pagaron, por si les sirve después.
+> **2. Recuperar el boleto (RN05):** les pedimos que el comprador escriba **el folio y el código del boleto** (el código de 12 caracteres que va bajo el QR), no sólo el folio. El folio es consecutivo (`ORD-000123`, `ORD-000124`, …): con el folio solo, cualquiera podría ver los boletos de otra persona cambiando un número. El código es aleatorio y no se puede adivinar. El servicio busca la orden por el código y comprueba que el folio coincida. En la confirmación de compra conviene mostrar los dos datos juntos y sugerir guardarlos o tomar captura.
+> **3. Comprador anónimo:** no hace falta crear uno; la orden se guarda sin comprador (`IdComprador` nulo) y para ustedes funciona igual.
+> **Recordatorio:** para cargar sus datos seguimos necesitando QB6 (periodo; proponemos del 9 al 15 nov), QB7 (acomodo de las 80 butacas; proponemos 8 filas de 10) y QB8 (sinopsis, clasificación, duración e idioma de Spider-Man), antes del **sáb 7 nov**. Y revisen el aviso sobre `UQ_Funciones_IdEvento_FechaHoraInicio`: cada función queda ligada a su sala.
+> Detalle en `citas_backend/docs/BCK_RESPUESTAS_P15_P19.md` §11.
