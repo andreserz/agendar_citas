@@ -6,7 +6,7 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 
 - [x] Anteproyecto: documentar contexto, negocio, alcance, objetivos y restricciones. **Cerrado el 3 nov 2026. Los pendientes se trasladaron a las etapas siguientes.**
 - [ ] Propuesta: definir experiencia, identidad visual y dependencias conocidas. **Pendiente.**
-- [ ] Definición: acordar requisitos y reglas de negocio. **Pendiente.**
+- [ ] Definición: acordar requisitos y reglas de negocio. **En curso desde el 6 nov 2026: `docs/DEFINICION.md` en borrador, cerró folio del boleto (RN05) y conteo diario (RN06); falta validación del equipo y del cliente.**
 - [ ] Especificación: detallar interfaz, integración y criterios de aceptación. **Pendiente.**
 - [ ] Construcción: implementar la aplicación aprobada en `app/`. **Pendiente.**
 - [ ] Pruebas: validar los criterios acordados en `tests/`. **Pendiente.**
@@ -27,12 +27,22 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 - [x] Redactar la respuesta a P4 con el negocio y los datos del cineclub en `docs/RESPUESTA_P4.md`.
 - [x] Validar el anteproyecto con el equipo y aprobar el negocio. **Cerrado por el equipo el 3 nov 2026.**
 
+## Definición — abierta el 6 de noviembre de 2026
+
+- [x] Armar el `docs/DEFINICION.md` con objetivo, usuarios, oferta, RF, RN y estados, siguiendo el formato de `citas_web_1` y `citas_service`.
+- [x] Decidir la recuperación del boleto sin cuenta: **folio de la orden** (RN05); correo descartado porque no hay cuentas ni envíos.
+- [x] Definir el conteo diario (RN06): **reservas creadas por día calendario en `America/Mexico_City`, sin importar su estado final y sin desglose por sala**.
+- [x] Mapear cada requisito y regla de web_2 contra el servicio, marcando lo condicional (folio de orden, conteo diario, P10).
+- [ ] Validar la `DEFINICION.md` con el equipo y cerrarla.
+- [ ] Confirmar con el cliente que el folio y el conteo diario quedan como acordados; registrar la confirmación.
+- [ ] Confirmar con el servicio: consulta de orden por folio, órdenes sin comprador identificado y exposición del conteo diario (añadir a `ACUERDOS.md`).
+
 ## Pendientes trasladados
 
 ### Definición
 
-- [ ] Definir cómo se recupera un boleto sin cuenta (folio, código o correo).
-- [ ] Precisar el conteo diario: si incluye reservas vencidas y si se desglosa por sala o función.
+- [x] Definir cómo se recupera un boleto sin cuenta: folio de la orden. **Decidido el 6 nov 2026 (RN05 de `DEFINICION.md`).**
+- [x] Precisar el conteo diario: incluye reservas vencidas y liberadas (toda reserva creada del día), sin desglose por sala. **Decidido el 6 nov 2026 (RN06 de `DEFINICION.md`).**
 
 ### Coordinación con `citas_service`
 
