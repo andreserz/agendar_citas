@@ -1,0 +1,14 @@
+{
+  "name": "citas-web-1",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Frontend del Teatro Aquí nadie actúa normal — demo resiliente con datos locales y adaptador para citas_service.",
+  "scripts": {
+    "start": "node tools/serve.js",
+    "test": "node --test tests"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
