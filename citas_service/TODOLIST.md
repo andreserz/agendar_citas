@@ -45,3 +45,20 @@ Leyenda de estatus: ⬜ pendiente · 🔄 en progreso · ✅ hecho · 🚧 bloqu
 - [ ] Colección Postman/Swagger para los webs (L). **Pendiente.**
 - [ ] Adaptador a la BD real si el backend la entregó; si no, documentar el siguiente paso (D). **Pendiente. El 4 nov el backend terminó su etapa 1; lo más probable es entregar con datos en memoria y dejar el siguiente paso documentado en ADR-004.**
 - [ ] Ensayo de la demo y entrega el lun 9 nov (todos). **Pendiente. Se corre todo en una sola laptop (D12).**
+
+---
+
+## Plan de implementación — change `impl-service` (actualizado 18 nov 2026)
+
+Fuente: `openspec/changes/impl-service/` (`tasks.md` tiene el detalle). El contrato entre capas es `openspec/changes/impl-service/specs/contrato-entre-capas/spec.md`.
+
+Decisiones de este plan que corrigen la implementación actual: liberar una reserva vencida responde `410 RESERVA_VENCIDA` y no la libera; el límite de 10 es obligatorio para `web_1`; `web_2` compra sin token.
+
+- [ ] 1. Configuración: `JWT_SECRET`, `REPOSITORIO`, `SQL_*` y `.env.example` (tareas 1.1–1.3)
+- [ ] 2. Middlewares: `X-Sitio`, autenticación según sitio y traducción de errores (tareas 2.1–2.3)
+- [ ] 3. Rutas de `/api/v1` del contrato (tareas 3.1–3.7)
+- [ ] 4. Dominio en memoria: liberar vencida, límite obligatorio, sitios, JWT, UUID y semilla de web_2 (tareas 4.1–4.6)
+- [ ] 5. Adaptador SQL Server que llama solo a procedimientos (tareas 5.1–5.3)
+- [ ] 6. `openapi.yaml` a `1.0.0` y `redocly lint` sin errores (tareas 6.1–6.3)
+- [ ] 7. Pruebas de contrato, expiración, concurrencia, límite y pago (tareas 7.1–7.6)
+- [ ] 8. Entrega: `npm test`, `npm start` y prueba de `web_1` en modo `api` (tareas 8.1–8.3)

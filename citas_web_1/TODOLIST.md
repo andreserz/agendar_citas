@@ -38,3 +38,17 @@
 - [ ] Contrato definitivo de `citas_service` (autenticación, disponibilidad, reservas, pagos y QR).
 - [ ] Confirmar zona horaria, excepciones de calendario, accesibilidad física y política de cancelación.
 - [ ] Sustituir la demo por la API cuando el servicio esté operativo; basta cambiar `apiBaseUrl` y `modo` en `app/config.js`.
+
+---
+
+## Plan de implementación — change `impl-web1` (actualizado 18 nov 2026)
+
+Fuente: `openspec/changes/impl-web1/` (`tasks.md` tiene el detalle). El contrato entre capas es `openspec/changes/impl-web1/specs/contrato-entre-capas/spec.md`.
+
+- [ ] 1. Configuración contra el requisito de integración (tareas 1.1–1.2)
+- [ ] 2. Cliente de API: rutas, `X-Sitio`, `Authorization` por ruta y errores del contrato (tareas 2.1–2.4)
+- [ ] 3. Fachada de datos: detección con `/salud`, modo `api` sin respaldo y aviso visible de demo (tareas 3.1–3.4)
+- [ ] 4. Demo con la misma semilla del servicio (tareas 4.1–4.3)
+- [ ] 5. Documentación: especificación §4 y §8, y encabezado de `AGENTS.md` (tareas 5.1–5.2)
+- [ ] 6. Pruebas: 10 pruebas actuales, cliente contra mock del contrato, modo y recorrido en navegador (tareas 6.1–6.4)
+- [ ] 7. Entrega: avance registrado aquí (tarea 7.1)

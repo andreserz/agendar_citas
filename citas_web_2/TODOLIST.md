@@ -59,3 +59,17 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 
 - [ ] Definir el formato del código de boleto para el QR (PR7).
 - [ ] Redactar los criterios de aceptación.
+
+---
+
+## Plan de implementación — change `impl-web2` (actualizado 18 nov 2026)
+
+Fuente: `openspec/changes/impl-web2/` (`tasks.md` tiene el detalle). El contrato entre capas es `openspec/changes/impl-web2/specs/contrato-entre-capas/spec.md`. No hace falta acordar nada con otros equipos: la API, los códigos y la semilla vienen del contrato.
+
+- [ ] 1. Documentación previa: Propuesta (paleta y tipografías), Definición (horarios de 30 funciones, «Por confirmar») y Especificación (tareas 1.1–1.3)
+- [ ] 2. Configuración y servidor estático en `5502` (tareas 2.1–2.2)
+- [ ] 3. Cliente de API con `X-Sitio: web_2` y sin `Authorization` (tareas 3.1–3.3)
+- [ ] 4. Pantallas RF01 a RF11: cartelera, mapa, resumen, rechazo completo, checkout, confirmación, folio y conteo diario (tareas 4.1–4.8)
+- [ ] 5. Demo con la semilla de web_2 y aviso de modo (tareas 5.1–5.2)
+- [ ] 6. Pruebas de dominio, cliente, recorrido en navegador y 390 px (tareas 6.1–6.4)
+- [ ] 7. Entrega: avance registrado aquí y corrección del texto que dice «cerró» la Definición (tarea 7.1)
