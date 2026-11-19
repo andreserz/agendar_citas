@@ -1,5 +1,7 @@
 'use strict';
 
+const crypto = require('crypto');
+
 const { ReservasRepo } = require('../interfaces');
 const { CODIGOS, ErrorRepositorio } = require('../errores');
 const {
@@ -24,11 +26,13 @@ class ReservasRepoMemoria extends ReservasRepo {
   }
 
   // Sin `await` en todo el cuerpo: verificar y apartar ocurre de forma atómica.
-  async crear({ sitio, compradorId, funcionId, asientoIds, ahora, expiraEn, limitePorComprador } = {}) {
+  async crear(datos = {}) {
+    const { sitio, compradorId, funcionId, asientoIds, ahora, expiraEn, limitePorComprador } = datos;
     exigirFecha(ahora, 'ahora');
     exigirFecha(expiraEn, 'expiraEn');
     exigirTexto(sitio, 'sitio');
     exigirTexto(compradorId, 'compradorId');
+    exigirLimite(datos, limitePorComprador);
     if (expiraEn <= ahora) {
       throw new ErrorRepositorio(CODIGOS.SOLICITUD_INVALIDA, 'expiraEn debe ser posterior a ahora.');
     }
@@ -70,14 +74,15 @@ class ReservasRepoMemoria extends ReservasRepo {
       );
     }
 
-    // Límite por persona y función, validado en la misma operación (PR4, BCK RN09).
-    if (limitePorComprador !== undefined && limitePorComprador !== null) {
+    // Límite por persona y función. La capa de API siempre decide el valor: 10 para los
+    // sitios con RequiereComprador = 1 y `null` para los que no lo aplican (RN04, D23).
+    if (limitePorComprador !== null) {
       const actuales = this.#contar(compradorId, funcionId, ahora);
       if (actuales + asientoIds.length > limitePorComprador) {
         throw new ErrorRepositorio(
           CODIGOS.LIMITE_EXCEDIDO,
           `Supera el máximo de ${limitePorComprador} asientos por persona y función.`,
-          { limite: limitePorComprador, actuales, solicitados: asientoIds.length }
+          { maximo: limitePorComprador, actuales, solicitados: asientoIds.length }
         );
       }
     }
@@ -93,7 +98,8 @@ class ReservasRepoMemoria extends ReservasRepo {
     });
 
     const reserva = {
-      id: idUnico('res', this.almacen.reservas),
+      // UUID v4 no adivinable: es el único secreto de una reserva de web_2 (design §4).
+      id: crypto.randomUUID(),
       sitio,
       compradorId,
       funcionId,
@@ -117,10 +123,16 @@ class ReservasRepoMemoria extends ReservasRepo {
     return vistaReserva(reserva, ahora);
   }
 
-  async obtener(reservaId, ahora) {
+  /**
+   * Devuelve la reserva, o `null` si no existe o si se indica un `sitio` distinto al suyo
+   * (RN09: una reserva de web_2 no se revela a web_1).
+   */
+  async obtener(reservaId, ahora, sitio) {
     exigirFecha(ahora, 'ahora');
     const reserva = this.almacen.reservas.get(reservaId);
-    return reserva ? vistaReserva(reserva, ahora) : null;
+    if (!reserva) return null;
+    if (sitio !== undefined && reserva.sitio !== sitio) return null;
+    return vistaReserva(reserva, ahora);
   }
 
   async listarActivasDeComprador(compradorId, ahora) {
@@ -145,8 +157,13 @@ class ReservasRepoMemoria extends ReservasRepo {
     if (reserva.estado === 'liberada') {
       throw new ErrorRepositorio(CODIGOS.RESERVA_LIBERADA, 'La reserva ya fue liberada.');
     }
+    // Vencida: no se libera; el estado sigue siendo vencido (CA-17, D23).
+    if (estadoReserva(reserva, ahora) === 'vencida') {
+      throw new ErrorRepositorio(CODIGOS.RESERVA_VENCIDA, 'La reserva venció.', {
+        expiraEn: new Date(reserva.expiraEn),
+      });
+    }
 
-    // Activa, vencida o no (BCK RN12).
     reserva.estado = 'liberada';
     for (const { asientoId } of reserva.asientos) {
       const slot = obtenerSlot(this.almacen, reserva.funcionId, asientoId);
@@ -193,6 +210,20 @@ function validarListaAsientos(asientoIds) {
       CODIGOS.SOLICITUD_INVALIDA,
       `La lista de asientos debe tener de 1 a ${MAX_ASIENTOS_POR_RESERVA} asientos sin repetir.`
     );
+  }
+}
+
+/**
+ * `limitePorComprador` ya no es opcional: la capa de API decide el valor según el sitio
+ * (10 si `RequiereComprador = 1`, `null` si no aplica) y el repositorio no lo omite (RN04).
+ */
+function exigirLimite(datos, limitePorComprador) {
+  if (!Object.prototype.hasOwnProperty.call(datos, 'limitePorComprador')) {
+    throw new TypeError('limitePorComprador es obligatorio: usa un entero positivo o null.');
+  }
+  if (limitePorComprador === null) return;
+  if (!Number.isInteger(limitePorComprador) || limitePorComprador < 1) {
+    throw new TypeError('limitePorComprador debe ser un entero positivo o null.');
   }
 }
 

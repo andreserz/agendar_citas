@@ -48,8 +48,18 @@ function probarContratoRepos(nombre, crearRepos) {
         asientoIds,
         ahora: T0,
         expiraEn: en(5),
+        limitePorComprador: null,
         ...extra,
       });
+
+    const datosBase = () => ({
+      sitio: 'web_1',
+      compradorId: 'cmp-ana',
+      funcionId: FUNCION,
+      asientoIds: ['A1'],
+      ahora: T0,
+      expiraEn: en(5),
+    });
 
     const estadosDe = async (funcionId, ahora, ids) => {
       const asientos = await asientosRepo.listarAsientos(funcionId, ahora);
@@ -145,7 +155,7 @@ function probarContratoRepos(nombre, crearRepos) {
             { asientoId: 'J1', etiqueta: 'J1', zonaId: 'balcon', precio: 300 },
           ],
         });
-        expect(reserva.id).toMatch(/^res-/);
+        expect(reserva.id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
         expect(await estadosDe(FUNCION, en(1), ['A1', 'A2'])).toEqual({ A1: 'apartado', A2: 'disponible' });
       });
 
@@ -210,10 +220,26 @@ function probarContratoRepos(nombre, crearRepos) {
           apartar(['B1', 'B2', 'B3', 'B4', 'B5'], { limitePorComprador: 10, sitio: 'web_2' }),
           CODIGOS.LIMITE_EXCEDIDO
         );
-        expect(error.detalles).toEqual({ limite: 10, actuales: 6, solicitados: 5 });
+        expect(error.detalles).toEqual({ maximo: 10, actuales: 6, solicitados: 5 });
         // Otro comprador no se ve afectado; tampoco la misma persona en otra función.
         await apartar(['B1', 'B2', 'B3', 'B4', 'B5'], { limitePorComprador: 10, compradorId: 'cmp-beto' });
         await apartar(['B1', 'B2', 'B3', 'B4', 'B5'], { limitePorComprador: 10, funcionId: OTRA_FUNCION });
+      });
+
+      test('exige limitePorComprador: la API decide el valor o null', async () => {
+        const sinLimite = { ...datosBase(), limitePorComprador: undefined };
+        delete sinLimite.limitePorComprador;
+        await expect(reservasRepo.crear(sinLimite)).rejects.toThrow(/limitePorComprador es obligatorio/);
+        await expect(
+          reservasRepo.crear({ ...datosBase(), limitePorComprador: 'diez' })
+        ).rejects.toThrow(/entero positivo o null/);
+        // `null` significa «este sitio no tiene límite»: se puede pasar de 10 por comprador.
+        await apartar(['A1', 'A2', 'A3', 'A4', 'A5', 'A6']);
+        const sinTope = await apartar(['B1', 'B2', 'B3', 'B4', 'B5']);
+        expect(sinTope.asientos).toHaveLength(5);
+        expect(await reservasRepo.contarAsientosDeComprador({
+          compradorId: 'cmp-ana', funcionId: FUNCION, ahora: T0,
+        })).toBe(11);
       });
     });
 
@@ -223,6 +249,12 @@ function probarContratoRepos(nombre, crearRepos) {
         expect((await reservasRepo.obtener(id, en(4))).estado).toBe('activa');
         expect((await reservasRepo.obtener(id, en(5))).estado).toBe('vencida');
         expect(await reservasRepo.obtener('res-no-existe', T0)).toBeNull();
+      });
+
+      test('obtener oculta la reserva de otro sitio (RN09)', async () => {
+        const { id } = await apartar(['A1']);
+        expect((await reservasRepo.obtener(id, T0, 'web_1')).id).toBe(id);
+        expect(await reservasRepo.obtener(id, T0, 'web_2')).toBeNull();
       });
 
       test('lista sólo las reservas activas y vigentes del comprador', async () => {
@@ -257,10 +289,17 @@ function probarContratoRepos(nombre, crearRepos) {
         await fallaCon(reservasRepo.liberar('res-no-existe', en(2)), CODIGOS.NO_ENCONTRADO);
       });
 
-      test('liberar una reserva vencida no quita el asiento a quien lo apartó después', async () => {
+      test('liberar una reserva vencida responde RESERVA_VENCIDA y no la libera', async () => {
+        const vieja = await apartar(['A1']);
+        await fallaCon(reservasRepo.liberar(vieja.id, en(7)), CODIGOS.RESERVA_VENCIDA);
+        // Sigue vencida (no pasó a liberada).
+        expect((await reservasRepo.obtener(vieja.id, en(7))).estado).toBe('vencida');
+      });
+
+      test('liberar una vencida no quita el asiento a quien lo apartó después', async () => {
         const vieja = await apartar(['A1']);
         await apartar(['A1'], { compradorId: 'cmp-beto', ahora: en(6), expiraEn: en(11) });
-        await reservasRepo.liberar(vieja.id, en(7));
+        await fallaCon(reservasRepo.liberar(vieja.id, en(7)), CODIGOS.RESERVA_VENCIDA);
         expect(await estadosDe(FUNCION, en(7), ['A1'])).toEqual({ A1: 'apartado' });
       });
 

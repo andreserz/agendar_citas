@@ -27,7 +27,6 @@ class ServicioReservas {
    * @param {number} [opciones.duracionSegundos]
    * @param {number} [opciones.limitePorComprador]
    * @param {string[]} [opciones.sitiosQueExigenComprador]
-   * @param {boolean} [opciones.permitirLiberarVencidas] hoy `false` (CA-17); D-04 propone `true`
    */
   constructor({
     repos,
@@ -35,7 +34,6 @@ class ServicioReservas {
     duracionSegundos = DURACION_POR_DEFECTO,
     limitePorComprador = LIMITE_POR_DEFECTO,
     sitiosQueExigenComprador = SITIOS_QUE_EXIGEN_COMPRADOR,
-    permitirLiberarVencidas = false,
   } = {}) {
     if (!repos || !repos.reservasRepo || !repos.ordenesRepo) {
       throw new TypeError('ServicioReservas necesita reservasRepo y ordenesRepo.');
@@ -48,7 +46,6 @@ class ServicioReservas {
     this.duracionSegundos = duracionSegundos;
     this.limitePorComprador = limitePorComprador;
     this.sitiosQueExigenComprador = sitiosQueExigenComprador;
-    this.permitirLiberarVencidas = permitirLiberarVencidas;
   }
 
   /**
@@ -61,7 +58,8 @@ class ServicioReservas {
 
     const ahora = this.reloj.ahora();
     const expiraEn = new Date(ahora.getTime() + this.duracionSegundos * 1000);
-    const limite = this.#hayComprador(compradorId) ? this.limitePorComprador : undefined;
+    // El repositorio exige el valor: `null` cuando el sitio no tiene límite (RN04).
+    const limite = this.#hayComprador(compradorId) ? this.limitePorComprador : null;
 
     try {
       const reserva = await this.repos.reservasRepo.crear({
@@ -80,14 +78,14 @@ class ServicioReservas {
   }
 
   /**
-   * Consulta una reserva del comprador (RF05). La de otro comprador responde
-   * `NO_ENCONTRADO` para no revelar que existe (CA-14).
+   * Consulta una reserva del comprador o del sitio (RF05). La de otro comprador o de otro
+   * sitio responde `NO_ENCONTRADO` para no revelar que existe (CA-14, RN09).
    * @param {string} reservaId
-   * @param {{ compradorId?: string }} [datos]
+   * @param {{ compradorId?: string, sitio?: string }} [datos]
    */
-  async obtener(reservaId, { compradorId } = {}) {
+  async obtener(reservaId, { compradorId, sitio } = {}) {
     const ahora = this.reloj.ahora();
-    const reserva = await this.repos.reservasRepo.obtener(reservaId, ahora);
+    const reserva = await this.repos.reservasRepo.obtener(reservaId, ahora, sitio);
     this.#exigirPropietario(reserva, compradorId);
     return this.#vista(reserva, ahora);
   }
@@ -101,20 +99,16 @@ class ServicioReservas {
   }
 
   /**
-   * Libera una reserva activa del comprador (RF06, CA-16 a CA-18).
+   * Libera una reserva activa y vigente del comprador o del sitio (RF06, CA-16 a CA-18).
+   * Una reserva vencida responde `410` y no se libera (CA-17).
    * @param {string} reservaId
    * @param {string} [compradorId]
+   * @param {{ sitio?: string }} [datos]
    */
-  async liberar(reservaId, compradorId) {
+  async liberar(reservaId, compradorId, { sitio } = {}) {
     const ahora = this.reloj.ahora();
-    const reserva = await this.repos.reservasRepo.obtener(reservaId, ahora);
+    const reserva = await this.repos.reservasRepo.obtener(reservaId, ahora, sitio);
     this.#exigirPropietario(reserva, compradorId);
-
-    if (!this.permitirLiberarVencidas && reserva.estado === 'vencida') {
-      throw new ErrorRepositorio(CODIGOS.RESERVA_VENCIDA, 'La reserva venció.', {
-        expiraEn: reserva.expiraEn,
-      });
-    }
 
     try {
       const liberada = await this.repos.reservasRepo.liberar(reservaId, ahora);
@@ -132,13 +126,13 @@ class ServicioReservas {
    *
    * @param {string} reservaId
    * @param {Object} datosTarjeta
-   * @param {{ compradorId?: string }} [datos]
+   * @param {{ compradorId?: string, sitio?: string }} [datos]
    */
-  async pagar(reservaId, datosTarjeta, { compradorId } = {}) {
+  async pagar(reservaId, datosTarjeta, { compradorId, sitio } = {}) {
     const ahora = this.reloj.ahora();
     const { resultado, ultimosDigitos } = validarTarjeta(datosTarjeta, ahora);
 
-    const reserva = await this.repos.reservasRepo.obtener(reservaId, ahora);
+    const reserva = await this.repos.reservasRepo.obtener(reservaId, ahora, sitio);
     this.#exigirPropietario(reserva, compradorId);
 
     try {

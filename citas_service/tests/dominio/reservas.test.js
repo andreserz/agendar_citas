@@ -232,14 +232,16 @@ describe('Liberar (RF06)', () => {
     expect(error.codigo).toBe('RESERVA_VENCIDA');
   });
 
-  test('D-04: la opción permitirLiberarVencidas libera en lugar de fallar', async () => {
-    const { reloj, servicio } = entorno({ permitirLiberarVencidas: true });
+  test('RN09: una reserva de web_2 no se revela a web_1', async () => {
+    const { repos, reloj, servicio } = entorno();
     const reserva = await apartar(servicio);
-    reloj.avanzarSegundos(301);
 
-    const liberada = await servicio.liberar(reserva.id, ANA);
+    const desdeOtroSitio = await servicio.obtener(reserva.id, { sitio: 'web_2' }).catch((e) => e);
+    expect(desdeOtroSitio.codigo).toBe('NO_ENCONTRADO');
 
-    expect(liberada.estado).toBe('liberada');
+    const desdeSuSitio = await servicio.obtener(reserva.id, { sitio: 'web_1' });
+    expect(desdeSuSitio.id).toBe(reserva.id);
+    expect(desdeSuSitio.sitio).toBe('web_1');
   });
 
   test('CA-18: liberar una pagada responde RESERVA_PAGADA', async () => {
