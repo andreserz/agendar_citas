@@ -1,5 +1,6 @@
 'use strict';
 
+const crypto = require('crypto');
 const path = require('path');
 
 // Valores por defecto acordados como propuesta (PR8 y PR9). Se sobrescriben con variables de entorno.
@@ -28,17 +29,46 @@ function leerOrigenes(valor) {
     .filter(Boolean);
 }
 
+function leerTexto(valor) {
+  if (valor === undefined) return undefined;
+  const texto = valor.trim();
+  return texto === '' ? undefined : texto;
+}
+
+/**
+ * Secreto para firmar los JWT (Requirement: Dueño de la autenticación).
+ * Fuera de `test` es obligatorio. En `test`, si falta, se genera uno aleatorio por proceso
+ * para no escribir ningún secreto en el código.
+ */
+function leerJwtSecret(valor, entorno) {
+  const secreto = leerTexto(valor);
+  if (secreto !== undefined) return secreto;
+  if (entorno === 'test') return crypto.randomBytes(32).toString('hex');
+  throw new Error(
+    `Falta JWT_SECRET: el servicio no arranca sin él en el entorno "${entorno}". Defínelo en las variables de entorno.`
+  );
+}
+
 /**
  * Construye la configuración a partir de las variables de entorno.
  * Recibe `env` como parámetro para poder probarla sin tocar `process.env`.
  */
 function cargarConfig(env = process.env) {
+  const entorno = env.NODE_ENV || 'development';
   return Object.freeze({
-    entorno: env.NODE_ENV || 'development',
+    entorno,
     puerto: leerPuerto(env.PORT),
     corsOrigenes: Object.freeze(leerOrigenes(env.CORS_ORIGINS)),
-    // Implementación de repositorios (ADR-002): `memoria` hasta que exista el adaptador (ADR-004).
+    // Implementación de repositorios (ADR-002): `memoria` (por defecto) o `sql`.
     repositorio: (env.REPOSITORIO || 'memoria').trim().toLowerCase(),
+    jwtSecret: leerJwtSecret(env.JWT_SECRET, entorno),
+    // Conexión a SQL Server para REPOSITORIO=sql (design §6). Nunca se escriben en el código.
+    sql: Object.freeze({
+      servidor: leerTexto(env.SQL_SERVER),
+      baseDatos: leerTexto(env.SQL_DATABASE),
+      usuario: leerTexto(env.SQL_USER),
+      contrasena: leerTexto(env.SQL_PASSWORD),
+    }),
     rutaBase: '/api/v1',
     rutaSpec: path.join(__dirname, '..', 'docs', 'specs', 'openapi.yaml'),
   });
