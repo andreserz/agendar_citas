@@ -13,7 +13,7 @@ Estado: propuesto por el equipo de servicio; actualizado el 18 nov 2026 con Open
 1. **Spec primero.** `docs/specs/openapi.yaml` es la fuente de verdad. Los webs pueden trabajar contra un mock generado de ese archivo desde el viernes.
 2. **Patrón repositorio.** La lógica depende de interfaces (`AsientosRepo`, `ReservasRepo`, `OrdenesRepo`). Hoy se implementa la versión en memoria. Cuando el backend decida (SQL directo o su propia API), se agrega el adaptador sin tocar la lógica ni las pruebas.
 3. **La regla de 5 minutos vive en el servicio.** Cada reserva guarda `expiraEn = ahora + 5 min`. El estado de un asiento se calcula así: comprado → apartado (si `expiraEn > ahora`) → disponible. Se usa expiración perezosa al leer y, opcionalmente, un barrido periódico.
-4. **Contrato de datos hacia el backend.** `docs/specs/contrato-datos-backend.md` dice qué entidades, campos y garantías necesitamos. El backend responde en el chat y los ajustes se registran en `docs/specs/ACUERDOS.md`.
+4. **Contrato de datos hacia el backend.** `docs/specs/contrato-datos-backend.md` dice qué entidades, campos y garantías necesitamos. El backend responde por escrito y los ajustes se registran en `docs/specs/ACUERDOS.md`.
 
 ## ¿Quién escribe primero las reglas?
 
@@ -53,21 +53,21 @@ Endpoints borrador (genéricos, porque web_2 puede ser otro negocio):
 
 ## Comunicación entre equipos
 
-El repositorio pertenece al instructor, así que no usamos issues ni etiquetas de GitHub. Usamos dos piezas:
+El repositorio pertenece al instructor, así que no usamos issues ni etiquetas de GitHub. Desde el 18 nov 2026 ya no usamos el chat entre equipos (D26 de `ACUERDOS.md`). Usamos dos piezas:
 
-1. **Chat del grupo** (WhatsApp) para conversar y preguntar rápido.
+1. **Changes de OpenSpec** (`openspec/changes/`) para proponer cualquier cambio de rutas, formas de datos o códigos de error (D25).
 2. **`docs/specs/ACUERDOS.md`** como registro oficial. Tiene tres secciones: Preguntas abiertas, Propuestas del servicio y Decisiones acordadas.
 
 **Flujo:**
-1. Se pregunta en el chat.
-2. Cuando hay respuesta, el líder de contrato la copia en `ACUERDOS.md` y hace commit.
-3. Si una decisión cambia, se edita su fila y se avisa en el chat.
+1. Una pregunta para otro equipo se registra en `ACUERDOS.md` como `P#`; un cambio de contrato se propone con un change de OpenSpec.
+2. Cuando hay respuesta, el líder de contrato la pasa a Decisiones acordadas y hace commit.
+3. Si una decisión cambia, se edita su fila y se actualiza la fecha.
 
-El chat no lo leen los agentes; el archivo sí. Lo que no esté en `ACUERDOS.md` no se considera acordado.
+Los agentes leen ambos. Lo que no esté en `ACUERDOS.md` o en el contrato de OpenSpec no se considera acordado.
 
-**Nadie más necesita saber git para comunicarse.** Los demás equipos y compañeros solo escriben en el chat. El líder de contrato es la única persona que edita `ACUERDOS.md` y hace commit. Cuando hay una actualización importante, comparte en el chat una captura o el texto del archivo.
+El chat del grupo queda solo para que el equipo service se organice (avances, olas, dudas internas). El líder de contrato es la única persona del equipo que edita `ACUERDOS.md` y hace commit.
 
-- **Cambios de contrato:** se acuerdan en el chat con el equipo afectado, se registran en `ACUERDOS.md` y después se actualiza `openapi.yaml`.
+- **Cambios de contrato:** se proponen con un change de OpenSpec que actualiza el contrato; después se actualiza `openapi.yaml` (D25).
 - **Sincronía:** 15 minutos diarios entre un enlace por equipo, de jueves a domingo.
 - **Fechas propuestas al backend** (se cambiaron el 4 nov; la BD ya se confirmó: SQL Server con procedimientos almacenados, D4 y D5):
   - Viernes 6 nov: responder P3, P6 y P11–P13.
@@ -171,7 +171,7 @@ Se cambió el 18 nov: la entrega pasa al **lun 23 de noviembre de 2026** y se tr
 
 ## Propuesta para los demás equipos
 
-No modificamos sus carpetas; lo proponemos en el chat:
+No modificamos sus carpetas; lo proponemos en `ACUERDOS.md` o con un change de OpenSpec:
 
 1. Que todos consulten `citas_service/docs/specs/ACUERDOS.md` y referencien ese archivo en su propio `AGENTS.md`, para que sus agentes también respeten las decisiones.
 

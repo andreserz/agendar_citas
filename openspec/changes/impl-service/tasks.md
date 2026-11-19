@@ -35,9 +35,9 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 - [ ] 5.3 Pruebas de integración del adaptador marcadas para ejecutarse solo con `CitasBD` disponible.
 
 ## 6. Contrato OpenAPI
-- [ ] 6.1 Actualizar `openapi.yaml` a `1.0.0` con todas las rutas, formas y errores del contrato (Requirement: OpenAPI 1.0.0).
-- [ ] 6.2 Quitar `resultadoSimulado` y los ejemplos de formato anterior.
-- [ ] 6.3 `redocly lint` sin errores.
+- [x] 6.1 Actualizar `openapi.yaml` a `1.0.0` con todas las rutas, formas y errores del contrato (Requirement: OpenAPI 1.0.0).
+- [x] 6.2 Quitar `resultadoSimulado` y los ejemplos de formato anterior.
+- [x] 6.3 `redocly lint` sin errores.
 
 ## 7. Pruebas
 - [ ] 7.1 Pruebas de contrato por ruta con Supertest (Requirement: Pruebas de contrato).

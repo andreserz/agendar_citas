@@ -1,53 +1,77 @@
 openapi: 3.0.3
 info:
   title: citas_service — API de reserva y compra de boletos
-  version: 0.1.0-borrador
+  version: 1.0.0
   description: |
-    **Borrador v0.1 para revisión** de `citas_web_1`, `citas_web_2` y el equipo de servicio.
-    Reglas de negocio: `docs/DEFINICION.md`. Acuerdos y preguntas: `docs/specs/ACUERDOS.md`.
+    Contrato `1.0.0` de `citas_service` para `citas_web_1` y `citas_web_2`.
+    Fuente: capacidad `contrato-entre-capas` del change de OpenSpec `impl-service`.
+    Un cambio en rutas, formas o códigos de error requiere un change nuevo de OpenSpec;
+    un cambio incompatible se publica como `/api/v2`.
 
-    Convenciones de este borrador:
-    - `x-estado: borrador` marca operaciones que dependen de preguntas abiertas
-      (indicadas en `x-depende-de`). Pueden cambiar sin aviso previo.
-    - Todas las fechas van en ISO 8601 con desplazamiento explícito. La zona horaria
-      de las funciones está pendiente (P8); los ejemplos usan hora de Ciudad de México (-06:00).
-    - Los montos se expresan en unidades de la moneda (pesos), acompañados de `moneda`.
-    - Cada petición identifica al sitio con el encabezado `X-Sitio` (propuesta PR5).
-    - Las operaciones del comprador usan un token Bearer. Quién emite el token depende de P5;
-      en este borrador lo emite `/auth/login`.
+    Convenciones:
+    - Toda petición a `/api/v1`, excepto `GET /salud`, incluye `X-Sitio` con `web_1` o `web_2`.
+      Si falta o no es válido → `400 SOLICITUD_INVALIDA` con `detalles.campo = "X-Sitio"`.
+    - Identidad por sitio: `web_1` (`RequiereComprador = 1`) exige `Authorization: Bearer <token>`
+      en las operaciones de comprador; `web_2` (`RequiereComprador = 0`) no usa token y sus
+      reservas se identifican por un `id` UUID v4. En la tabla de rutas esto se marca «Según sitio».
+    - Fechas en ISO 8601 con desplazamiento explícito de Ciudad de México, por ejemplo
+      `2026-11-12T19:00:00-06:00`.
+    - Montos en unidades de la moneda (pesos), acompañados de `moneda` (`MXN` en ambos sitios).
+    - Los campos opcionales se omiten cuando no aplican; no se envían como `null`.
 
-    Errores: todas las respuestas de error usan el esquema `Error`.
-    `409` = conflicto de disponibilidad o de estado; `410` = la reserva ya no está vigente (PR3).
+    Errores: todas las respuestas de error usan el esquema `Error`, con `mensaje` en español.
+    `409` = conflicto de disponibilidad o de estado; `410` = la reserva ya no está vigente.
   contact:
     name: Equipo citas_service (líder de contrato)
 servers:
   - url: http://localhost:3000/api/v1
-    description: Local (PR8, pendiente de confirmar)
+    description: Local
 tags:
+  - name: Salud
+    description: Estado del servicio. No requiere `X-Sitio`.
   - name: Catálogo
-    description: Eventos, funciones y asientos. No requiere comprador.
+    description: Eventos, funciones y asientos del sitio. No requiere comprador.
   - name: Reservas
     description: Apartado de asientos por 5 minutos.
   - name: Pagos
-    description: Pago simulado de una reserva.
+    description: Pago simulado de una reserva con tarjetas de prueba.
   - name: Órdenes
     description: Compras concluidas y boletos.
+  - name: Reportes
+    description: Conteos para el sitio.
   - name: Autenticación
-    description: Cuentas de comprador. Depende de P5.
+    description: Cuentas de comprador (solo las usa `web_1`).
 
 security:
   - sitio: []
 
 paths:
+  /salud:
+    get:
+      tags: [Salud]
+      operationId: obtenerSalud
+      summary: Estado del servicio
+      description: No requiere `X-Sitio`.
+      security: []
+      responses:
+        '200':
+          description: El servicio responde.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Salud' }
+              example:
+                estado: ok
+                repositorio: memoria
+
   /eventos:
     get:
       tags: [Catálogo]
       operationId: listarEventos
-      summary: Listar eventos
-      description: RF01.
+      summary: Listar eventos del sitio
+      description: Solo eventos con `sitio` igual a `X-Sitio`.
       responses:
         '200':
-          description: Eventos disponibles para el sitio que hace la petición.
+          description: Eventos del sitio que hace la petición.
           content:
             application/json:
               schema:
@@ -58,6 +82,7 @@ paths:
                     type: array
                     items: { $ref: '#/components/schemas/Evento' }
         '400': { $ref: '#/components/responses/SolicitudInvalida' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /eventos/{eventoId}:
     parameters:
@@ -66,14 +91,16 @@ paths:
       tags: [Catálogo]
       operationId: obtenerEvento
       summary: Obtener un evento
-      description: RF01.
+      description: Un evento de otro sitio responde `404`.
       responses:
         '200':
           description: Evento.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Evento' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /eventos/{eventoId}/funciones:
     parameters:
@@ -82,7 +109,7 @@ paths:
       tags: [Catálogo]
       operationId: listarFunciones
       summary: Listar funciones de un evento
-      description: RF02. Ordenadas por fecha de inicio.
+      description: Funciones activas ordenadas por `inicio`.
       responses:
         '200':
           description: Funciones del evento.
@@ -95,7 +122,9 @@ paths:
                   funciones:
                     type: array
                     items: { $ref: '#/components/schemas/Funcion' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /funciones/{funcionId}:
     parameters:
@@ -104,14 +133,16 @@ paths:
       tags: [Catálogo]
       operationId: obtenerFuncion
       summary: Obtener una función
-      description: RF02.
+      description: Función con sus zonas y precios.
       responses:
         '200':
           description: Función.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Funcion' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /funciones/{funcionId}/asientos:
     parameters:
@@ -121,43 +152,62 @@ paths:
       operationId: listarAsientos
       summary: Mapa de asientos de una función
       description: |
-        RF03. Devuelve zonas con precio y cada asiento con su estado calculado al momento
-        de la consulta (RN01, ADR-003). No revela quién aparta o compra un asiento.
+        El `estado` de cada asiento se calcula con la hora del servidor, en este orden:
+        1. Tiene boleto → `comprado`.
+        2. Tiene una reserva `activa` con `expiraEn > ahora` → `apartado`.
+        3. En otro caso → `disponible`.
+
+        La comparación es estricta: en `ahora = expiraEn` el asiento está `disponible`.
+        La respuesta no revela quién aparta o compra un asiento.
       responses:
         '200':
           description: Zonas y asientos de la función.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/MapaAsientos' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /reservas:
     post:
       tags: [Reservas]
       operationId: crearReserva
-      summary: Apartar asientos
+      summary: Apartar asientos (5 minutos)
       description: |
-        RF04, RN01–RN04, RN08, RN11. Crea una reserva que vence 5 minutos después.
-        Todos los asientos deben ser de la misma función. Si alguno no está disponible
-        se rechaza toda la reserva con `409` y se indican los asientos en `detalles`
-        (propuesta, pendiente de P9).
+        «Según sitio»: `web_1` exige token; `web_2` no.
+        Validaciones en este orden:
+        1. Formato: entre 1 y 10 asientos sin repetidos → `400 SOLICITUD_INVALIDA`.
+        2. Identidad según sitio → `401 NO_AUTENTICADO`.
+        3. Existencia de función y asientos → `404 NO_ENCONTRADO`; asientos de funciones
+           distintas → `400 SOLICITUD_INVALIDA`.
+        4. Límite (solo `web_1`): comprados + apartados vigentes + solicitados ≤ 10
+           → `422 LIMITE_EXCEDIDO`.
+        5. Disponibilidad → `409 ASIENTO_NO_DISPONIBLE` con todos los asientos en conflicto;
+           ninguno queda apartado.
+        6. Creación → `201` con `Location`.
+
+        `expiraEn = creadaEn + 300 s` con el reloj del servicio. El precio de cada asiento se
+        toma de su zona en la función al apartar y no cambia durante la vigencia. La operación
+        es atómica.
       security:
         - sitio: []
           comprador: []
+        - sitio: []
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: '#/components/schemas/NuevaReserva' }
             example:
-              funcionId: fun-2026-10-29-1900
-              asientoIds: [fun-2026-10-29-1900-A7, fun-2026-10-29-1900-A8]
+              funcionId: fun-2026-11-12-1900
+              asientoIds: [A7, A8]
       responses:
         '201':
           description: Reserva creada.
           headers:
             Location:
-              description: URL de la reserva creada.
+              description: URL de la reserva creada (`/api/v1/reservas/{id}`).
               schema: { type: string }
           content:
             application/json:
@@ -166,7 +216,7 @@ paths:
         '401': { $ref: '#/components/responses/NoAutenticado' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
         '409':
-          description: Uno o más asientos ya no están disponibles. `codigo` = `ASIENTO_NO_DISPONIBLE`.
+          description: Uno o más asientos no están disponibles. `codigo` = `ASIENTO_NO_DISPONIBLE`.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
@@ -175,29 +225,28 @@ paths:
                   codigo: ASIENTO_NO_DISPONIBLE
                   mensaje: Algunos asientos ya no están disponibles.
                   detalles:
-                    asientoIds: [fun-2026-10-29-1900-A8]
+                    asientoIds: [A8]
         '422':
           description: |
-            Se superaría el máximo de 10 asientos por persona y función (RN04).
-            `codigo` = `LIMITE_EXCEDIDO`. Código HTTP propuesto, pendiente de confirmar (PR4).
+            Se superaría el máximo de 10 asientos por comprador y función. Solo aplica a sitios
+            con `RequiereComprador = 1` (`web_1`). `codigo` = `LIMITE_EXCEDIDO`.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
               example:
                 error:
                   codigo: LIMITE_EXCEDIDO
-                  mensaje: Sólo puedes tener 10 asientos en esta función.
+                  mensaje: Solo puedes tener 10 asientos en esta función.
                   detalles:
                     maximo: 10
                     actuales: 9
                     solicitados: 2
+        '500': { $ref: '#/components/responses/ErrorInterno' }
     get:
       tags: [Reservas]
       operationId: listarMisReservas
-      summary: Reservas del comprador
-      description: RF10. Por defecto sólo las activas y vigentes.
-      x-estado: borrador
-      x-depende-de: [P5]
+      summary: Reservas activas del comprador
+      description: Solo para sitios con `RequiereComprador = 1` (`web_1`). Requiere token.
       security:
         - sitio: []
           comprador: []
@@ -207,11 +256,11 @@ paths:
           required: false
           schema:
             type: string
-            enum: [activa, vencida, liberada, pagada]
+            enum: [activa]
             default: activa
       responses:
         '200':
-          description: Reservas del comprador autenticado.
+          description: Reservas activas y vigentes del comprador autenticado.
           content:
             application/json:
               schema:
@@ -221,7 +270,9 @@ paths:
                   reservas:
                     type: array
                     items: { $ref: '#/components/schemas/Reserva' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '401': { $ref: '#/components/responses/NoAutenticado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /reservas/{reservaId}:
     parameters:
@@ -231,34 +282,46 @@ paths:
       operationId: obtenerReserva
       summary: Consultar una reserva
       description: |
-        RF05. Incluye `segundosRestantes` para la cuenta regresiva. Una reserva de otro
-        comprador responde `404` para no revelar que existe (RN09).
+        «Según sitio». Incluye `segundosRestantes` para la cuenta regresiva. Una reserva de
+        otro sitio o de otro comprador responde `404` para no revelar que existe.
       security:
         - sitio: []
           comprador: []
+        - sitio: []
       responses:
         '200':
           description: Reserva.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Reserva' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '401': { $ref: '#/components/responses/NoAutenticado' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
     delete:
       tags: [Reservas]
       operationId: liberarReserva
       summary: Liberar una reserva
-      description: RF06. Sólo reservas activas y vigentes.
+      description: |
+        «Según sitio».
+        - `activa` y vigente → `204`; sus asientos vuelven a `disponible`.
+        - `activa` con `expiraEn <= ahora` → `410 RESERVA_VENCIDA`; no se libera.
+        - `pagada` → `409 RESERVA_PAGADA`.
+        - `liberada` → `410 RESERVA_LIBERADA`.
+        - Inexistente o de otro sitio o comprador → `404 NO_ENCONTRADO`.
       security:
         - sitio: []
           comprador: []
+        - sitio: []
       responses:
         '204':
           description: Reserva liberada; sus asientos vuelven a estar disponibles.
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '401': { $ref: '#/components/responses/NoAutenticado' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
         '409': { $ref: '#/components/responses/ReservaPagada' }
         '410': { $ref: '#/components/responses/ReservaNoVigente' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /reservas/{reservaId}/pago:
     parameters:
@@ -268,18 +331,26 @@ paths:
       operationId: pagarReserva
       summary: Pago simulado de una reserva
       description: |
-        RF08, RN05–RN07. Registra un intento de pago simulado.
-        - Aprobado: la reserva pasa a `pagada` y se crea la orden (operación atómica).
-        - Rechazado: la reserva sigue activa sin extender `expiraEn`; se puede reintentar.
-        Ambos resultados responden `201` porque el intento queda registrado; el resultado
-        viene en `resultado`.
+        «Según sitio». Solo se aceptan dos números de tarjeta de prueba:
+        - `4242 4242 4242 4242` → aprobado.
+        - `4000 0000 0000 0002` → rechazado.
 
-        La forma de elegir el resultado depende de P10. En este borrador el sitio envía
-        `resultadoSimulado`.
-      x-depende-de: [P10]
+        Otro número, o un error de formato en `titular`, `vencimiento` (`MM/AA`, no vencido)
+        o `cvv` (3 dígitos) → `400 SOLICITUD_INVALIDA` con `detalles.campo`; no se registra
+        intento.
+
+        Resultados sobre una reserva `activa` y vigente (ambos responden `201`):
+        - Aprobado: en una sola operación atómica se registra el intento, la reserva pasa a
+          `pagada`, se crea la orden con sus boletos y los asientos quedan `comprado`.
+        - Rechazado: se registra el intento; la reserva sigue `activa` y `expiraEn` no cambia.
+          Se puede reintentar mientras siga vigente.
+
+        El servicio nunca guarda el número completo ni el CVV; el intento guarda solo los
+        últimos 4 dígitos.
       security:
         - sitio: []
           comprador: []
+        - sitio: []
       requestBody:
         required: true
         content:
@@ -287,29 +358,48 @@ paths:
             schema: { $ref: '#/components/schemas/NuevoPago' }
             examples:
               aprobado:
-                value: { resultadoSimulado: aprobado }
+                value:
+                  numeroTarjeta: 4242 4242 4242 4242
+                  titular: Ana López
+                  vencimiento: 12/28
+                  cvv: '123'
               rechazado:
-                value: { resultadoSimulado: rechazado }
+                value:
+                  numeroTarjeta: 4000 0000 0000 0002
+                  titular: Ana López
+                  vencimiento: 12/28
+                  cvv: '123'
       responses:
         '201':
-          description: Intento de pago registrado.
+          description: Intento de pago registrado. El resultado viene en `resultado`.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Pago' }
-        '400': { $ref: '#/components/responses/SolicitudInvalida' }
+        '400':
+          description: |
+            Tarjeta que no es de prueba o datos con formato incorrecto. `codigo` = `SOLICITUD_INVALIDA`.
+            No se registra intento.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example:
+                error:
+                  codigo: SOLICITUD_INVALIDA
+                  mensaje: Usa una de las tarjetas de prueba.
+                  detalles:
+                    campo: numeroTarjeta
         '401': { $ref: '#/components/responses/NoAutenticado' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
         '409': { $ref: '#/components/responses/ReservaPagada' }
         '410': { $ref: '#/components/responses/ReservaNoVigente' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /ordenes:
     get:
       tags: [Órdenes]
       operationId: listarMisOrdenes
-      summary: Compras del comprador
-      description: RF10.
-      x-estado: borrador
-      x-depende-de: [P5]
+      summary: Órdenes del comprador
+      description: Solo para sitios con `RequiereComprador = 1` (`web_1`). Requiere token.
       security:
         - sitio: []
           comprador: []
@@ -325,7 +415,37 @@ paths:
                   ordenes:
                     type: array
                     items: { $ref: '#/components/schemas/Orden' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '401': { $ref: '#/components/responses/NoAutenticado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
+
+  /ordenes/buscar:
+    get:
+      tags: [Órdenes]
+      operationId: buscarOrden
+      summary: Recuperar una compra sin cuenta
+      description: |
+        Se envía exactamente uno de `folio` o `codigo` (código de un boleto). Ninguno o ambos
+        → `400 SOLICITUD_INVALIDA`. Se filtra por el sitio de `X-Sitio`: una orden inexistente
+        o de otro sitio → `404 NO_ENCONTRADO`.
+      parameters:
+        - name: folio
+          in: query
+          required: false
+          schema: { $ref: '#/components/schemas/Folio' }
+        - name: codigo
+          in: query
+          required: false
+          schema: { $ref: '#/components/schemas/CodigoBoleto' }
+      responses:
+        '200':
+          description: Orden con sus boletos.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Orden' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
+        '404': { $ref: '#/components/responses/NoEncontrado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /ordenes/{ordenId}:
     parameters:
@@ -337,27 +457,59 @@ paths:
       tags: [Órdenes]
       operationId: obtenerOrden
       summary: Consultar una orden y sus boletos
-      description: RF09. Una orden de otro comprador responde `404` (RN09).
+      description: «Según sitio». Una orden de otro sitio o de otro comprador responde `404`.
       security:
         - sitio: []
           comprador: []
+        - sitio: []
       responses:
         '200':
           description: Orden.
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Orden' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '401': { $ref: '#/components/responses/NoAutenticado' }
         '404': { $ref: '#/components/responses/NoEncontrado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
+
+  /reportes/reservas-por-dia:
+    get:
+      tags: [Reportes]
+      operationId: contarReservasPorDia
+      summary: Conteo de reservas por día
+      description: |
+        Número de reservas creadas por día calendario en `America/Mexico_City`, sin importar
+        su estado final y sin desglose por sala. Se cuenta solo el sitio de `X-Sitio`.
+        El rango máximo es de 92 días; un rango mayor o inválido → `400 SOLICITUD_INVALIDA`.
+      parameters:
+        - name: desde
+          in: query
+          required: true
+          description: Primer día del rango (AAAA-MM-DD, hora de CDMX).
+          schema: { type: string, format: date, example: '2026-11-19' }
+        - name: hasta
+          in: query
+          required: true
+          description: Último día del rango, inclusive (AAAA-MM-DD, hora de CDMX).
+          schema: { type: string, format: date, example: '2026-11-25' }
+      responses:
+        '200':
+          description: Conteo por día.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReservasPorDia' }
+        '400': { $ref: '#/components/responses/SolicitudInvalida' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /auth/registro:
     post:
       tags: [Autenticación]
       operationId: registrarComprador
       summary: Registrar comprador
-      description: RF12. Sólo si P5 asigna las cuentas al servicio.
-      x-estado: borrador
-      x-depende-de: [P5]
+      description: |
+        Crea la cuenta y devuelve un token JWT (HS256, 8 horas). La contraseña se guarda
+        como hash calculado en el servicio.
       requestBody:
         required: true
         content:
@@ -375,25 +527,25 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Error' }
+              example:
+                error:
+                  codigo: CORREO_REGISTRADO
+                  mensaje: Ese correo ya tiene una cuenta.
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
   /auth/login:
     post:
       tags: [Autenticación]
       operationId: iniciarSesion
       summary: Iniciar sesión
-      description: RF12. Sólo si P5 asigna las cuentas al servicio.
-      x-estado: borrador
-      x-depende-de: [P5]
+      description: |
+        Cualquier fallo de credenciales responde `401 NO_AUTENTICADO` con el mismo mensaje,
+        sin indicar si falló el correo o la contraseña.
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              type: object
-              required: [correo, contrasena]
-              properties:
-                correo: { type: string, format: email }
-                contrasena: { type: string, format: password }
+            schema: { $ref: '#/components/schemas/Credenciales' }
       responses:
         '200':
           description: Sesión iniciada.
@@ -402,6 +554,7 @@ paths:
               schema: { $ref: '#/components/schemas/Sesion' }
         '400': { $ref: '#/components/responses/SolicitudInvalida' }
         '401': { $ref: '#/components/responses/NoAutenticado' }
+        '500': { $ref: '#/components/responses/ErrorInterno' }
 
 components:
   securitySchemes:
@@ -410,13 +563,16 @@ components:
       in: header
       name: X-Sitio
       description: |
-        Identifica al sitio consumidor (`web_1` o `web_2`). Propuesta PR5; en el ejercicio
-        local basta el identificador. Si se decide usar llaves secretas, se configurarán por
-        variable de entorno y nunca se escribirán en este archivo.
+        Identifica al sitio consumidor. Valores permitidos: `web_1` o `web_2`. No es una llave
+        secreta. Obligatorio en toda petición a `/api/v1` excepto `GET /salud`.
     comprador:
       type: http
       scheme: bearer
-      description: Token emitido por `/auth/login` o `/auth/registro`. Depende de P5.
+      bearerFormat: JWT
+      description: |
+        Token JWT HS256 emitido por `/auth/registro` o `/auth/login`, con `sub` = id del
+        comprador y expiración de 8 horas. Obligatorio en las operaciones de comprador de los
+        sitios con `RequiereComprador = 1` (`web_1`).
 
   parameters:
     EventoId:
@@ -433,45 +589,102 @@ components:
       name: reservaId
       in: path
       required: true
-      schema: { type: string }
+      schema: { type: string, format: uuid }
 
   responses:
     SolicitudInvalida:
-      description: Datos faltantes o con formato incorrecto, o falta `X-Sitio`. `codigo` = `SOLICITUD_INVALIDA`.
-      content:
-        application/json:
-          schema: { $ref: '#/components/schemas/Error' }
-    NoAutenticado:
-      description: Falta el token del comprador, es inválido o las credenciales no coinciden. `codigo` = `NO_AUTENTICADO`.
-      content:
-        application/json:
-          schema: { $ref: '#/components/schemas/Error' }
-    NoEncontrado:
-      description: El recurso no existe o pertenece a otro comprador. `codigo` = `NO_ENCONTRADO`.
-      content:
-        application/json:
-          schema: { $ref: '#/components/schemas/Error' }
-    ReservaPagada:
-      description: La reserva ya fue pagada. `codigo` = `RESERVA_PAGADA`.
-      content:
-        application/json:
-          schema: { $ref: '#/components/schemas/Error' }
-    ReservaNoVigente:
       description: |
-        La reserva ya no está vigente (PR3). `codigo` = `RESERVA_VENCIDA` si pasó su
-        `expiraEn`, o `RESERVA_LIBERADA` si el comprador la liberó.
+        Datos faltantes o con formato incorrecto, JSON mal formado, o `X-Sitio` ausente o no
+        válido. `codigo` = `SOLICITUD_INVALIDA`; `detalles.campo` indica el dato.
       content:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }
           example:
             error:
-              codigo: RESERVA_VENCIDA
-              mensaje: La reserva venció; vuelve a seleccionar tus asientos.
+              codigo: SOLICITUD_INVALIDA
+              mensaje: Falta el encabezado X-Sitio o no es válido.
+              detalles:
+                campo: X-Sitio
+    NoAutenticado:
+      description: |
+        Falta el token del comprador, es inválido o las credenciales no coinciden.
+        `codigo` = `NO_AUTENTICADO`. No revela si el correo existe.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error:
+              codigo: NO_AUTENTICADO
+              mensaje: Inicia sesión para continuar.
+    NoEncontrado:
+      description: |
+        El recurso no existe o pertenece a otro sitio o comprador. `codigo` = `NO_ENCONTRADO`.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error:
+              codigo: NO_ENCONTRADO
+              mensaje: El recurso solicitado no existe.
+    ReservaPagada:
+      description: La reserva ya fue pagada. `codigo` = `RESERVA_PAGADA`.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error:
+              codigo: RESERVA_PAGADA
+              mensaje: Esta reserva ya fue pagada.
+    ReservaNoVigente:
+      description: |
+        La reserva ya no está vigente. `codigo` = `RESERVA_VENCIDA` si pasó su `expiraEn`,
+        o `RESERVA_LIBERADA` si fue liberada.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            vencida:
+              value:
+                error:
+                  codigo: RESERVA_VENCIDA
+                  mensaje: La reserva venció; vuelve a seleccionar tus asientos.
+            liberada:
+              value:
+                error:
+                  codigo: RESERVA_LIBERADA
+                  mensaje: La reserva ya fue liberada.
+    ErrorInterno:
+      description: |
+        Error no previsto, incluidos los códigos de base de datos no mapeados.
+        `codigo` = `ERROR_INTERNO`. No incluye detalles de la base de datos ni trazas.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example:
+            error:
+              codigo: ERROR_INTERNO
+              mensaje: Ocurrió un error inesperado.
 
   schemas:
     Error:
       type: object
       required: [error]
+      description: |
+        Formato único de error. Traducción de los códigos de base de datos:
+
+        | Base de datos | HTTP | `codigo` |
+        | --- | --- | --- |
+        | 51001 | 409 | `ASIENTO_NO_DISPONIBLE` |
+        | 51002 | 409 | `CORREO_REGISTRADO` |
+        | 51003 | 409 | `RESERVA_PAGADA` |
+        | 52001 | 410 | `RESERVA_VENCIDA` |
+        | 52002 | 410 | `RESERVA_LIBERADA` |
+        | 53001 | 422 | `LIMITE_EXCEDIDO` |
+        | 53002, 53003, 53008 | 400 | `SOLICITUD_INVALIDA` |
+        | 53004 | 500 | `ERROR_INTERNO` |
+        | 53005, 53006, 53007 | 400 | `SOLICITUD_INVALIDA` |
+        | 54001–54005 | 404 | `NO_ENCONTRADO` |
+        | 50000 o no mapeado | 500 | `ERROR_INTERNO` |
       properties:
         error:
           type: object
@@ -485,54 +698,73 @@ components:
                 - NO_AUTENTICADO
                 - NO_ENCONTRADO
                 - ASIENTO_NO_DISPONIBLE
+                - CORREO_REGISTRADO
                 - RESERVA_PAGADA
                 - RESERVA_VENCIDA
                 - RESERVA_LIBERADA
                 - LIMITE_EXCEDIDO
-                - CORREO_REGISTRADO
                 - ERROR_INTERNO
             mensaje:
               type: string
-              description: Texto en español apto para mostrar al usuario.
+              description: Texto en español apto para mostrar al usuario. Sin datos de otro comprador ni trazas.
             detalles:
               type: object
               additionalProperties: true
-              description: Información adicional según el código (por ejemplo, asientos que fallaron).
+              description: Información adicional según el código (por ejemplo, `campo` o `asientoIds`).
+
+    Sitio:
+      type: string
+      enum: [web_1, web_2]
 
     Dinero:
       type: number
       minimum: 0
-      description: Monto en unidades de la moneda indicada (por ejemplo, pesos).
+      description: Monto en unidades de la moneda indicada (pesos).
 
     Moneda:
       type: string
-      description: Código ISO 4217. MXN para web_1; web_2 pendiente (P4).
+      description: Código ISO 4217.
+      enum: [MXN]
       example: MXN
+
+    FechaHora:
+      type: string
+      format: date-time
+      description: ISO 8601 con desplazamiento de Ciudad de México.
+      example: '2026-11-12T19:00:00-06:00'
+
+    Folio:
+      type: string
+      pattern: '^ORD-[0-9]{6}$'
+      description: Folio visible de la orden.
+      example: ORD-000123
+
+    CodigoBoleto:
+      type: string
+      pattern: '^[A-Z2-9]{12}$'
+      description: Código único del boleto; el sitio lo dibuja como QR.
+      example: 7KQ2M9XD4TPA
+
+    Salud:
+      type: object
+      required: [estado, repositorio]
+      properties:
+        estado:
+          type: string
+          enum: [ok]
+        repositorio:
+          type: string
+          enum: [memoria, sql]
 
     Evento:
       type: object
-      required: [id, nombre]
+      required: [id, sitio, nombre]
       properties:
         id: { type: string, example: evt-suegra }
+        sitio: { $ref: '#/components/schemas/Sitio' }
         nombre: { type: string, example: ¡Que no se entere la suegra! }
-        descripcion: { type: string }
         recinto: { type: string, example: Teatro Aquí nadie actúa normal }
-
-    Funcion:
-      type: object
-      required: [id, eventoId, inicio]
-      properties:
-        id: { type: string, example: fun-2026-10-29-1900 }
-        eventoId: { type: string, example: evt-suegra }
-        inicio:
-          type: string
-          format: date-time
-          description: Fecha y hora de inicio con desplazamiento (P8).
-          example: '2026-10-29T19:00:00-06:00'
-        asientosDisponibles:
-          type: integer
-          minimum: 0
-          description: Calculado al momento de la consulta.
+        descripcion: { type: string }
 
     Zona:
       type: object
@@ -543,20 +775,37 @@ components:
         precio: { $ref: '#/components/schemas/Dinero' }
         moneda: { $ref: '#/components/schemas/Moneda' }
 
+    Funcion:
+      type: object
+      required: [id, eventoId, inicio, zonas]
+      properties:
+        id: { type: string, example: fun-2026-11-12-1900 }
+        eventoId: { type: string, example: evt-suegra }
+        inicio: { $ref: '#/components/schemas/FechaHora' }
+        formato: { type: string, example: 2D }
+        idioma: { type: string, example: Por confirmar }
+        clasificacion: { type: string, example: Por confirmar }
+        duracionMinutos: { type: integer, minimum: 1 }
+        zonas:
+          type: array
+          description: Zonas de la función con su precio.
+          items: { $ref: '#/components/schemas/Zona' }
+
     EstadoAsiento:
       type: string
       enum: [disponible, apartado, comprado]
-      description: Calculado al consultar (ver `DEFINICION.md`, Estados).
+      description: Calculado al consultar con la hora del servidor.
 
     Asiento:
       type: object
-      required: [id, zonaId, etiqueta, estado]
+      required: [id, zonaId, fila, numero, etiqueta, precio, estado]
       properties:
-        id: { type: string, example: fun-2026-10-29-1900-A7 }
+        id: { type: string, example: A7 }
         zonaId: { type: string, example: preferente }
         fila: { type: string, example: A }
         numero: { type: integer, example: 7 }
         etiqueta: { type: string, description: Texto para mostrar., example: A7 }
+        precio: { $ref: '#/components/schemas/Dinero' }
         estado: { $ref: '#/components/schemas/EstadoAsiento' }
 
     MapaAsientos:
@@ -571,8 +820,8 @@ components:
           type: array
           items: { $ref: '#/components/schemas/Asiento' }
         consultadoEn:
-          type: string
-          format: date-time
+          allOf:
+            - $ref: '#/components/schemas/FechaHora'
           description: Hora del servicio a la que se calcularon los estados.
 
     NuevaReserva:
@@ -591,63 +840,82 @@ components:
       type: object
       required: [asientoId, etiqueta, zonaId, precio]
       properties:
-        asientoId: { type: string }
+        asientoId: { type: string, example: A7 }
         etiqueta: { type: string, example: A7 }
         zonaId: { type: string, example: preferente }
         precio:
           allOf:
             - $ref: '#/components/schemas/Dinero'
-          description: Precio tomado al crear la reserva (RN08).
+          description: Precio tomado al crear la reserva; no cambia durante la vigencia.
 
     EstadoReserva:
       type: string
       enum: [activa, vencida, liberada, pagada]
-      description: "`vencida` se calcula al consultar (ADR-003)."
+      description: "`vencida` se calcula al consultar: reserva `activa` con `expiraEn <= ahora`."
 
     Reserva:
       type: object
-      required: [id, funcionId, estado, asientos, total, moneda, creadaEn, expiraEn, segundosRestantes]
+      required: [id, sitio, funcionId, estado, asientos, total, moneda, creadaEn, expiraEn, segundosRestantes]
       properties:
-        id: { type: string, example: res-8f3a2c }
-        funcionId: { type: string }
-        sitio: { type: string, example: web_1 }
+        id:
+          type: string
+          format: uuid
+          description: UUID v4, no adivinable.
+          example: 3f2b8c1e-7a4d-4e9b-9c1a-2d5e6f7a8b9c
+        sitio: { $ref: '#/components/schemas/Sitio' }
+        funcionId: { type: string, example: fun-2026-11-12-1900 }
         estado: { $ref: '#/components/schemas/EstadoReserva' }
         asientos:
           type: array
           items: { $ref: '#/components/schemas/AsientoReservado' }
-        total: { $ref: '#/components/schemas/Dinero' }
+        total:
+          allOf:
+            - $ref: '#/components/schemas/Dinero'
+          description: Suma de los precios de los asientos.
         moneda: { $ref: '#/components/schemas/Moneda' }
-        creadaEn: { type: string, format: date-time }
+        creadaEn: { $ref: '#/components/schemas/FechaHora' }
         expiraEn:
-          type: string
-          format: date-time
-          description: "`creadaEn` + 5 minutos (RN01)."
+          allOf:
+            - $ref: '#/components/schemas/FechaHora'
+          description: "`creadaEn` + 300 segundos, con el reloj del servicio."
         segundosRestantes:
           type: integer
           minimum: 0
           description: |
-            Segundos hasta `expiraEn` según el reloj del servicio; 0 si no está activa.
-            Se recomienda usarlo para la cuenta regresiva en lugar del reloj del navegador.
+            Segundos hasta `expiraEn` según el reloj del servicio; 0 si no está activa y vigente.
+            Úsalo para la cuenta regresiva en lugar del reloj del navegador.
         ordenId:
           type: string
-          nullable: true
-          description: Presente cuando la reserva está pagada.
+          description: Presente solo cuando la reserva está pagada.
 
     NuevoPago:
       type: object
-      required: [resultadoSimulado]
-      description: Pendiente de P10. Puede cambiar a datos de tarjeta de prueba.
+      required: [numeroTarjeta, titular, vencimiento, cvv]
       properties:
-        resultadoSimulado:
+        numeroTarjeta:
           type: string
-          enum: [aprobado, rechazado]
+          description: |
+            Solo tarjetas de prueba: `4242 4242 4242 4242` (aprobado) o
+            `4000 0000 0000 0002` (rechazado).
+          example: 4242 4242 4242 4242
+        titular:
+          type: string
+          minLength: 1
+          example: Ana López
+        vencimiento:
+          type: string
+          pattern: '^(0[1-9]|1[0-2])/[0-9]{2}$'
+          description: "`MM/AA`, no vencido."
+          example: 12/28
+        cvv:
+          type: string
+          pattern: '^[0-9]{3}$'
+          example: '123'
 
     Pago:
       type: object
-      required: [id, reservaId, resultado, simulado, fecha]
+      required: [resultado, simulado, reserva]
       properties:
-        id: { type: string, example: pag-1b7e }
-        reservaId: { type: string }
         resultado:
           type: string
           enum: [aprobado, rechazado]
@@ -655,55 +923,84 @@ components:
           type: boolean
           enum: [true]
           description: Siempre `true`; el sitio debe indicar que el pago es simulado.
-        fecha: { type: string, format: date-time }
-        orden:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/Orden'
-          nullable: true
-          description: Presente sólo si `resultado` es `aprobado`.
         reserva:
           allOf:
             - $ref: '#/components/schemas/Reserva'
-          description: Estado de la reserva después del intento (útil para reintentar si fue rechazado).
+          description: |
+            Reserva después del intento: `pagada` si se aprobó, `activa` si se rechazó.
+        orden:
+          allOf:
+            - $ref: '#/components/schemas/Orden'
+          description: Presente solo si `resultado` es `aprobado`.
 
     Boleto:
       type: object
-      required: [id, codigo, eventoId, funcionId, inicio, zonaId, etiqueta, precio]
+      required: [codigo, etiqueta, zonaId, precio, eventoNombre, inicio]
       properties:
-        id: { type: string }
-        codigo:
-          type: string
-          description: Código único y difícil de adivinar; el sitio lo dibuja como QR (PR7, RN10).
-          example: BOL-7KQ2-M9XD-4TPA
-        eventoId: { type: string }
-        eventoNombre: { type: string }
-        funcionId: { type: string }
-        inicio: { type: string, format: date-time }
-        zonaId: { type: string }
+        codigo: { $ref: '#/components/schemas/CodigoBoleto' }
         etiqueta: { type: string, example: A7 }
+        zonaId: { type: string, example: preferente }
         precio: { $ref: '#/components/schemas/Dinero' }
+        eventoNombre: { type: string, example: ¡Que no se entere la suegra! }
+        inicio: { $ref: '#/components/schemas/FechaHora' }
 
     Orden:
       type: object
-      required: [id, numero, reservaId, fecha, total, moneda, boletos]
+      required: [id, folio, reservaId, sitio, fecha, total, moneda, boletos]
       properties:
         id: { type: string }
-        numero:
-          type: string
-          description: Número visible para el comprador.
-          example: ORD-2026-000123
-        reservaId: { type: string }
-        sitio: { type: string, example: web_1 }
-        fecha: { type: string, format: date-time }
+        folio: { $ref: '#/components/schemas/Folio' }
+        reservaId: { type: string, format: uuid }
+        sitio: { $ref: '#/components/schemas/Sitio' }
+        fecha: { $ref: '#/components/schemas/FechaHora' }
         total: { $ref: '#/components/schemas/Dinero' }
         moneda: { $ref: '#/components/schemas/Moneda' }
-        pagoSimulado:
-          type: boolean
-          enum: [true]
         boletos:
           type: array
           items: { $ref: '#/components/schemas/Boleto' }
+      example:
+        id: ord-7c1e
+        folio: ORD-000123
+        reservaId: 3f2b8c1e-7a4d-4e9b-9c1a-2d5e6f7a8b9c
+        sitio: web_1
+        fecha: '2026-11-12T18:42:10-06:00'
+        total: 1600
+        moneda: MXN
+        boletos:
+          - codigo: 7KQ2M9XD4TPA
+            etiqueta: A7
+            zonaId: preferente
+            precio: 800
+            eventoNombre: ¡Que no se entere la suegra!
+            inicio: '2026-11-12T19:00:00-06:00'
+          - codigo: HN4R8WZ3C6EB
+            etiqueta: A8
+            zonaId: preferente
+            precio: 800
+            eventoNombre: ¡Que no se entere la suegra!
+            inicio: '2026-11-12T19:00:00-06:00'
+
+    ReservasPorDia:
+      type: object
+      required: [sitio, desde, hasta, dias]
+      description: |
+        Forma de respuesta definida por el servicio: el contrato compartido fija el conteo
+        (reservas creadas por día en CDMX, sin importar su estado), no el envoltorio.
+      properties:
+        sitio: { $ref: '#/components/schemas/Sitio' }
+        desde: { type: string, format: date, example: '2026-11-19' }
+        hasta: { type: string, format: date, example: '2026-11-25' }
+        dias:
+          type: array
+          items:
+            type: object
+            required: [fecha, reservas]
+            properties:
+              fecha: { type: string, format: date, example: '2026-11-19' }
+              reservas:
+                type: integer
+                minimum: 0
+                description: Reservas creadas ese día, sin importar su estado final.
 
     NuevoComprador:
       type: object
@@ -712,6 +1009,13 @@ components:
         nombre: { type: string, minLength: 1 }
         correo: { type: string, format: email }
         contrasena: { type: string, format: password, minLength: 8 }
+
+    Credenciales:
+      type: object
+      required: [correo, contrasena]
+      properties:
+        correo: { type: string, format: email }
+        contrasena: { type: string, format: password }
 
     Comprador:
       type: object
@@ -723,8 +1027,9 @@ components:
 
     Sesion:
       type: object
-      required: [token, comprador]
+      required: [comprador, token]
       properties:
-        token: { type: string, description: Token Bearer para las operaciones del comprador. }
-        expiraEn: { type: string, format: date-time }
         comprador: { $ref: '#/components/schemas/Comprador' }
+        token:
+          type: string
+          description: "JWT para el encabezado `Authorization: Bearer <token>`."

@@ -62,7 +62,7 @@ Los proyectos usan sólo las siguientes etapas:
 
 ## 3. Comunicación con otros equipos
 - El repositorio pertenece al instructor; no se usan issues ni etiquetas de GitHub.
-- Se conversa en el chat del grupo. Las preguntas, propuestas y decisiones se registran por escrito en `./docs/specs/ACUERDOS.md`, que es la fuente oficial.
+- Entre equipos ya no se usa el chat (desde el 18 nov 2026): los cambios de contrato se proponen con un change de OpenSpec y las preguntas y decisiones se registran por escrito en `./docs/specs/ACUERDOS.md`, que es la fuente oficial. El chat solo sirve para organizarse dentro del equipo service.
 - El servicio escribe primero las reglas y le pide al backend lo que necesita (`./docs/specs/contrato-datos-backend.md`). El backend decide el motor, el esquema y los índices.
 - Ramas: `service/<etapa-o-tema>` → PR a `main`, siguiendo la convención del repositorio.
 - No todo el equipo maneja git. Cuando el usuario pida operaciones de git, explica en una línea qué hará cada comando antes de ejecutarlo. Nunca uses `--force`, `reset --hard` ni resuelvas conflictos sin confirmación; ante un conflicto, detente y explica qué pasó.
