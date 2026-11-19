@@ -38,8 +38,7 @@ class AsientosRepoMemoria extends AsientosRepo {
   }
 
   async listarZonas(funcionId) {
-    const { sitio } = this.#funcionYSitio(funcionId);
-    return this.#zonasDeSitio(sitio).map((zona) => ({
+    return this.#zonasDeFuncion(funcionId).map((zona) => ({
       id: zona.id,
       nombre: zona.nombre,
       precio: this.almacen.precios.get(clave(funcionId, zona.id)),
@@ -49,10 +48,9 @@ class AsientosRepoMemoria extends AsientosRepo {
 
   async listarAsientos(funcionId, ahora) {
     exigirFecha(ahora, 'ahora');
-    const { sitio } = this.#funcionYSitio(funcionId);
-    const zonasDelSitio = new Set(this.#zonasDeSitio(sitio).map((z) => z.id));
+    const zonasDeFuncion = new Set(this.#zonasDeFuncion(funcionId).map((z) => z.id));
     return [...this.almacen.asientos.values()]
-      .filter((a) => a.activo && zonasDelSitio.has(a.zonaId))
+      .filter((a) => a.activo && zonasDeFuncion.has(a.zonaId))
       .map((a) => ({
         id: a.id,
         zonaId: a.zonaId,
@@ -72,8 +70,15 @@ class AsientosRepoMemoria extends AsientosRepo {
     return { funcion, sitio: this.almacen.eventos.get(funcion.eventoId).sitio };
   }
 
-  #zonasDeSitio(sitio) {
-    return [...this.almacen.zonas.values()].filter((z) => z.sitio === sitio);
+  /**
+   * Zonas del sitio que tienen precio en la función. En web_1 son las 3 zonas; en web_2
+   * sólo la sala de la función, igual que `AsientosFuncion` en el backend.
+   */
+  #zonasDeFuncion(funcionId) {
+    const { sitio } = this.#funcionYSitio(funcionId);
+    return [...this.almacen.zonas.values()].filter(
+      (z) => z.sitio === sitio && this.almacen.precios.has(clave(funcionId, z.id))
+    );
   }
 }
 
@@ -84,8 +89,15 @@ function vistaEvento({ id, sitio, nombre, descripcion, recinto }) {
   return evento;
 }
 
-function vistaFuncion({ id, eventoId, inicio }) {
-  return { id, eventoId, inicio: new Date(inicio) };
+// Campos opcionales de la función; web_1 no los tiene y no se incluyen.
+const CAMPOS_OPCIONALES_FUNCION = ['formato', 'idioma', 'clasificacion', 'duracionMinutos'];
+
+function vistaFuncion(funcion) {
+  const vista = { id: funcion.id, eventoId: funcion.eventoId, inicio: new Date(funcion.inicio) };
+  for (const campo of CAMPOS_OPCIONALES_FUNCION) {
+    if (funcion[campo] !== undefined && funcion[campo] !== null) vista[campo] = funcion[campo];
+  }
+  return vista;
 }
 
 module.exports = { AsientosRepoMemoria };

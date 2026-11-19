@@ -24,10 +24,19 @@
  * @property {string} [descripcion]
  * @property {string} [recinto]
  *
+ * @typedef {Object} Sitio
+ * @property {string} id  `web_1` o `web_2`
+ * @property {string} nombre
+ * @property {boolean} requiereComprador  `RequiereComprador` del backend (P15)
+ *
  * @typedef {Object} Funcion
  * @property {string} id
  * @property {string} eventoId
  * @property {Date} inicio
+ * @property {string} [formato]  `2D` o `3D` (sólo web_2)
+ * @property {string} [idioma]
+ * @property {string} [clasificacion]
+ * @property {number} [duracionMinutos]
  *
  * @typedef {Object} Zona
  * @property {string} id
@@ -94,6 +103,15 @@
  */
 
 const { NoImplementado } = require('./errores');
+
+/** Sitios consumidores y su regla de identidad (`RequiereComprador`). */
+class SitiosRepo {
+  /** @returns {Promise<Sitio[]>} todos los sitios */
+  async listar() { throw new NoImplementado('SitiosRepo.listar'); }
+
+  /** @param {string} sitioId @returns {Promise<Sitio|null>} */
+  async obtener(sitioId) { throw new NoImplementado('SitiosRepo.obtener'); }
+}
 
 /** Catálogo: eventos, funciones, zonas y asientos con su estado. */
 class AsientosRepo {
@@ -192,4 +210,4 @@ class OrdenesRepo {
   async listarBoletos() { throw new NoImplementado('OrdenesRepo.listarBoletos'); }
 }
 
-module.exports = { AsientosRepo, ReservasRepo, OrdenesRepo };
+module.exports = { SitiosRepo, AsientosRepo, ReservasRepo, OrdenesRepo };
