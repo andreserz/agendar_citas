@@ -48,7 +48,7 @@ Leyenda de estatus: ⬜ pendiente · 🔄 en progreso · ✅ hecho · 🚧 bloqu
 
 ---
 
-## Plan de implementación — change `impl-service` · ⬜ 0/34 (actualizado 18 nov 2026)
+## Plan de implementación — change `impl-service` · 🔄 3/34 (actualizado 18 nov 2026)
 
 Fuente: `openspec/changes/impl-service/` (`tasks.md` tiene el texto completo y es donde `/opsx:apply` marca los `[x]`). El contrato entre capas es `openspec/changes/impl-service/specs/contrato-entre-capas/spec.md`. Cómo ejecutar cada tarea: `docs/PLAN_TRABAJO.md`, sección «Cómo ejecutar con OpenSpec».
 
@@ -88,10 +88,10 @@ Olas: **1** jue 19 · **2** vie 20 · **3** sáb 21 · **4** dom 22 · **E** lun
 - [ ] 5.2 Mapear `Estado` de SP06 a `disponible`, `apartado` y `comprado` — **D** · ola 4
 - [ ] 5.3 Pruebas de integración del adaptador, solo con `CitasBD` disponible (si el backend no la entrega, queda 🚧 y se entrega con `REPOSITORIO=memoria`) — **D** · ola 4
 
-### 6. Contrato OpenAPI · ⬜ 0/3
-- [ ] 6.1 `openapi.yaml` a `1.0.0` con todas las rutas, formas y errores del contrato (va primero: ninguna ruta se implementa antes de estar en la spec) — **L** · ola 1
-- [ ] 6.2 Quitar `resultadoSimulado` y los ejemplos con el formato anterior — **L** · ola 1
-- [ ] 6.3 `redocly lint` sin errores — **L** · ola 1
+### 6. Contrato OpenAPI · ✅ 3/3
+- [x] 6.1 `openapi.yaml` a `1.0.0` con todas las rutas, formas y errores del contrato (va primero: ninguna ruta se implementa antes de estar en la spec) — **L** · ola 1 **Hecho el 18 nov en `service/contrato-v1`: 17 rutas, formas y tabla de errores del contrato.**
+- [x] 6.2 Quitar `resultadoSimulado` y los ejemplos con el formato anterior — **L** · ola 1 **Hecho con la reescritura de 6.1.**
+- [x] 6.3 `redocly lint` sin errores — **L** · ola 1 **18 nov: 0 errores, 3 advertencias aceptadas (sin `license`, `localhost` por D24, `/salud` sin 4XX por contrato).**
 
 ### 7. Pruebas · ⬜ 0/6
 - [ ] 7.1 Pruebas de contrato por ruta con Supertest — **L** · ola 4

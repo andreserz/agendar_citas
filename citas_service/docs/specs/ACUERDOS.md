@@ -3,9 +3,11 @@
 Registro oficial de preguntas, propuestas y decisiones entre `citas_service`, `citas_backend`, `citas_web_1` y `citas_web_2`.
 
 **Cómo se usa:**
-1. Se conversa en el chat del grupo.
-2. Cuando hay respuesta, el líder de contrato la copia aquí y hace commit.
-3. Si una decisión cambia, se edita su fila, se actualiza la fecha y se avisa en el chat.
+1. Una pregunta para otro equipo se registra aquí como `P#` en **Preguntas abiertas**; un cambio de contrato se propone con un change de OpenSpec (D25).
+2. Cuando hay respuesta, el líder de contrato la pasa a **Decisiones acordadas** y hace commit.
+3. Si una decisión cambia, se edita su fila y se actualiza la fecha.
+
+Entre equipos no se usa el chat (D26); el chat solo sirve para organizarse dentro del equipo service.
 
 Los agentes (pi, Claude) deben respetar todo lo que esté en **Decisiones acordadas**. Lo que esté en **Propuestas** todavía puede cambiar.
 
@@ -15,7 +17,9 @@ Los agentes (pi, Claude) deben respetar todo lo que esté en **Decisiones acorda
 
 ## Preguntas abiertas
 
-**No hay preguntas abiertas desde el 18 nov 2026.**
+| # | Pregunta | Para | Abierta |
+| --- | --- | --- | --- |
+| P20 | La forma «Función» del contrato (`openapi.yaml` 1.0.0) no tiene `asientosDisponibles`, pero web_1 lo usa en `citas_web_1/app/js/views/cartelera.js` (líneas 165 y 196) con `?? 0`: contra la API real todas las funciones se verían agotadas. ¿web_1 deja de usarlo (y calcula la disponibilidad con `GET /funciones/{id}/asientos`) o se abre un change de OpenSpec para agregar el campo al contrato (D25)? | web_1 | 18 nov 2026 |
 
 Historial: P1 y P2 pasaron a Decisiones (D4 y D5) el 4 nov; P3, P6 y P11–P13 pasaron a D7–D11 el 6 nov con las respuestas de `citas_backend/docs/BCK_DEFINICION.md`; P7, P8 y P10 pasaron a D12–D14 el 6 nov. El 18 nov, P4, P5, P9 y P15–P19 pasaron a D15–D22, resueltas por el contrato de OpenSpec (`contrato-entre-capas`).
 
@@ -41,7 +45,7 @@ Vienen de `citas_backend/docs/BCK_DEFINICION.md` §8. QB1 es para web_1.
 | # | Decisión | Acordado con | Fecha |
 | --- | --- | --- | --- |
 | D1 | `citas_service` se construye con Node.js 20 + Express, OpenAPI 3 y Jest + Supertest. | equipo service | 29 oct 2026 |
-| D2 | Canal de comunicación: chat del grupo para conversar y este archivo para registrar acuerdos. | equipo service | 29 oct 2026 |
+| D2 | ~~Canal de comunicación: chat del grupo para conversar y este archivo para registrar acuerdos.~~ Reemplazada por D26 el 18 nov 2026. | equipo service | 29 oct 2026 |
 | D3 | No hay servidor ni dominio: cada equipo ejecuta los proyectos localmente (`localhost`). | equipo service | 29 oct 2026 |
 | D4 | (Responde P1) El backend entrega la base de datos con procedimientos almacenados que el servicio invoca (opción C). El servicio no escribe consultas SQL directas. | backend (`citas_backend/docs/BCK_ANTEPROYECTO.md`, E1) | 4 nov 2026 |
 | D5 | (Responde P2) El motor es Microsoft SQL Server 2019 o superior (Express o Developer). Se entrega como scripts `.sql` numerados que se ejecutan en SSMS; por ahora no hay Docker. Los datos de conexión llegarán en un `.env.example` del backend, sin contraseñas reales. | backend (`BCK_ANTEPROYECTO.md`, E2 y E8) | 4 nov 2026 |
@@ -65,3 +69,4 @@ Vienen de `citas_backend/docs/BCK_DEFINICION.md` §8. QB1 es para web_1.
 | D23 | (Venía de PR1, PR3 y PR4) El apartado dura 5 minutos: el servicio calcula `expiraEn = creadaEn + 300 s` con su reloj y la BD recibe `@Ahora` y `@ExpiraEn` (PR1). Los errores siguen la tabla de mapeo del contrato: `409` por conflicto, `410` por reserva vencida o liberada, `422` por límite y `404` si no existe (PR3). El límite de 10 asientos por comprador y función se valida solo para web_1 (PR4). | contrato de OpenSpec («Reserva de asientos», «Mapeo de errores», «Fechas y zona horaria») | 18 nov 2026 |
 | D24 | (Venía de PR5–PR9 y QB4) La API vive bajo `http://localhost:3000/api/v1` y exige `X-Sitio` (`web_1` o `web_2`) en cada petición, salvo `/salud` (PR5); Swagger UI en `/docs` sigue por `AGENTS.md`. El repositorio por defecto es `memoria` (`REPOSITORIO=memoria`) y `sql` es opcional (PR6). Cada boleto trae un `codigo` de 12 caracteres `[A-Z2-9]` y la orden un folio `ORD-` + 6 dígitos; el contrato no define el QR (PR7, QB4). Puertos: servicio `3000`, web_1 `5501` y web_2 `5502` (PR8). CORS solo para esos dos sitios en `localhost` y `127.0.0.1`, configurable con `CORS_ORIGINS` (PR9). | contrato de OpenSpec («Base de la API», «Puertos y orígenes permitidos», «Formas de datos») | 18 nov 2026 |
 | D25 | Cualquier cambio en rutas, formas de datos o códigos de error se hace con un change nuevo de OpenSpec que actualice el contrato y `openapi.yaml`; ya no se acuerda por chat ni en archivos de otros equipos. Este archivo sigue como registro del servicio. | contrato de OpenSpec («Cambios de este contrato») | 18 nov 2026 |
+| D26 | (Reemplaza D2) Entre equipos ya no se usa el chat del grupo: los cambios de contrato van en un change de OpenSpec (D25) y las preguntas y decisiones se registran en este archivo. El chat solo sirve para que el equipo service se organice. | equipo service | 18 nov 2026 |
