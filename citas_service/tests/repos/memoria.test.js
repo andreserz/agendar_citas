@@ -9,12 +9,12 @@ probarContratoRepos('memoria', () => crearReposEnMemoria());
 
 describe('crearRepos (selección por REPOSITORIO)', () => {
   test('usa memoria por defecto', () => {
-    const repos = crearRepos(cargarConfig({}));
+    const repos = crearRepos(cargarConfig({ NODE_ENV: 'test' }));
     expect(Object.keys(repos).sort()).toEqual(['asientosRepo', 'ordenesRepo', 'reservasRepo']);
   });
 
   test('falla con un valor no disponible', () => {
-    expect(() => crearRepos(cargarConfig({ REPOSITORIO: 'sqlserver' }))).toThrow(/no está disponible/);
+    expect(() => crearRepos(cargarConfig({ NODE_ENV: 'test', REPOSITORIO: 'sqlserver' }))).toThrow(/no está disponible/);
   });
 
   test('cada llamada crea un almacén independiente', async () => {
