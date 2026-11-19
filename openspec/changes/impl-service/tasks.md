@@ -3,9 +3,9 @@
 Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 
 ## 1. Configuración
-- [ ] 1.1 Agregar `JWT_SECRET`, `REPOSITORIO` y variables `SQL_*` a `config.js`; fallar al arrancar si falta `JWT_SECRET` fuera de `test` (Requirement: Dueño de la autenticación).
-- [ ] 1.2 Actualizar `.env.example` con valores de ejemplo sin secretos.
-- [ ] 1.3 Agregar dependencias `jsonwebtoken` y `mssql`.
+- [x] 1.1 Agregar `JWT_SECRET`, `REPOSITORIO` y variables `SQL_*` a `config.js`; fallar al arrancar si falta `JWT_SECRET` fuera de `test` (Requirement: Dueño de la autenticación).
+- [x] 1.2 Actualizar `.env.example` con valores de ejemplo sin secretos.
+- [x] 1.3 Agregar dependencias `jsonwebtoken` y `mssql`.
 
 ## 2. Middlewares
 - [ ] 2.1 `validarSitio` con `X-Sitio` y excepción de `/salud` (Requirement: Validación de X-Sitio).
@@ -25,7 +25,7 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 - [ ] 4.1 Corregir `ReservasRepo.liberar` en memoria: vencida → `410 RESERVA_VENCIDA` sin liberar (Requirement: Liberar reserva).
 - [ ] 4.2 Hacer obligatorio `limitePorComprador` en la API para sitios con `RequiereComprador = 1` (Requirement: Límite de 10 asientos).
 - [ ] 4.3 Repositorio de sitios en memoria con `web_1` (1) y `web_2` (0).
-- [ ] 4.4 Hash scrypt y token JWT (Requirement: Dueño de la autenticación).
+- [x] 4.4 Hash scrypt y token JWT (Requirement: Dueño de la autenticación).
 - [ ] 4.5 `reservaId` UUID v4 y verificación de sitio (Requirement: Sitios sin cuenta).
 - [ ] 4.6 Semilla en memoria de web_2 igual a la del contrato (10 salas, 800 asientos, 900 funciones).
 
