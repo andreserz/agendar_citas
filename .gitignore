@@ -1,0 +1,5 @@
+# Sistema operativo
+.DS_Store
+
+# Dependencias (instalación local de OpenSpec y subproyectos)
+node_modules/

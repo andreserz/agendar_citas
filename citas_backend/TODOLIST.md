@@ -76,3 +76,20 @@ Entrega: **lun 9 nov 2026**.
 - ⏳ Datos de prueba (A)
 - ⏳ Revisión final con el subagente `sqlserver-dba` (S)
 - ⏳ Demo y entrega el lun 9 nov (todos)
+
+---
+
+## Plan de implementación — change `impl-backend` (actualizado 18 nov 2026)
+
+Fuente: `openspec/changes/impl-backend/` (`tasks.md` tiene el detalle). El contrato entre capas es `openspec/changes/impl-backend/specs/contrato-entre-capas/spec.md`; no hace falta acordar nada con otros equipos.
+
+Cambios que este plan exige a la base de datos: `Sitios.RequiereComprador`, compradores nulables, `UltimosDigitos` en intentos, código `52002` para reservas liberadas, SP18 renombrado a `spOrdenes_Buscar` y SP19 como `spReservas_ContarPorDia`.
+
+- [ ] 1. Preparación: `app/`, `tests/` y `.env.example` (tareas 1.1–1.2)
+- [ ] 2. Esquema en `02_tablas.sql` (tareas 2.1–2.6)
+- [ ] 3. Índices en `03_indices.sql` (tareas 3.1–3.3)
+- [ ] 4. Procedimientos prioritarios: SP06, SP07 y SP13 (tareas 4.1–4.3)
+- [ ] 5. Resto de procedimientos SP01–SP19 en `04_sps.sql` (tareas 5.1–5.8)
+- [ ] 6. Semilla web_1 (120 funciones, 360 precios) y web_2 (800 asientos, 900 funciones, 9,000 precios) (tareas 6.1–6.3)
+- [ ] 7. Pruebas de base de datos: concurrencia, vencimiento, límite, pago atómico, unicidad, `RequiereComprador` (tareas 7.1–7.7)
+- [ ] 8. Entrega: revisión con `sqlserver-dba`, aviso a los demás equipos por el propio contrato y avance registrado aquí (tareas 8.1–8.3)
