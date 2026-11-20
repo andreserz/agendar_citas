@@ -24,10 +24,10 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 ## 4. Dominio
 - [ ] 4.1 Corregir `ReservasRepo.liberar` en memoria: vencida → `410 RESERVA_VENCIDA` sin liberar (Requirement: Liberar reserva).
 - [ ] 4.2 Hacer obligatorio `limitePorComprador` en la API para sitios con `RequiereComprador = 1` (Requirement: Límite de 10 asientos).
-- [ ] 4.3 Repositorio de sitios en memoria con `web_1` (1) y `web_2` (0).
+- [x] 4.3 Repositorio de sitios en memoria con `web_1` (1) y `web_2` (0).
 - [x] 4.4 Hash scrypt y token JWT (Requirement: Dueño de la autenticación).
 - [ ] 4.5 `reservaId` UUID v4 y verificación de sitio (Requirement: Sitios sin cuenta).
-- [ ] 4.6 Semilla en memoria de web_2 igual a la del contrato (10 salas, 800 asientos, 900 funciones).
+- [x] 4.6 Semilla en memoria de web_2 igual a la del contrato (10 salas, 800 asientos, 900 funciones).
 
 ## 5. Adaptador SQL
 - [ ] 5.1 Implementar `AsientosRepo`, `ReservasRepo` y `OrdenesRepo` en `app/repos/sql/` llamando solo a procedimientos (Requirement: Adaptador SQL Server).

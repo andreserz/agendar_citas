@@ -78,10 +78,10 @@ Olas: **1** jue 19 · **2** vie 20 · **3** sáb 21 · **4** dom 22 · **E** lun
 ### 4. Dominio · ⬜ 0/6
 - [ ] 4.1 `ReservasRepo.liberar` en memoria: vencida → `410 RESERVA_VENCIDA` sin liberar — **R** · ola 1
 - [ ] 4.2 `limitePorComprador` obligatorio para sitios con `RequiereComprador = 1` — **R** · ola 1
-- [ ] 4.3 Repositorio de sitios en memoria con `web_1` (1) y `web_2` (0) — **D** · ola 1
+- [x] 4.3 Repositorio de sitios en memoria con `web_1` (1) y `web_2` (0) — **D** · ola 1 **Hecho el 19 nov en `service/datos-sql`: `SitiosRepo` y `sitios-repo-memoria.js`; `crearReposEnMemoria` entrega `sitiosRepo`.**
 - [ ] 4.4 Hash scrypt y token JWT — **S** · ola 1
 - [ ] 4.5 `reservaId` UUID v4 y verificación de sitio — **R** · ola 1
-- [ ] 4.6 Semilla en memoria de web_2 igual a la del contrato (10 salas, 800 asientos, 900 funciones) — **D** · ola 1
+- [x] 4.6 Semilla en memoria de web_2 igual a la del contrato (10 salas, 800 asientos, 900 funciones) — **D** · ola 1 **Hecho el 19 nov en `service/datos-sql`: `datos-iniciales-web2.js` (Spider-Man, 10 salas, 800 asientos, 900 funciones y 900 precios); cada función muestra solo su sala.**
 
 ### 5. Adaptador SQL · ⬜ 0/3
 - [ ] 5.1 `AsientosRepo`, `ReservasRepo` y `OrdenesRepo` en `app/repos/sql/` llamando solo a procedimientos — **D** · ola 4

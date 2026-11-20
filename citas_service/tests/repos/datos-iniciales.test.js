@@ -1,10 +1,14 @@
 'use strict';
 
-const { generarDatosIniciales } = require('../../app/repos/memoria/datos-iniciales');
+const {
+  generarDatosIniciales,
+  generarDatosWeb1,
+  generarDatosWeb2,
+} = require('../../app/repos/memoria/datos-iniciales');
 
 // Deben coincidir con citas_backend/docs/BCK_DEFINICION.md §7 (05_datos_iniciales.sql).
 describe('Datos iniciales de web_1', () => {
-  const datos = generarDatosIniciales();
+  const datos = generarDatosWeb1();
 
   test('1 sitio, 1 evento, 3 zonas, 120 asientos, 120 funciones y 360 precios', () => {
     expect(datos.sitios).toHaveLength(1);
@@ -55,8 +59,98 @@ describe('Datos iniciales de web_1', () => {
   });
 
   test('cada llamada devuelve copias independientes', () => {
-    const otra = generarDatosIniciales();
+    const otra = generarDatosWeb1();
     otra.asientos[0].zonaId = 'cambiada';
-    expect(generarDatosIniciales().asientos[0].zonaId).toBe('preferente');
+    expect(generarDatosWeb1().asientos[0].zonaId).toBe('preferente');
+  });
+});
+
+// Deben coincidir con la «Semilla de datos acordada» del contrato (openspec impl-service).
+describe('Datos iniciales de web_2', () => {
+  const datos = generarDatosWeb2();
+
+  test('1 sitio sin cuenta, 1 evento, 10 salas, 800 asientos, 900 funciones y 900 precios', () => {
+    expect(datos.sitios).toEqual([{ id: 'web_2', nombre: 'Cineclub', requiereComprador: false }]);
+    expect(datos.eventos).toEqual([
+      expect.objectContaining({ id: 'evt-spiderman', sitio: 'web_2', nombre: 'Spider-Man' }),
+    ]);
+    expect(datos.zonas).toHaveLength(10);
+    expect(datos.asientos).toHaveLength(800);
+    expect(datos.funciones).toHaveLength(900);
+    expect(datos.precios).toHaveLength(900);
+  });
+
+  test('salas «Sala 1» a «Sala 10» con capacidad 80: filas A–H, números 1–10', () => {
+    expect(datos.zonas.map((z) => z.nombre)).toEqual(
+      Array.from({ length: 10 }, (_, i) => `Sala ${i + 1}`)
+    );
+    expect(datos.zonas.every((z) => z.capacidad === 80 && z.moneda === 'MXN' && z.sitio === 'web_2')).toBe(true);
+    for (const zona of datos.zonas) {
+      const asientos = datos.asientos.filter((a) => a.zonaId === zona.id);
+      expect(asientos).toHaveLength(80);
+      expect([...new Set(asientos.map((a) => a.fila))]).toEqual(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']);
+    }
+    expect(new Set(datos.asientos.map((a) => a.id)).size).toBe(800);
+    expect(datos.asientos.find((a) => a.id === 'sala-3-A7')).toMatchObject({
+      zonaId: 'sala-3', fila: 'A', numero: 7, etiqueta: 'A7',
+    });
+  });
+
+  test('30 funciones por día durante 30 días (19 nov al 18 dic 2026)', () => {
+    const porDia = {};
+    for (const f of datos.funciones) {
+      const dia = f.id.slice(4, 14);
+      porDia[dia] = (porDia[dia] || 0) + 1;
+    }
+    const dias = Object.keys(porDia).sort();
+    expect(dias).toHaveLength(30);
+    expect([dias[0], dias[dias.length - 1]]).toEqual(['2026-11-19', '2026-12-18']);
+    expect(Object.values(porDia).every((n) => n === 30)).toBe(true);
+  });
+
+  test('salas 1–5 en 2D ($100) a las 13:00, 16:00 y 20:00; salas 6–10 en 3D ($150) a las 12:30, 15:30 y 18:30', () => {
+    const delDia = (sala) => datos.funciones
+      .filter((f) => f.id.startsWith('fun-2026-11-19-') && f.zonaId === sala)
+      .map((f) => [f.formato, f.inicio.toISOString()]);
+    expect(delDia('sala-1')).toEqual([
+      ['2D', '2026-11-19T19:00:00.000Z'],
+      ['2D', '2026-11-19T22:00:00.000Z'],
+      ['2D', '2026-11-20T02:00:00.000Z'],
+    ]);
+    expect(delDia('sala-6')).toEqual([
+      ['3D', '2026-11-19T18:30:00.000Z'],
+      ['3D', '2026-11-19T21:30:00.000Z'],
+      ['3D', '2026-11-20T00:30:00.000Z'],
+    ]);
+    const precio = new Map(datos.precios.map((p) => [p.funcionId, p]));
+    for (const f of datos.funciones) {
+      const numeroSala = Number(f.zonaId.split('-')[1]);
+      expect(f.formato).toBe(numeroSala <= 5 ? '2D' : '3D');
+      expect(precio.get(f.id)).toEqual({ funcionId: f.id, zonaId: f.zonaId, precio: f.formato === '2D' ? 100 : 150 });
+    }
+  });
+
+  test('idioma y clasificación «Por confirmar» y duración de 120 minutos', () => {
+    expect(datos.funciones.every((f) =>
+      f.idioma === 'Por confirmar' && f.clasificacion === 'Por confirmar' && f.duracionMinutos === 120
+    )).toBe(true);
+  });
+
+  test('no hay dos funciones iguales en la misma sala y hora', () => {
+    expect(new Set(datos.funciones.map((f) => f.id)).size).toBe(900);
+    expect(new Set(datos.funciones.map((f) => `${f.zonaId}|${f.inicio.toISOString()}`)).size).toBe(900);
+  });
+});
+
+describe('Datos iniciales completos', () => {
+  test('juntan web_1 y web_2 sin identificadores repetidos', () => {
+    const datos = generarDatosIniciales();
+    expect(datos.sitios.map((s) => [s.id, s.requiereComprador])).toEqual([['web_1', true], ['web_2', false]]);
+    expect(datos.funciones).toHaveLength(120 + 900);
+    expect(datos.asientos).toHaveLength(120 + 800);
+    expect(datos.precios).toHaveLength(360 + 900);
+    for (const lista of ['sitios', 'eventos', 'zonas', 'asientos', 'funciones']) {
+      expect(new Set(datos[lista].map((x) => x.id)).size).toBe(datos[lista].length);
+    }
   });
 });
