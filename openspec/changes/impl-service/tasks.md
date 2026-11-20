@@ -9,7 +9,7 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 
 ## 2. Middlewares
 - [x] 2.1 `validarSitio` con `X-Sitio` y excepción de `/salud` (Requirement: Validación de X-Sitio).
-- [ ] 2.2 `autenticarComprador` que respeta `RequiereComprador` (Requirement: Sitios sin cuenta).
+- [x] 2.2 `autenticarComprador` que respeta `RequiereComprador` (Requirement: Sitios sin cuenta).
 - [x] 2.3 Manejador de errores que mapea `ErrorRepositorio` según la tabla del contrato (Requirement: Traducción de errores).
 
 ## 3. Rutas

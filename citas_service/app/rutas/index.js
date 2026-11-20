@@ -5,12 +5,15 @@ const path = require('path');
 
 /**
  * Routers por dominio (design §1). Cada archivo de `app/rutas/` exporta
- * `crearRouter({ repos, reloj, config })` y devuelve un `express.Router` con rutas relativas
- * a `/api/v1` (por ejemplo `router.post('/reservas', ...)`).
+ * `crearRouter({ repos, reloj, config, autenticarComprador })` y devuelve un `express.Router` con
+ * rutas relativas a `/api/v1` (por ejemplo `router.post('/reservas', ...)`).
  *
  * En los controladores:
  * - `req.sitio` trae el `X-Sitio` ya validado (`web_1` o `web_2`); pásenlo al dominio, por ejemplo
  *   `reservasRepo.obtener(id, reloj(), { sitio: req.sitio })`.
+ * - En las rutas de comprador («Según sitio» o «Sí (web_1)» en el contrato) agreguen el middleware:
+ *   `router.post('/reservas', autenticarComprador, controlador)`. Deja `req.compradorId` (web_1, con
+ *   token válido; si no, responde 401) y `req.requiereComprador` (true en web_1, false en web_2).
  * - `reloj()` devuelve la fecha actual (en pruebas, la fecha fija que se inyecte).
  * - Los errores se pasan con `throw` o `next(err)`; el manejador central los traduce.
  *

@@ -8,6 +8,7 @@ const YAML = require('yaml');
 
 const { enviarError } = require('./errores');
 const { crearValidarSitio } = require('./middlewares/validar-sitio');
+const { crearAutenticarComprador } = require('./middlewares/autenticar-comprador');
 const { crearBuscadorDeRutas } = require('./middlewares/rutas-contrato');
 const { crearManejadorErrores } = require('./middlewares/errores');
 const { crearRouter: crearRouterSalud } = require('./rutas/salud');
@@ -43,7 +44,12 @@ function crearApp(config, repos, reloj = relojDelSistema) {
   // API versionada. Spec primero: aquí sólo se montan rutas definidas en openapi.yaml.
   // Orden (design §2): cors → json → salud → validarSitio → routers de negocio → 404 → errores.
   const api = express.Router();
-  const dependencias = { repos, reloj, config };
+  const autenticarComprador = crearAutenticarComprador({
+    sitiosRepo: repos && repos.sitiosRepo,
+    jwtSecret: config.jwtSecret,
+    reloj,
+  });
+  const dependencias = { repos, reloj, config, autenticarComprador };
   api.use(crearRouterSalud(dependencias)); // GET /salud no requiere X-Sitio.
   api.use(crearValidarSitio({ esRutaDelContrato: crearBuscadorDeRutas(spec) }));
   montarRouters(api, dependencias);
