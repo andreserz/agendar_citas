@@ -8,12 +8,12 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 - [x] 1.3 Agregar dependencias `jsonwebtoken` y `mssql`.
 
 ## 2. Middlewares
-- [ ] 2.1 `validarSitio` con `X-Sitio` y excepción de `/salud` (Requirement: Validación de X-Sitio).
+- [x] 2.1 `validarSitio` con `X-Sitio` y excepción de `/salud` (Requirement: Validación de X-Sitio).
 - [ ] 2.2 `autenticarComprador` que respeta `RequiereComprador` (Requirement: Sitios sin cuenta).
-- [ ] 2.3 Manejador de errores que mapea `ErrorRepositorio` según la tabla del contrato (Requirement: Traducción de errores).
+- [x] 2.3 Manejador de errores que mapea `ErrorRepositorio` según la tabla del contrato (Requirement: Traducción de errores).
 
 ## 3. Rutas
-- [ ] 3.1 `GET /salud` (Requirement: Validación de X-Sitio).
+- [x] 3.1 `GET /salud` (Requirement: Validación de X-Sitio).
 - [ ] 3.2 Catálogo: `GET /eventos`, `GET /eventos/{id}`, `GET /eventos/{id}/funciones`, `GET /funciones/{id}`, `GET /funciones/{id}/asientos` (Requirement: Rutas montadas según el contrato).
 - [ ] 3.3 Reservas: `POST /reservas` con límite obligatorio para `web_1`, `GET /reservas/{id}`, `GET /reservas?estado=activa`, `DELETE /reservas/{id}` (Requirement: Reserva de asientos).
 - [ ] 3.4 Pagos: `POST /reservas/{id}/pago` con validación de tarjetas de prueba y de formato (Requirement: Pago simulado).
