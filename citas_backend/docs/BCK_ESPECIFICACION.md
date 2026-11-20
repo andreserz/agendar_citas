@@ -56,6 +56,24 @@ Revisé `citas_service/app/repos/interfaces.js` (esqueleto del PR #11) contra SP
 | --- | --- |
 | SP01 no tenía un error para datos vacíos; una columna `NOT NULL` vacía terminaría como `50000`. | **Error nuevo 53008, «Datos del comprador incompletos»** (`422`). |
 
+### 2.4 Alineación con el contrato de OpenSpec (Construcción, 20 nov 2026)
+
+El contrato `openspec/changes/impl-backend/specs/backend-esquema-contrato` llegó después de esta Especificación y **manda** donde difieren. Al construir SP06, SP07 y SP13 se aplicó lo siguiente; los demás SP se alinean igual al construirse.
+
+| Tema | Esta Especificación decía | Se construye así (contrato) |
+| --- | --- | --- |
+| Id de reserva | `IdReserva BIGINT` en parámetros y resultados | Columna nueva `Reservas.IdPublico UNIQUEIDENTIFIER` (`NEWID()`, UUID v4, `UQ_Reservas_IdPublico`). `@ReservaId` y la columna `IdReserva` de las formas R y O son ese UUID; el `BIGINT` queda interno (aprobado por la usuaria el 20 nov 2026; contrato «Sitios sin cuenta») |
+| Parámetros | `@ClaveSitio`, `@IdComprador`, `@IdFuncion`, `@IdsAsientos` | `@Sitio`, `@CompradorId`, `@FuncionId`, `@AsientoIds`, `@ReservaId` |
+| Lista de asientos (SP07) | Arreglo JSON con `OPENJSON` | Lista CSV (`'12,15,18'`) con `STRING_SPLIT`, de 1 a 10 enteros sin repetidos |
+| Límite de 10 (SP07) | Siempre que haya comprador | Sólo si llega `@LimiteAsientos` (el servicio lo envía cuando el sitio lo exige) |
+| Comprador en SP07 | 53005 si falta; 54004 si no existe | 53005 si falta o no existe/está inactivo; **53006** si se envía a un sitio con `RequiereComprador = 0` |
+| Sitio inválido (SP07) | 54005 | **53007** «Sitio no válido» |
+| Reserva no encontrada (SP13) | 54002 | **54003** |
+| Últimos dígitos inválidos (SP13) | 53006 | El contrato no tiene código: se registra en `BitacoraErrores` y se lanza **50000** (el servicio ya validó la tarjeta) |
+| Clasificación y duración | En `Eventos` (§3.1 anterior) | En `Funciones` (§3.1) |
+
+Las formas R y O (§5.3) se arman con funciones en línea internas (`fnReservas_Encabezado`, `fnReservas_Asientos`, `fnOrdenes_Encabezado`, `fnOrdenes_Boletos`), que no forman parte del contrato y que el rol del servicio no puede llamar directamente.
+
 ## 3. Esquema final
 
 Todo lo que no aparece aquí queda **igual** al diccionario de `BCK_DEFINICION.md` §6.

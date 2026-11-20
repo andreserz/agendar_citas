@@ -20,9 +20,9 @@ Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y report
 - [x] 3.3 Índice por `CreadaEn` de `Reservas` para `spReservas_ContarPorDia`.
 
 ## 4. Procedimientos prioritarios (04_sps.sql, primero)
-- [ ] 4.1 SP06 `spAsientos_ListarPorFuncion` con `@Ahora` y `Estado` (Requirement: Procedimientos del contrato).
-- [ ] 4.2 SP07 `spReservas_Crear` con CSV, transacción, bloqueo, límite opcional y `51001` con ids (Requirement: Reglas de apartado).
-- [ ] 4.3 SP13 `spOrdenes_Pagar` atómico: intento, reserva pagada, orden, boletos y asientos comprados (Requirement: Procedimientos del contrato).
+- [x] 4.1 SP06 `spAsientos_ListarPorFuncion` con `@Ahora` y `Estado` (Requirement: Procedimientos del contrato).
+- [x] 4.2 SP07 `spReservas_Crear` con CSV, transacción, bloqueo, límite opcional y `51001` con ids (Requirement: Reglas de apartado).
+- [x] 4.3 SP13 `spOrdenes_Pagar` atómico: intento, reserva pagada, orden, boletos y asientos comprados (Requirement: Procedimientos del contrato).
 
 ## 5. Resto de procedimientos (04_sps.sql)
 - [ ] 5.1 SP01 a SP05 con las firmas de la tabla del contrato.
