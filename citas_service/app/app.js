@@ -7,6 +7,14 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yaml');
 
 const { enviarError } = require('./errores');
+const { crearValidarSitio } = require('./middlewares/validar-sitio');
+const { crearBuscadorDeRutas } = require('./middlewares/rutas-contrato');
+const { crearManejadorErrores } = require('./middlewares/errores');
+const { crearRouter: crearRouterSalud } = require('./rutas/salud');
+const { montarRouters } = require('./rutas');
+
+// Reloj por defecto: la hora del sistema. Las pruebas inyectan uno fijo (RNF06).
+const relojDelSistema = () => new Date();
 
 function cargarSpec(rutaSpec) {
   return YAML.parse(fs.readFileSync(rutaSpec, 'utf8'));
@@ -16,12 +24,13 @@ function cargarSpec(rutaSpec) {
  * Crea la aplicación Express sin abrir el puerto, para poder probarla con Supertest.
  * Los endpoints de negocio se agregan en el router de `/api/v1` conforme existan en la spec.
  */
-function crearApp(config, repos) {
+function crearApp(config, repos, reloj = relojDelSistema) {
   const app = express();
   app.disable('x-powered-by');
 
-  // Repositorios disponibles para las rutas (ADR-002). Las pruebas pueden inyectar los suyos.
+  // Repositorios y reloj disponibles para las rutas (ADR-002, ADR-003). Las pruebas pueden inyectar los suyos.
   app.locals.repos = repos;
+  app.locals.reloj = reloj;
 
   // CORS sólo para los orígenes configurados (PR9).
   app.use(cors({ origin: [...config.corsOrigenes] }));
@@ -32,7 +41,12 @@ function crearApp(config, repos) {
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(spec));
 
   // API versionada. Spec primero: aquí sólo se montan rutas definidas en openapi.yaml.
+  // Orden (design §2): cors → json → salud → validarSitio → routers de negocio → 404 → errores.
   const api = express.Router();
+  const dependencias = { repos, reloj, config };
+  api.use(crearRouterSalud(dependencias)); // GET /salud no requiere X-Sitio.
+  api.use(crearValidarSitio({ esRutaDelContrato: crearBuscadorDeRutas(spec) }));
+  montarRouters(api, dependencias);
   app.use(config.rutaBase, api);
 
   // Ruta inexistente.
@@ -40,15 +54,8 @@ function crearApp(config, repos) {
     enviarError(res, 404, 'NO_ENCONTRADO', 'El recurso solicitado no existe.');
   });
 
-  // Manejador de errores: JSON mal formado → 400; cualquier otro → 500 sin exponer detalles.
-  // eslint-disable-next-line no-unused-vars
-  app.use((err, req, res, next) => {
-    if (err.type === 'entity.parse.failed') {
-      return enviarError(res, 400, 'SOLICITUD_INVALIDA', 'El cuerpo de la petición no es JSON válido.');
-    }
-    if (config.entorno !== 'test') console.error(err);
-    return enviarError(res, 500, 'ERROR_INTERNO', 'Ocurrió un error inesperado.');
-  });
+  // Manejador de errores: traduce ErrorRepositorio y códigos de la base de datos (tabla del contrato).
+  app.use(crearManejadorErrores({ entorno: config.entorno }));
 
   return app;
 }
