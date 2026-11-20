@@ -535,7 +535,7 @@ No hay un SP para crear funciones, porque ningún sitio lo pidió. Si hace falta
 
 | Script | Contenido | Responsable |
 | --- | --- | --- |
-| `app/01_crear_bd.sql` | Crea la base **`CitasDB`** si no existe, con intercalación `Modern_Spanish_CI_AS` (sin distinción de mayúsculas, RN21) y modelo de recuperación `SIMPLE`. Crea el rol `rolCitasServicio` | A |
+| `app/01_crear_bd.sql` | Crea la base **`CitasBD`** (nombre del contrato entre capas) si no existe, con intercalación `Modern_Spanish_CI_AS` (sin distinción de mayúsculas, RN21) y modelo de recuperación `SIMPLE`. Crea el rol `rolCitasServicio` | A |
 | `app/02_tablas.sql` | Las 16 tablas del diccionario (incluida `BitacoraErrores`) con los cambios de §3, en orden de dependencias: catálogos, entidades, transacciones y soporte | A |
 | `app/03_indices.sql` | Los índices de §4 | A |
 | `app/04_sps.sql` | SP01–SP19 con la plantilla de §5, y `GRANT EXECUTE ON SCHEMA::dbo TO rolCitasServicio` | H |
