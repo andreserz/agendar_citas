@@ -191,10 +191,13 @@ GO
 /* --------------------------- 3. Transacciones -------------------------- */
 
 -- Reservas. IdComprador admite NULL: web_2 reserva sin comprador (P15, tarea 2.3).
+-- IdPublico: id que ve el servicio (UUID v4 no adivinable, contrato «Sitios sin cuenta»);
+-- Id BIGINT queda sólo como clave interna (aprobado por la usuaria el 20 nov 2026).
 IF OBJECT_ID(N'dbo.Reservas', N'U') IS NULL
 CREATE TABLE dbo.Reservas
 (
-    Id                BIGINT         IDENTITY(1,1) NOT NULL,
+    Id                BIGINT           IDENTITY(1,1) NOT NULL,
+    IdPublico         UNIQUEIDENTIFIER NOT NULL CONSTRAINT DF_Reservas_IdPublico DEFAULT (NEWID()),
     IdComprador       INT            NULL,
     IdSitio           INT            NOT NULL,
     IdFuncion         INT            NOT NULL,
@@ -204,6 +207,7 @@ CREATE TABLE dbo.Reservas
     Total             DECIMAL(12,2)  NOT NULL,
     FechaRegistro     DATETIME2(3)   NOT NULL CONSTRAINT DF_Reservas_FechaRegistro DEFAULT (SYSUTCDATETIME()),
     CONSTRAINT PK_Reservas                PRIMARY KEY CLUSTERED (Id),
+    CONSTRAINT UQ_Reservas_IdPublico      UNIQUE (IdPublico),
     CONSTRAINT FK_Reservas_Compradores    FOREIGN KEY (IdComprador)     REFERENCES dbo.Compradores (Id),
     CONSTRAINT FK_Reservas_Sitios         FOREIGN KEY (IdSitio)         REFERENCES dbo.Sitios (Id),
     CONSTRAINT FK_Reservas_Funciones      FOREIGN KEY (IdFuncion)       REFERENCES dbo.Funciones (Id),
