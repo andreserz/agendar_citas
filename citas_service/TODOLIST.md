@@ -93,8 +93,8 @@ Olas: **1** jue 19 · **2** vie 20 · **3** sáb 21 · **4** dom 22 · **E** lun
 - [x] 6.2 Quitar `resultadoSimulado` y los ejemplos con el formato anterior — **L** · ola 1 **Hecho con la reescritura de 6.1.**
 - [x] 6.3 `redocly lint` sin errores — **L** · ola 1 **18 nov: 0 errores, 3 advertencias aceptadas (sin `license`, `localhost` por D24, `/salud` sin 4XX por contrato).**
 
-### 7. Pruebas · ⬜ 0/6
-- [ ] 7.1 Pruebas de contrato por ruta con Supertest — **L** · ola 4
+### 7. Pruebas · 🔄 0/6
+- [ ] 🔄 7.1 Pruebas de contrato por ruta con Supertest — **L** · ola 4 **20 nov: suite en `tests/contrato/` integrada en el PR #23. Valida cada respuesta contra `openapi.yaml` y las pruebas de cada router se activan solas cuando existe su archivo en `app/rutas/`. Se cierra cuando estén los seis routers y pasen sus pruebas; para revisar un router antes del merge: `npx jest tests/contrato`. En la entrega se corre `CONTRATO_ESTRICTO=1 npm test`.**
 - [ ] 7.2 Pruebas de expiración con reloj fijo — **R** · ola 3
 - [ ] 7.3 Pruebas de concurrencia con `Promise.all` en memoria (CA-25) — **R** · ola 3
 - [ ] 7.4 Pruebas del límite de web_1 y de que web_2 no tiene límite — **R** · ola 3
