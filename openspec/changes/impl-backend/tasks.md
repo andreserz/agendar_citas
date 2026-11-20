@@ -7,12 +7,12 @@ Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y report
 - [x] 1.2 Crear `citas_backend/.env.example` con las variables de conexión y sin contraseñas reales.
 
 ## 2. Esquema (02_tablas.sql)
-- [ ] 2.1 Crear `CitasBD` en `01_crear_bd.sql` de forma idempotente.
-- [ ] 2.2 Tabla `Sitios` con `RequiereComprador` y datos de `web_1` (1) y `web_2` (0) (Requirement: Sitios y compradores opcionales).
-- [ ] 2.3 Hacer `Reservas.IdComprador` y `Ordenes.IdComprador` nulables.
-- [ ] 2.4 `Zonas.Capacidad`, y en `Funciones`: `Formato`, `Idioma`, `Clasificacion`, `DuracionMinutos` (Requirement: Campos de función y zona).
-- [ ] 2.5 `IntentosPago.UltimosDigitos CHAR(4) NOT NULL` (Requirement: Pagos con últimos dígitos).
-- [ ] 2.6 Verificar que no existe ninguna columna con número completo de tarjeta ni CVV.
+- [x] 2.1 Crear `CitasBD` en `01_crear_bd.sql` de forma idempotente.
+- [x] 2.2 Tabla `Sitios` con `RequiereComprador` y datos de `web_1` (1) y `web_2` (0) (Requirement: Sitios y compradores opcionales).
+- [x] 2.3 Hacer `Reservas.IdComprador` y `Ordenes.IdComprador` nulables.
+- [x] 2.4 `Zonas.Capacidad`, y en `Funciones`: `Formato`, `Idioma`, `Clasificacion`, `DuracionMinutos` (Requirement: Campos de función y zona).
+- [x] 2.5 `IntentosPago.UltimosDigitos CHAR(4) NOT NULL` (Requirement: Pagos con últimos dígitos).
+- [x] 2.6 Verificar que no existe ninguna columna con número completo de tarjeta ni CVV.
 
 ## 3. Índices (03_indices.sql)
 - [ ] 3.1 Índice único `UQ_Funciones_IdEvento_FechaHoraInicio`.
