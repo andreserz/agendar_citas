@@ -15,9 +15,9 @@ Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y report
 - [x] 2.6 Verificar que no existe ninguna columna con número completo de tarjeta ni CVV.
 
 ## 3. Índices (03_indices.sql)
-- [ ] 3.1 Índice único `UQ_Funciones_IdEvento_FechaHoraInicio`.
-- [ ] 3.2 Índice por `Folio` y por `Codigo` de boleto para `spOrdenes_Buscar`.
-- [ ] 3.3 Índice por `CreadaEn` de `Reservas` para `spReservas_ContarPorDia`.
+- [x] 3.1 Índice único `UQ_Funciones_IdEvento_FechaHoraInicio`.
+- [x] 3.2 Índice por `Folio` y por `Codigo` de boleto para `spOrdenes_Buscar`.
+- [x] 3.3 Índice por `CreadaEn` de `Reservas` para `spReservas_ContarPorDia`.
 
 ## 4. Procedimientos prioritarios (04_sps.sql, primero)
 - [ ] 4.1 SP06 `spAsientos_ListarPorFuncion` con `@Ahora` y `Estado` (Requirement: Procedimientos del contrato).
@@ -36,7 +36,7 @@ Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y report
 
 ## 6. Datos iniciales (05_datos_iniciales.sql)
 - [ ] 6.1 Semilla de web_1: 1 evento, 3 zonas, 120 asientos, 120 funciones, 360 precios (Requirement: Semilla de web_1 y web_2).
-- [ ] 6.2 Semilla de web_2: 1 evento, 10 salas con capacidad 80, 800 asientos, 900 funciones del 19 nov al 18 dic 2026, y 9,000 precios (10 salas × 900 funciones), más los campos de formato.
+- [ ] 6.2 Semilla de web_2: 1 evento, 10 salas con capacidad 80, 800 asientos, 900 funciones del 19 nov al 18 dic 2026, y 900 precios (uno por función, el de su sala: RN30 y contrato «Semilla de datos acordada»), más los campos de formato. Corregido el 20 nov 2026: decía 9,000 (10 salas × 900 funciones).
 - [ ] 6.3 Confirmar que la carga es idempotente.
 
 ## 7. Pruebas (tests/)
@@ -44,7 +44,7 @@ Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y report
 - [ ] 7.2 Vencimiento con `@Ahora` y `@ExpiraEn <= @Ahora` → `53004`.
 - [ ] 7.3 Límite de 10 con `@LimiteAsientos` → `53001`.
 - [ ] 7.4 Pago atómico con fallo forzado al crear un boleto: sin orden parcial.
-- [ ] 7.5 Conteos de la semilla (web_1: 120 funciones y 360 precios; web_2: 800 asientos, 900 funciones y 9,000 precios).
+- [ ] 7.5 Conteos de la semilla (web_1: 120 funciones y 360 precios; web_2: 800 asientos, 900 funciones y 900 precios).
 - [ ] 7.6 Unicidad de `Folio` y código de boleto.
 - [ ] 7.7 `RequiereComprador` con `53005` y `53006`.
 

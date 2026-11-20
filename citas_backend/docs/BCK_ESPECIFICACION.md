@@ -82,7 +82,7 @@ Todo lo que no aparece aquí queda **igual** al diccionario de `BCK_DEFINICION.m
 
 | Antes | Después | Motivo |
 | --- | --- | --- |
-| `UQ_Funciones_IdEvento_FechaHoraInicio` | `UQ_Funciones_IdEvento_FechaHoraInicio_IdZona` | P16. SQL Server trata los `NULL` como iguales en un `UNIQUE`, así que web_1 (`IdZona` nula) conserva la misma protección. |
+| `UQ_Funciones_IdEvento_FechaHoraInicio` | `UQ_Funciones_IdEvento_FechaHoraInicio` con clave `(IdEvento, FechaHoraInicio, IdZona)`. Conserva el nombre del contrato (aprobado por la usuaria el 20 nov 2026) y se crea en `03_indices.sql` (tarea 3.1) | P16. SQL Server trata los `NULL` como iguales en un `UNIQUE`, así que web_1 (`IdZona` nula) conserva la misma protección. |
 
 ### 3.3 Columnas calculadas
 
@@ -117,7 +117,7 @@ Las restricciones `PK_` y `UQ_` crean su propio índice en `02_tablas.sql`. Aqu�
 | `IX_Ordenes_IdComprador` | `Ordenes (IdComprador)` | INCLUDE (`FechaCompra`, `Total`) | SP15 |
 | `IX_Boletos_IdOrden` | `Boletos (IdOrden)` | — | SP13–SP16, SP18 |
 
-**Cambio respecto a la Propuesta:** se elimina `IX_Funciones_Evento (IdEvento, FechaHoraInicio)`, porque `UQ_Funciones_IdEvento_FechaHoraInicio_IdZona` empieza con esas mismas columnas y ya sirve para SP04. `UQ_Boletos_IdFuncion_IdAsiento` sirve para contar comprados (SP10) y `UQ_Boletos_Codigo`, para SP18.
+**Cambio respecto a la Propuesta:** se elimina `IX_Funciones_Evento (IdEvento, FechaHoraInicio)`, porque `UQ_Funciones_IdEvento_FechaHoraInicio` (clave con `IdZona`) empieza con esas mismas columnas y ya sirve para SP04. `UQ_Boletos_IdFuncion_IdAsiento` sirve para contar comprados (SP10) y `UQ_Boletos_Codigo`, para SP18.
 
 ## 5. Plantilla común de los procedimientos
 
