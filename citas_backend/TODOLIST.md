@@ -86,7 +86,7 @@ Fuente: `openspec/changes/impl-backend/` (`tasks.md` tiene el detalle). El contr
 Cambios que este plan exige a la base de datos: `Sitios.RequiereComprador`, compradores nulables, `UltimosDigitos` en intentos, código `52002` para reservas liberadas, SP18 renombrado a `spOrdenes_Buscar` y SP19 como `spReservas_ContarPorDia`.
 
 - [x] 1. Preparación: `app/`, `tests/` y `.env.example` (tareas 1.1–1.2) **Hecho el 20 nov 2026 en la rama `backend/impl-backend` (S); aprobado por la usuaria el 20 nov 2026. Se agregó `citas_backend/.gitignore` con `.env` y se corrigió `CitasDB` → `CitasBD` en `BCK_ESPECIFICACION.md` §9.**
-- [ ] 2. Esquema en `02_tablas.sql` (tareas 2.1–2.6)
+- [x] 2. Esquema en `02_tablas.sql` (tareas 2.1–2.6) **Hecho el 20 nov 2026 (S, rama `backend/impl-backend-esquema`): `01_crear_bd.sql` (CitasBD, `Modern_Spanish_CI_AS`, SIMPLE, rol `rolCitasServicio`) y `02_tablas.sql` (16 tablas). Validado en SQL Server 2019 con una base temporal: dos ejecuciones sin errores, columnas y restricciones del contrato correctas, sin columnas de tarjeta ni CVV. Las filas de `Sitios` se cargan en `05` (tareas 6.1–6.2). Ajustes por el punto 3 de `promt.md` (más sitios a futuro) tras la revisión de `sqlserver-dba`: `Sitios.Moneda` y `Sitios.ZonaHoraria`, `CK_AsientosFuncion_Vendido` (RN15) y `RECOVERY SIMPLE` sólo al crear la base; `BCK_ESPECIFICACION.md` §3.1 alineada con el contrato. Revalidado en SQL Server 2019. Aprobado por la usuaria el 20 nov 2026; se incluye el `promt.md` actualizado.**
 - [ ] 3. Índices en `03_indices.sql` (tareas 3.1–3.3)
 - [ ] 4. Procedimientos prioritarios: SP06, SP07 y SP13 (tareas 4.1–4.3)
 - [ ] 5. Resto de procedimientos SP01–SP19 en `04_sps.sql` (tareas 5.1–5.8)

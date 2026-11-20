@@ -65,11 +65,15 @@ Todo lo que no aparece aquí queda **igual** al diccionario de `BCK_DEFINICION.m
 | Tabla | Columna | Tipo | N | Restricción | Origen |
 | --- | --- | --- | --- | --- | --- |
 | `Sitios` | `RequiereComprador` | `BIT` | No | `DF_Sitios_RequiereComprador` = 1 | P15 |
-| `Eventos` | `Clasificacion` | `VARCHAR(5)` | Sí | — | P16 |
-| `Eventos` | `DuracionMin` | `SMALLINT` | Sí | `CK_Eventos_DuracionMin` (> 0) | P16 |
+| `Sitios` | `Moneda` | `CHAR(3)` | No | `DF_Sitios_Moneda` = `MXN`, `CK_Sitios_Moneda` (`MXN` o `USD`) | Contrato (moneda por sitio) y `promt.md` punto 3 (20 nov 2026) |
+| `Sitios` | `ZonaHoraria` | `VARCHAR(64)` | No | `DF_Sitios_ZonaHoraria` = `America/Mexico_City` | `promt.md` punto 3 (20 nov 2026). SP19 sigue con UTC−6 fijo hasta que un change del contrato diga lo contrario |
+| `Zonas` | `Capacidad` | `INT` | Sí | `CK_Zonas_Capacidad` (> 0) | Contrato (sala de web_2 = 80) |
 | `Funciones` | `IdZona` | `INT` | Sí | `FK_Funciones_Zonas` | P16 (sala) |
-| `Funciones` | `Formato` | `VARCHAR(2)` | Sí | `CK_Funciones_Formato` (`IN ('2D','3D')`) | P16 |
-| `Funciones` | `Idioma` | `NVARCHAR(30)` | Sí | — | P16 |
+| `Funciones` | `Formato` | `VARCHAR(10)` | Sí | `CK_Funciones_Formato` (`IN ('2D','3D')`) | P16, tipo del contrato |
+| `Funciones` | `Idioma` | `NVARCHAR(40)` | Sí | — | P16, tipo del contrato |
+| `Funciones` | `Clasificacion` | `NVARCHAR(20)` | Sí | — | Contrato: va en `Funciones`, no en `Eventos` |
+| `Funciones` | `DuracionMinutos` | `INT` | Sí | `CK_Funciones_DuracionMinutos` (> 0) | Contrato: reemplaza `Eventos.DuracionMin` |
+| `AsientosFuncion` | — | — | — | `CK_AsientosFuncion_Vendido`: si `Vendido = 1`, `IdReservaActual` no es nulo y `ExpiraEn` es nulo | RN15 (revisión `sqlserver-dba`, 20 nov 2026) |
 | `Reservas` | `IdComprador` | `INT` | **Sí** (antes No) | `FK_Reservas_Compradores` | P15 |
 | `Ordenes` | `IdComprador` | `INT` | **Sí** (antes No) | `FK_Ordenes_Compradores` | P15 |
 | `IntentosPago` | `UltimosDigitos` | `CHAR(4)` | No | `CK_IntentosPago_UltimosDigitos` (`NOT LIKE '%[^0-9]%'`) | P19 |
