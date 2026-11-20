@@ -10,7 +10,7 @@ probarContratoRepos('memoria', () => crearReposEnMemoria());
 describe('crearRepos (selección por REPOSITORIO)', () => {
   test('usa memoria por defecto', () => {
     const repos = crearRepos(cargarConfig({ NODE_ENV: 'test' }));
-    expect(Object.keys(repos).sort()).toEqual(['asientosRepo', 'ordenesRepo', 'reservasRepo']);
+    expect(Object.keys(repos).sort()).toEqual(['asientosRepo', 'ordenesRepo', 'reservasRepo', 'sitiosRepo']);
   });
 
   test('falla con un valor no disponible', () => {

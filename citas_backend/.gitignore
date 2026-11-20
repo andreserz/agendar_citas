@@ -1,0 +1,2 @@
+# Variables de conexión reales: nunca se suben al repositorio (RNF-B07)
+.env

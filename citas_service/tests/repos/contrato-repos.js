@@ -82,12 +82,15 @@ function probarContratoRepos(nombre, crearRepos) {
     });
 
     describe('AsientosRepo', () => {
-      test('lista el evento de web_1 y filtra por sitio', async () => {
-        const eventos = await asientosRepo.listarEventos();
+      test('lista el evento de cada sitio y filtra por sitio', async () => {
+        const eventos = await asientosRepo.listarEventos({ sitio: 'web_1' });
         expect(eventos).toEqual([
           expect.objectContaining({ id: 'evt-suegra', sitio: 'web_1', nombre: '¡Que no se entere la suegra!' }),
         ]);
-        expect(await asientosRepo.listarEventos({ sitio: 'web_2' })).toEqual([]);
+        expect(await asientosRepo.listarEventos({ sitio: 'web_2' })).toEqual([
+          expect.objectContaining({ id: 'evt-spiderman', sitio: 'web_2', nombre: 'Spider-Man' }),
+        ]);
+        expect(await asientosRepo.listarEventos()).toHaveLength(2);
         expect(await asientosRepo.obtenerEvento('evt-suegra')).toMatchObject({ id: 'evt-suegra' });
         expect(await asientosRepo.obtenerEvento('no-existe')).toBeNull();
       });
@@ -129,6 +132,26 @@ function probarContratoRepos(nombre, crearRepos) {
         });
         expect(asientos.find((a) => a.id === 'L10')).toMatchObject({ zonaId: 'balcon', precio: 300 });
         await fallaCon(asientosRepo.listarAsientos('no-existe', T0), CODIGOS.NO_ENCONTRADO);
+      });
+
+      test('web_2: 900 funciones; cada una muestra sólo su sala con 80 asientos y su formato', async () => {
+        expect(await asientosRepo.listarFunciones('evt-spiderman')).toHaveLength(900);
+        const funcionId = 'fun-2026-11-19-1230-sala-6';
+        expect(await asientosRepo.obtenerFuncion(funcionId)).toEqual({
+          id: funcionId,
+          eventoId: 'evt-spiderman',
+          inicio: new Date('2026-11-19T18:30:00.000Z'),
+          formato: '3D',
+          idioma: 'Por confirmar',
+          clasificacion: 'Por confirmar',
+          duracionMinutos: 120,
+        });
+        expect(await asientosRepo.listarZonas(funcionId)).toEqual([
+          { id: 'sala-6', nombre: 'Sala 6', precio: 150, moneda: 'MXN' },
+        ]);
+        const asientos = await asientosRepo.listarAsientos(funcionId, T0);
+        expect(asientos).toHaveLength(80);
+        expect(asientos.every((a) => a.zonaId === 'sala-6' && a.precio === 150 && a.estado === 'disponible')).toBe(true);
       });
 
       test('exige `ahora` como fecha', async () => {

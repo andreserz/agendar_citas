@@ -7,9 +7,12 @@
  * - 120 funciones: jueves, viernes y sábados del 1 oct al 31 dic 2026 × 3 horarios.
  * - 360 precios: uno por zona y función (P14).
  * Las horas se guardan en UTC. CDMX es UTC−6 todo el año (E18).
+ * Los datos de web_2 están en `datos-iniciales-web2.js`; `generarDatosIniciales` junta ambos.
  */
 
-const SITIO = { id: 'web_1', nombre: 'Teatro Aquí nadie actúa normal' };
+const { generarDatosWeb2 } = require('./datos-iniciales-web2');
+
+const SITIO = { id: 'web_1', nombre: 'Teatro Aquí nadie actúa normal', requiereComprador: true };
 
 const EVENTO = {
   id: 'evt-suegra',
@@ -76,8 +79,8 @@ function generarAsientos() {
   return asientos;
 }
 
-/** Devuelve una copia nueva de los datos iniciales cada vez que se llama. */
-function generarDatosIniciales() {
+/** Devuelve una copia nueva de los datos iniciales de web_1 cada vez que se llama. */
+function generarDatosWeb1() {
   const funciones = generarFunciones();
   return {
     sitios: [{ ...SITIO }],
@@ -91,4 +94,14 @@ function generarDatosIniciales() {
   };
 }
 
-module.exports = { generarDatosIniciales };
+/**
+ * Datos iniciales completos (web_1 y web_2), iguales a la semilla del contrato compartido.
+ * Devuelve una copia nueva cada vez que se llama.
+ */
+function generarDatosIniciales() {
+  const web1 = generarDatosWeb1();
+  const web2 = generarDatosWeb2();
+  return Object.fromEntries(Object.keys(web1).map((k) => [k, [...web1[k], ...web2[k]]]));
+}
+
+module.exports = { generarDatosIniciales, generarDatosWeb1, generarDatosWeb2 };

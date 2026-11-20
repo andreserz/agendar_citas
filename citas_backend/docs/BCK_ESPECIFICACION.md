@@ -56,6 +56,24 @@ Revisé `citas_service/app/repos/interfaces.js` (esqueleto del PR #11) contra SP
 | --- | --- |
 | SP01 no tenía un error para datos vacíos; una columna `NOT NULL` vacía terminaría como `50000`. | **Error nuevo 53008, «Datos del comprador incompletos»** (`422`). |
 
+### 2.4 Alineación con el contrato de OpenSpec (Construcción, 20 nov 2026)
+
+El contrato `openspec/changes/impl-backend/specs/backend-esquema-contrato` llegó después de esta Especificación y **manda** donde difieren. Al construir SP06, SP07 y SP13 se aplicó lo siguiente; los demás SP se alinean igual al construirse.
+
+| Tema | Esta Especificación decía | Se construye así (contrato) |
+| --- | --- | --- |
+| Id de reserva | `IdReserva BIGINT` en parámetros y resultados | Columna nueva `Reservas.IdPublico UNIQUEIDENTIFIER` (`NEWID()`, UUID v4, `UQ_Reservas_IdPublico`). `@ReservaId` y la columna `IdReserva` de las formas R y O son ese UUID; el `BIGINT` queda interno (aprobado por la usuaria el 20 nov 2026; contrato «Sitios sin cuenta») |
+| Parámetros | `@ClaveSitio`, `@IdComprador`, `@IdFuncion`, `@IdsAsientos` | `@Sitio`, `@CompradorId`, `@FuncionId`, `@AsientoIds`, `@ReservaId` |
+| Lista de asientos (SP07) | Arreglo JSON con `OPENJSON` | Lista CSV (`'12,15,18'`) con `STRING_SPLIT`, de 1 a 10 enteros sin repetidos |
+| Límite de 10 (SP07) | Siempre que haya comprador | Sólo si llega `@LimiteAsientos` (el servicio lo envía cuando el sitio lo exige) |
+| Comprador en SP07 | 53005 si falta; 54004 si no existe | 53005 si falta o no existe/está inactivo; **53006** si se envía a un sitio con `RequiereComprador = 0` |
+| Sitio inválido (SP07) | 54005 | **53007** «Sitio no válido» |
+| Reserva no encontrada (SP13) | 54002 | **54003** |
+| Últimos dígitos inválidos (SP13) | 53006 | El contrato no tiene código: se registra en `BitacoraErrores` y se lanza **50000** (el servicio ya validó la tarjeta) |
+| Clasificación y duración | En `Eventos` (§3.1 anterior) | En `Funciones` (§3.1) |
+
+Las formas R y O (§5.3) se arman con funciones en línea internas (`fnReservas_Encabezado`, `fnReservas_Asientos`, `fnOrdenes_Encabezado`, `fnOrdenes_Boletos`), que no forman parte del contrato y que el rol del servicio no puede llamar directamente.
+
 ## 3. Esquema final
 
 Todo lo que no aparece aquí queda **igual** al diccionario de `BCK_DEFINICION.md` §6.
@@ -65,11 +83,15 @@ Todo lo que no aparece aquí queda **igual** al diccionario de `BCK_DEFINICION.m
 | Tabla | Columna | Tipo | N | Restricción | Origen |
 | --- | --- | --- | --- | --- | --- |
 | `Sitios` | `RequiereComprador` | `BIT` | No | `DF_Sitios_RequiereComprador` = 1 | P15 |
-| `Eventos` | `Clasificacion` | `VARCHAR(5)` | Sí | — | P16 |
-| `Eventos` | `DuracionMin` | `SMALLINT` | Sí | `CK_Eventos_DuracionMin` (> 0) | P16 |
+| `Sitios` | `Moneda` | `CHAR(3)` | No | `DF_Sitios_Moneda` = `MXN`, `CK_Sitios_Moneda` (`MXN` o `USD`) | Contrato (moneda por sitio) y `promt.md` punto 3 (20 nov 2026) |
+| `Sitios` | `ZonaHoraria` | `VARCHAR(64)` | No | `DF_Sitios_ZonaHoraria` = `America/Mexico_City` | `promt.md` punto 3 (20 nov 2026). SP19 sigue con UTC−6 fijo hasta que un change del contrato diga lo contrario |
+| `Zonas` | `Capacidad` | `INT` | Sí | `CK_Zonas_Capacidad` (> 0) | Contrato (sala de web_2 = 80) |
 | `Funciones` | `IdZona` | `INT` | Sí | `FK_Funciones_Zonas` | P16 (sala) |
-| `Funciones` | `Formato` | `VARCHAR(2)` | Sí | `CK_Funciones_Formato` (`IN ('2D','3D')`) | P16 |
-| `Funciones` | `Idioma` | `NVARCHAR(30)` | Sí | — | P16 |
+| `Funciones` | `Formato` | `VARCHAR(10)` | Sí | `CK_Funciones_Formato` (`IN ('2D','3D')`) | P16, tipo del contrato |
+| `Funciones` | `Idioma` | `NVARCHAR(40)` | Sí | — | P16, tipo del contrato |
+| `Funciones` | `Clasificacion` | `NVARCHAR(20)` | Sí | — | Contrato: va en `Funciones`, no en `Eventos` |
+| `Funciones` | `DuracionMinutos` | `INT` | Sí | `CK_Funciones_DuracionMinutos` (> 0) | Contrato: reemplaza `Eventos.DuracionMin` |
+| `AsientosFuncion` | — | — | — | `CK_AsientosFuncion_Vendido`: si `Vendido = 1`, `IdReservaActual` no es nulo y `ExpiraEn` es nulo | RN15 (revisión `sqlserver-dba`, 20 nov 2026) |
 | `Reservas` | `IdComprador` | `INT` | **Sí** (antes No) | `FK_Reservas_Compradores` | P15 |
 | `Ordenes` | `IdComprador` | `INT` | **Sí** (antes No) | `FK_Ordenes_Compradores` | P15 |
 | `IntentosPago` | `UltimosDigitos` | `CHAR(4)` | No | `CK_IntentosPago_UltimosDigitos` (`NOT LIKE '%[^0-9]%'`) | P19 |
@@ -78,7 +100,7 @@ Todo lo que no aparece aquí queda **igual** al diccionario de `BCK_DEFINICION.m
 
 | Antes | Después | Motivo |
 | --- | --- | --- |
-| `UQ_Funciones_IdEvento_FechaHoraInicio` | `UQ_Funciones_IdEvento_FechaHoraInicio_IdZona` | P16. SQL Server trata los `NULL` como iguales en un `UNIQUE`, así que web_1 (`IdZona` nula) conserva la misma protección. |
+| `UQ_Funciones_IdEvento_FechaHoraInicio` | `UQ_Funciones_IdEvento_FechaHoraInicio` con clave `(IdEvento, FechaHoraInicio, IdZona)`. Conserva el nombre del contrato (aprobado por la usuaria el 20 nov 2026) y se crea en `03_indices.sql` (tarea 3.1) | P16. SQL Server trata los `NULL` como iguales en un `UNIQUE`, así que web_1 (`IdZona` nula) conserva la misma protección. |
 
 ### 3.3 Columnas calculadas
 
@@ -113,7 +135,7 @@ Las restricciones `PK_` y `UQ_` crean su propio índice en `02_tablas.sql`. Aqu�
 | `IX_Ordenes_IdComprador` | `Ordenes (IdComprador)` | INCLUDE (`FechaCompra`, `Total`) | SP15 |
 | `IX_Boletos_IdOrden` | `Boletos (IdOrden)` | — | SP13–SP16, SP18 |
 
-**Cambio respecto a la Propuesta:** se elimina `IX_Funciones_Evento (IdEvento, FechaHoraInicio)`, porque `UQ_Funciones_IdEvento_FechaHoraInicio_IdZona` empieza con esas mismas columnas y ya sirve para SP04. `UQ_Boletos_IdFuncion_IdAsiento` sirve para contar comprados (SP10) y `UQ_Boletos_Codigo`, para SP18.
+**Cambio respecto a la Propuesta:** se elimina `IX_Funciones_Evento (IdEvento, FechaHoraInicio)`, porque `UQ_Funciones_IdEvento_FechaHoraInicio` (clave con `IdZona`) empieza con esas mismas columnas y ya sirve para SP04. `UQ_Boletos_IdFuncion_IdAsiento` sirve para contar comprados (SP10) y `UQ_Boletos_Codigo`, para SP18.
 
 ## 5. Plantilla común de los procedimientos
 
@@ -535,7 +557,7 @@ No hay un SP para crear funciones, porque ningún sitio lo pidió. Si hace falta
 
 | Script | Contenido | Responsable |
 | --- | --- | --- |
-| `app/01_crear_bd.sql` | Crea la base **`CitasDB`** si no existe, con intercalación `Modern_Spanish_CI_AS` (sin distinción de mayúsculas, RN21) y modelo de recuperación `SIMPLE`. Crea el rol `rolCitasServicio` | A |
+| `app/01_crear_bd.sql` | Crea la base **`CitasBD`** (nombre del contrato entre capas) si no existe, con intercalación `Modern_Spanish_CI_AS` (sin distinción de mayúsculas, RN21) y modelo de recuperación `SIMPLE`. Crea el rol `rolCitasServicio` | A |
 | `app/02_tablas.sql` | Las 16 tablas del diccionario (incluida `BitacoraErrores`) con los cambios de §3, en orden de dependencias: catálogos, entidades, transacciones y soporte | A |
 | `app/03_indices.sql` | Los índices de §4 | A |
 | `app/04_sps.sql` | SP01–SP19 con la plantilla de §5, y `GRANT EXECUTE ON SCHEMA::dbo TO rolCitasServicio` | H |
