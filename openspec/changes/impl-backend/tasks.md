@@ -3,8 +3,8 @@
 Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y reportar en `citas_backend/TODOLIST.md`.
 
 ## 1. Preparación
-- [ ] 1.1 Crear `citas_backend/app/` y `citas_backend/tests/` (Requirement: Scripts de construcción).
-- [ ] 1.2 Crear `citas_backend/.env.example` con las variables de conexión y sin contraseñas reales.
+- [x] 1.1 Crear `citas_backend/app/` y `citas_backend/tests/` (Requirement: Scripts de construcción).
+- [x] 1.2 Crear `citas_backend/.env.example` con las variables de conexión y sin contraseñas reales.
 
 ## 2. Esquema (02_tablas.sql)
 - [ ] 2.1 Crear `CitasBD` en `01_crear_bd.sql` de forma idempotente.
