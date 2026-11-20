@@ -62,7 +62,7 @@
  * @typedef {Object} Reserva
  * @property {string} id
  * @property {string} sitio
- * @property {string} compradorId
+ * @property {string|null} compradorId  `null` en los sitios sin cuenta (`web_2`)
  * @property {string} funcionId
  * @property {EstadoReserva} estado  `vencida` se calcula con `ahora`; nunca se guarda
  * @property {AsientoReservado[]} asientos
@@ -155,7 +155,8 @@ class ReservasRepo {
    *
    * `limitePorComprador` es obligatorio: la capa de API decide el valor (10 para los sitios
    * con `RequiereComprador = 1`) y usa `null` cuando el sitio no tiene límite (RN04).
-   * @param {{ sitio: string, compradorId: string, funcionId: string, asientoIds: string[],
+   * `compradorId` puede ser `null` en los sitios sin comprador (`web_2`, D18).
+   * @param {{ sitio: string, compradorId: string|null, funcionId: string, asientoIds: string[],
    *           ahora: Date, expiraEn: Date, limitePorComprador: number|null }} datos
    * @returns {Promise<Reserva>}
    */

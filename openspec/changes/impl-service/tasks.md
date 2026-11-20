@@ -15,8 +15,8 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 ## 3. Rutas
 - [x] 3.1 `GET /salud` (Requirement: Validación de X-Sitio).
 - [ ] 3.2 Catálogo: `GET /eventos`, `GET /eventos/{id}`, `GET /eventos/{id}/funciones`, `GET /funciones/{id}`, `GET /funciones/{id}/asientos` (Requirement: Rutas montadas según el contrato).
-- [ ] 3.3 Reservas: `POST /reservas` con límite obligatorio para `web_1`, `GET /reservas/{id}`, `GET /reservas?estado=activa`, `DELETE /reservas/{id}` (Requirement: Reserva de asientos).
-- [ ] 3.4 Pagos: `POST /reservas/{id}/pago` con validación de tarjetas de prueba y de formato (Requirement: Pago simulado).
+- [x] 3.3 Reservas: `POST /reservas` con límite obligatorio para `web_1`, `GET /reservas/{id}`, `GET /reservas?estado=activa`, `DELETE /reservas/{id}` (Requirement: Reserva de asientos).
+- [x] 3.4 Pagos: `POST /reservas/{id}/pago` con validación de tarjetas de prueba y de formato (Requirement: Pago simulado).
 - [ ] 3.5 Órdenes: `GET /ordenes`, `GET /ordenes/{id}`, `GET /ordenes/buscar` (Requirement: Recuperar compra sin cuenta).
 - [ ] 3.6 Reportes: `GET /reportes/reservas-por-dia` con rango máximo de 92 días (Requirement: Conteo diario de reservas).
 - [ ] 3.7 Auth: `POST /auth/registro`, `POST /auth/login` (Requirement: Autenticación de compradores).
@@ -41,10 +41,10 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 
 ## 7. Pruebas
 - [ ] 7.1 Pruebas de contrato por ruta con Supertest (Requirement: Pruebas de contrato).
-- [ ] 7.2 Pruebas de expiración con reloj fijo.
-- [ ] 7.3 Pruebas de concurrencia por Promise.all en memoria (CA-25).
-- [ ] 7.4 Pruebas de límite de web_1 y ausencia de límite en web_2.
-- [ ] 7.5 Pruebas de pago: tarjetas de prueba, atomicidad y no guardar número completo.
+- [x] 7.2 Pruebas de expiración con reloj fijo.
+- [x] 7.3 Pruebas de concurrencia por Promise.all en memoria (CA-25).
+- [x] 7.4 Pruebas de límite de web_1 y ausencia de límite en web_2.
+- [x] 7.5 Pruebas de pago: tarjetas de prueba, atomicidad y no guardar número completo.
 - [ ] 7.6 Mantener verde la suite actual (58 pruebas).
 
 ## 8. Entrega

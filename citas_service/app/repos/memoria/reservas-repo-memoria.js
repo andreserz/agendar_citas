@@ -31,7 +31,11 @@ class ReservasRepoMemoria extends ReservasRepo {
     exigirFecha(ahora, 'ahora');
     exigirFecha(expiraEn, 'expiraEn');
     exigirTexto(sitio, 'sitio');
-    exigirTexto(compradorId, 'compradorId');
+    // web_2 no tiene comprador: el repositorio guarda `null` (IdComprador nullable, D18).
+    const comprador = compradorId === undefined || compradorId === null || compradorId === ''
+      ? null
+      : compradorId;
+    if (comprador !== null) exigirTexto(comprador, 'compradorId');
     exigirLimite(datos, limitePorComprador);
     if (expiraEn <= ahora) {
       throw new ErrorRepositorio(CODIGOS.SOLICITUD_INVALIDA, 'expiraEn debe ser posterior a ahora.');
@@ -101,7 +105,7 @@ class ReservasRepoMemoria extends ReservasRepo {
       // UUID v4 no adivinable: es el único secreto de una reserva de web_2 (design §4).
       id: crypto.randomUUID(),
       sitio,
-      compradorId,
+      compradorId: comprador,
       funcionId,
       estado: 'activa',
       asientos: asientos.map(({ moneda, ...resto }) => resto),
