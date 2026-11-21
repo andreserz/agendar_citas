@@ -5,6 +5,7 @@ const { SitiosRepoMemoria } = require('./sitios-repo-memoria');
 const { AsientosRepoMemoria } = require('./asientos-repo-memoria');
 const { ReservasRepoMemoria } = require('./reservas-repo-memoria');
 const { OrdenesRepoMemoria } = require('./ordenes-repo-memoria');
+const { ReportesRepoMemoria } = require('./reportes-repo-memoria');
 
 /**
  * Crea los repositorios en memoria sobre un mismo almacén, cargado con los datos
@@ -17,6 +18,7 @@ function crearReposEnMemoria(datos) {
     asientosRepo: new AsientosRepoMemoria(almacen),
     reservasRepo: new ReservasRepoMemoria(almacen),
     ordenesRepo: new OrdenesRepoMemoria(almacen),
+    reportesRepo: new ReportesRepoMemoria(almacen),
   };
 }
 

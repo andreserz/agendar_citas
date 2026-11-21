@@ -68,11 +68,11 @@ Olas: **1** jue 19 · **2** vie 20 · **3** sáb 21 · **4** dom 22 · **E** lun
 
 ### 3. Rutas · 🔄 1/7
 - [x] 3.1 `GET /salud` — **S** · ola 2 **Hecho el 20 nov (PR #21), junto con el montaje automático de routers: R y D sólo agregan su archivo en `app/rutas/` sin editar `app.js`.**
-- [ ] 3.2 Catálogo: eventos, funciones y asientos — **D** · ola 3
+- [x] 3.2 Catálogo: eventos, funciones y asientos — **D** · ola 3 **Hecho el 20 nov en `service/datos-rutas`: `app/rutas/catalogo.js` (5 rutas, horas en CDMX con `app/fechas.js`).**
 - [ ] 3.3 Reservas: `POST`, `GET` por id, `GET ?estado=activa` y `DELETE`, con límite obligatorio para `web_1` — **R** · ola 3
 - [ ] 3.4 Pago: `POST /reservas/{id}/pago` con tarjetas de prueba y validación de formato — **R** · ola 3
-- [ ] 3.5 Órdenes: `GET /ordenes`, `GET /ordenes/{id}` y `GET /ordenes/buscar` — **D** · ola 3
-- [ ] 3.6 Reportes: `GET /reportes/reservas-por-dia` con rango máximo de 92 días — **D** · ola 3
+- [x] 3.5 Órdenes: `GET /ordenes`, `GET /ordenes/{id}` y `GET /ordenes/buscar` — **D** · ola 3 **Hecho el 20 nov en `service/datos-rutas`: `app/rutas/ordenes.js` y `OrdenesRepo.buscar` (SP18).**
+- [x] 3.6 Reportes: `GET /reportes/reservas-por-dia` con rango máximo de 92 días — **D** · ola 3 **Hecho el 20 nov en `service/datos-rutas`: `app/rutas/reportes.js` y `ReportesRepo` (SP19).**
 - [ ] 3.7 Auth: `POST /auth/registro` y `POST /auth/login` — **S** · ola 3
 
 ### 4. Dominio · 🔄 3/6
