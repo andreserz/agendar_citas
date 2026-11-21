@@ -62,7 +62,7 @@
  * @typedef {Object} Reserva
  * @property {string} id
  * @property {string} sitio
- * @property {string} compradorId
+ * @property {string|null} compradorId  `null` en los sitios sin cuenta (`web_2`)
  * @property {string} funcionId
  * @property {EstadoReserva} estado  `vencida` se calcula con `ahora`; nunca se guarda
  * @property {AsientoReservado[]} asientos
@@ -151,15 +151,23 @@ class ReservasRepo {
    * Aparta todos los asientos o ninguno (garantía 1). Errores:
    * SOLICITUD_INVALIDA (lista vacía, repetida, de más de 10, asiento ajeno a la función,
    * `expiraEn <= ahora`), NO_ENCONTRADO (función), ASIENTO_NO_DISPONIBLE (con
-   * `detalles.asientos`), LIMITE_EXCEDIDO (sólo si se indica `limitePorComprador`).
-   * @param {{ sitio: string, compradorId: string, funcionId: string, asientoIds: string[],
-   *           ahora: Date, expiraEn: Date, limitePorComprador?: number }} datos
+   * `detalles.asientos`), LIMITE_EXCEDIDO (con `detalles.maximo`, `actuales` y `solicitados`).
+   *
+   * `limitePorComprador` es obligatorio: la capa de API decide el valor (10 para los sitios
+   * con `RequiereComprador = 1`) y usa `null` cuando el sitio no tiene límite (RN04).
+   * `compradorId` puede ser `null` en los sitios sin comprador (`web_2`, D18).
+   * @param {{ sitio: string, compradorId: string|null, funcionId: string, asientoIds: string[],
+   *           ahora: Date, expiraEn: Date, limitePorComprador: number|null }} datos
    * @returns {Promise<Reserva>}
    */
   async crear(datos) { throw new NoImplementado('ReservasRepo.crear'); }
 
-  /** @param {string} reservaId @param {Date} ahora @returns {Promise<Reserva|null>} */
-  async obtener(reservaId, ahora) { throw new NoImplementado('ReservasRepo.obtener'); }
+  /**
+   * `null` si la reserva no existe o si se indica un `sitio` distinto al suyo (RN09).
+   * @param {string} reservaId @param {Date} ahora @param {string} [sitio]
+   * @returns {Promise<Reserva|null>}
+   */
+  async obtener(reservaId, ahora, sitio) { throw new NoImplementado('ReservasRepo.obtener'); }
 
   /** Reservas activas y no vencidas. @param {string} compradorId @param {Date} ahora @returns {Promise<Reserva[]>} */
   async listarActivasDeComprador(compradorId, ahora) { throw new NoImplementado('ReservasRepo.listarActivasDeComprador'); }
@@ -172,8 +180,9 @@ class ReservasRepo {
   async contarAsientosDeComprador(datos) { throw new NoImplementado('ReservasRepo.contarAsientosDeComprador'); }
 
   /**
-   * Libera una reserva activa, vencida o no; sus asientos quedan disponibles.
-   * Errores: NO_ENCONTRADO, RESERVA_PAGADA, RESERVA_LIBERADA.
+   * Libera una reserva activa y vigente; sus asientos quedan disponibles.
+   * Errores: NO_ENCONTRADO, RESERVA_PAGADA, RESERVA_LIBERADA, RESERVA_VENCIDA
+   * (una reserva vencida NO se libera: su estado sigue siendo vencido, CA-17).
    * @param {string} reservaId @param {Date} ahora @returns {Promise<Reserva>}
    */
   async liberar(reservaId, ahora) { throw new NoImplementado('ReservasRepo.liberar'); }
