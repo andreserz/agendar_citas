@@ -204,10 +204,29 @@ class OrdenesRepo {
   async listarDeComprador(compradorId) { throw new NoImplementado('OrdenesRepo.listarDeComprador'); }
 
   /**
+   * Orden del sitio por su folio o por el código de uno de sus boletos (SP18 `spOrdenes_Buscar`).
+   * Exactamente uno de `folio` o `codigo`; si no, SOLICITUD_INVALIDA. Devuelve `null` si no
+   * existe o es de otro sitio.
+   * @param {{ sitio: string, folio?: string, codigo?: string }} datos @returns {Promise<Orden|null>}
+   */
+  async buscar(datos) { throw new NoImplementado('OrdenesRepo.buscar'); }
+
+  /**
    * Boletos con comprador, asiento, función, fecha de compra y monto (consolidación, RF15).
    * @returns {Promise<Array<Boleto & { ordenId: string, compradorId: string, sitio: string, fechaCompra: Date }>>}
    */
   async listarBoletos() { throw new NoImplementado('OrdenesRepo.listarBoletos'); }
 }
 
-module.exports = { SitiosRepo, AsientosRepo, ReservasRepo, OrdenesRepo };
+/** Reportes del sitio (conteos). */
+class ReportesRepo {
+  /**
+   * Reservas creadas por día calendario de `creadaEn` en America/Mexico_City, sin importar su
+   * estado final (SP19 `spReservas_ContarPorDia`). Sólo devuelve los días con reservas, en orden.
+   * @param {{ sitio: string, desde: string, hasta: string }} datos  días `AAAA-MM-DD`, inclusive
+   * @returns {Promise<Array<{ fecha: string, reservas: number }>>}
+   */
+  async contarReservasPorDia(datos) { throw new NoImplementado('ReportesRepo.contarReservasPorDia'); }
+}
+
+module.exports = { SitiosRepo, AsientosRepo, ReservasRepo, OrdenesRepo, ReportesRepo };

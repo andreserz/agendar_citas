@@ -14,11 +14,11 @@ Marcar con `[x]` al terminar. Reportar el avance en `citas_service/TODOLIST.md`.
 
 ## 3. Rutas
 - [x] 3.1 `GET /salud` (Requirement: Validación de X-Sitio).
-- [ ] 3.2 Catálogo: `GET /eventos`, `GET /eventos/{id}`, `GET /eventos/{id}/funciones`, `GET /funciones/{id}`, `GET /funciones/{id}/asientos` (Requirement: Rutas montadas según el contrato).
+- [x] 3.2 Catálogo: `GET /eventos`, `GET /eventos/{id}`, `GET /eventos/{id}/funciones`, `GET /funciones/{id}`, `GET /funciones/{id}/asientos` (Requirement: Rutas montadas según el contrato).
 - [ ] 3.3 Reservas: `POST /reservas` con límite obligatorio para `web_1`, `GET /reservas/{id}`, `GET /reservas?estado=activa`, `DELETE /reservas/{id}` (Requirement: Reserva de asientos).
 - [ ] 3.4 Pagos: `POST /reservas/{id}/pago` con validación de tarjetas de prueba y de formato (Requirement: Pago simulado).
-- [ ] 3.5 Órdenes: `GET /ordenes`, `GET /ordenes/{id}`, `GET /ordenes/buscar` (Requirement: Recuperar compra sin cuenta).
-- [ ] 3.6 Reportes: `GET /reportes/reservas-por-dia` con rango máximo de 92 días (Requirement: Conteo diario de reservas).
+- [x] 3.5 Órdenes: `GET /ordenes`, `GET /ordenes/{id}`, `GET /ordenes/buscar` (Requirement: Recuperar compra sin cuenta).
+- [x] 3.6 Reportes: `GET /reportes/reservas-por-dia` con rango máximo de 92 días (Requirement: Conteo diario de reservas).
 - [ ] 3.7 Auth: `POST /auth/registro`, `POST /auth/login` (Requirement: Autenticación de compradores).
 
 ## 4. Dominio

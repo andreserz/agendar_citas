@@ -1,6 +1,7 @@
 'use strict';
 
 const { OrdenesRepo } = require('../interfaces');
+const { CODIGOS, ErrorRepositorio } = require('../errores');
 const {
   obtenerSlot,
   exigirReservaVigente,
@@ -82,6 +83,18 @@ class OrdenesRepoMemoria extends OrdenesRepo {
       .filter((o) => o.compradorId === compradorId)
       .sort((a, b) => a.fecha - b.fecha)
       .map((o) => structuredClone(o));
+  }
+
+  async buscar({ sitio, folio, codigo } = {}) {
+    const porFolio = typeof folio === 'string' && folio !== '';
+    const porCodigo = typeof codigo === 'string' && codigo !== '';
+    if (porFolio === porCodigo) {
+      throw new ErrorRepositorio(CODIGOS.SOLICITUD_INVALIDA, 'Envía exactamente uno: folio o código.');
+    }
+    const orden = [...this.almacen.ordenes.values()].find((o) =>
+      o.sitio === sitio && (porFolio ? o.numero === folio : o.boletos.some((b) => b.codigo === codigo))
+    );
+    return orden ? structuredClone(orden) : null;
   }
 
   async listarBoletos() {
