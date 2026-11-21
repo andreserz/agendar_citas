@@ -48,7 +48,7 @@ Leyenda de estatus: ⬜ pendiente · 🔄 en progreso · ✅ hecho · 🚧 bloqu
 
 ---
 
-## Plan de implementación — change `impl-service` · 🔄 12/34 (actualizado 20 nov 2026)
+## Plan de implementación — change `impl-service` · 🔄 25/34 (actualizado 20 nov 2026)
 
 Fuente: `openspec/changes/impl-service/` (`tasks.md` tiene el texto completo y es donde `/opsx:apply` marca los `[x]`). El contrato entre capas es `openspec/changes/impl-service/specs/contrato-entre-capas/spec.md`. Cómo ejecutar cada tarea: `docs/PLAN_TRABAJO.md`, sección «Cómo ejecutar con OpenSpec».
 
@@ -61,26 +61,26 @@ Olas: **1** jue 19 · **2** vie 20 · **3** sáb 21 · **4** dom 22 · **E** lun
 - [x] 1.2 `.env.example` con valores de ejemplo y sin secretos (cambiar `DB_*` por `SQL_*`) — **S** · ola 1 **Hecho el 19 nov (PR #19).**
 - [x] 1.3 Dependencias `jsonwebtoken` y `mssql` — **S** · ola 1 **Hecho el 19 nov (PR #19).**
 
-### 2. Middlewares · 🔄 2/3
+### 2. Middlewares · ✅ 3/3
 - [x] 2.1 `validarSitio` con `X-Sitio` y excepción de `/salud` — **S** · ola 2 **Hecho el 20 nov en `service/seguridad-api` (PR #21); las rutas fuera de `openapi.yaml` responden `404` aunque no traigan `X-Sitio`.**
-- [ ] 2.2 `autenticarComprador` que respeta `RequiereComprador` (depende de 4.3 y 4.4) — **S** · ola 2 **Desbloqueada el 20 nov: 4.3 y 4.4 ya están en `main`.**
+- [x] 2.2 `autenticarComprador` que respeta `RequiereComprador` (depende de 4.3 y 4.4) — **S** · ola 2 **Hecho el 20 nov en `service/seguridad-api` (PR #24).**
 - [x] 2.3 Manejador de errores que mapea `ErrorRepositorio` con la tabla del contrato — **S** · ola 2 **Hecho el 20 nov (PR #21).**
 
-### 3. Rutas · 🔄 1/7
+### 3. Rutas · 🔄 6/7
 - [x] 3.1 `GET /salud` — **S** · ola 2 **Hecho el 20 nov (PR #21), junto con el montaje automático de routers: R y D sólo agregan su archivo en `app/rutas/` sin editar `app.js`.**
 - [x] 3.2 Catálogo: eventos, funciones y asientos — **D** · ola 3 **Hecho el 20 nov en `service/datos-rutas`: `app/rutas/catalogo.js` (5 rutas, horas en CDMX con `app/fechas.js`).**
-- [ ] 3.3 Reservas: `POST`, `GET` por id, `GET ?estado=activa` y `DELETE`, con límite obligatorio para `web_1` — **R** · ola 3
-- [ ] 3.4 Pago: `POST /reservas/{id}/pago` con tarjetas de prueba y validación de formato — **R** · ola 3
+- [x] 3.3 Reservas: `POST`, `GET` por id, `GET ?estado=activa` y `DELETE`, con límite obligatorio para `web_1` — **R** · ola 3 **Hecho el 20 nov en `service/reservas` (PR #30).**
+- [x] 3.4 Pago: `POST /reservas/{id}/pago` con tarjetas de prueba y validación de formato — **R** · ola 3 **Hecho el 20 nov (PR #30).**
 - [x] 3.5 Órdenes: `GET /ordenes`, `GET /ordenes/{id}` y `GET /ordenes/buscar` — **D** · ola 3 **Hecho el 20 nov en `service/datos-rutas`: `app/rutas/ordenes.js` y `OrdenesRepo.buscar` (SP18).**
 - [x] 3.6 Reportes: `GET /reportes/reservas-por-dia` con rango máximo de 92 días — **D** · ola 3 **Hecho el 20 nov en `service/datos-rutas`: `app/rutas/reportes.js` y `ReportesRepo` (SP19).**
 - [ ] 3.7 Auth: `POST /auth/registro` y `POST /auth/login` — **S** · ola 3
 
-### 4. Dominio · 🔄 3/6
-- [ ] 4.1 `ReservasRepo.liberar` en memoria: vencida → `410 RESERVA_VENCIDA` sin liberar — **R** · ola 1
-- [ ] 4.2 `limitePorComprador` obligatorio para sitios con `RequiereComprador = 1` — **R** · ola 1
+### 4. Dominio · ✅ 6/6
+- [x] 4.1 `ReservasRepo.liberar` en memoria: vencida → `410 RESERVA_VENCIDA` sin liberar — **R** · ola 1 **Hecho en `service/reservas` (PR #30).**
+- [x] 4.2 `limitePorComprador` obligatorio para sitios con `RequiereComprador = 1` — **R** · ola 1 **Hecho (PR #30).**
 - [x] 4.3 Repositorio de sitios en memoria con `web_1` (1) y `web_2` (0) — **D** · ola 1 **Hecho el 19 nov en `service/datos-sql`: `SitiosRepo` y `sitios-repo-memoria.js`; `crearReposEnMemoria` entrega `sitiosRepo`.**
 - [x] 4.4 Hash scrypt y token JWT — **S** · ola 1 **Hecho el 19 nov (PR #19).**
-- [ ] 4.5 `reservaId` UUID v4 y verificación de sitio — **R** · ola 1
+- [x] 4.5 `reservaId` UUID v4 y verificación de sitio — **R** · ola 1 **Hecho (PR #30).**
 - [x] 4.6 Semilla en memoria de web_2 igual a la del contrato (10 salas, 800 asientos, 900 funciones) — **D** · ola 1 **Hecho el 19 nov en `service/datos-sql`: `datos-iniciales-web2.js` (Spider-Man, 10 salas, 800 asientos, 900 funciones y 900 precios); cada función muestra solo su sala.**
 
 ### 5. Adaptador SQL · ⬜ 0/3
@@ -93,13 +93,13 @@ Olas: **1** jue 19 · **2** vie 20 · **3** sáb 21 · **4** dom 22 · **E** lun
 - [x] 6.2 Quitar `resultadoSimulado` y los ejemplos con el formato anterior — **L** · ola 1 **Hecho con la reescritura de 6.1.**
 - [x] 6.3 `redocly lint` sin errores — **L** · ola 1 **18 nov: 0 errores, 3 advertencias aceptadas (sin `license`, `localhost` por D24, `/salud` sin 4XX por contrato).**
 
-### 7. Pruebas · 🔄 0/6
-- [ ] 🔄 7.1 Pruebas de contrato por ruta con Supertest — **L** · ola 4 **20 nov: suite en `tests/contrato/` integrada en el PR #23. Valida cada respuesta contra `openapi.yaml` y las pruebas de cada router se activan solas cuando existe su archivo en `app/rutas/`. Se cierra cuando estén los seis routers y pasen sus pruebas; para revisar un router antes del merge: `npx jest tests/contrato`. En la entrega se corre `CONTRATO_ESTRICTO=1 npm test`.**
-- [ ] 7.2 Pruebas de expiración con reloj fijo — **R** · ola 3
-- [ ] 7.3 Pruebas de concurrencia con `Promise.all` en memoria (CA-25) — **R** · ola 3
-- [ ] 7.4 Pruebas del límite de web_1 y de que web_2 no tiene límite — **R** · ola 3
-- [ ] 7.5 Pruebas de pago: tarjetas de prueba, atomicidad y que no se guarde el número completo — **R** · ola 3
-- [ ] 7.6 Mantener verde la suite actual (58 pruebas) — **L** · ola 4 **20 nov: 151/151 en verde tras los PR #20 y #21; se cierra al final.**
+### 7. Pruebas · 🔄 4/6
+- [ ] 🔄 7.1 Pruebas de contrato por ruta con Supertest — **L** · ola 4 **20 nov: suite en `tests/contrato/` integrada en el PR #23. Valida cada respuesta contra `openapi.yaml` y las pruebas de cada router se activan solas cuando existe su archivo en `app/rutas/`. Se cierra cuando estén los seis routers y pasen sus pruebas. **20 nov:** cinco de seis routers listos; solo falta `auth` (3.7). Se corrigió la prueba de `GET /ordenes`, que compraba dos veces los mismos asientos; para revisar un router antes del merge: `npx jest tests/contrato`. En la entrega se corre `CONTRATO_ESTRICTO=1 npm test`.**
+- [x] 7.2 Pruebas de expiración con reloj fijo — **R** · ola 3 **Hecho el 20 nov (PR #30).**
+- [x] 7.3 Pruebas de concurrencia con `Promise.all` en memoria (CA-25) — **R** · ola 3 **Hecho el 20 nov (PR #30).**
+- [x] 7.4 Pruebas del límite de web_1 y de que web_2 no tiene límite — **R** · ola 3 **Hecho el 20 nov (PR #30).**
+- [x] 7.5 Pruebas de pago: tarjetas de prueba, atomicidad y que no se guarde el número completo — **R** · ola 3 **Hecho el 20 nov (PR #30).**
+- [ ] 7.6 Mantener verde la suite actual (58 pruebas) — **L** · ola 4 **20 nov: 398 pasan, 9 omitidas y 1 pendiente (todas de auth, 3.7); se cierra al final.**
 
 ### 8. Entrega · ⬜ 0/3
 - [ ] 8.1 `npm test` y `npm start` con `REPOSITORIO=memoria` — **L** · ola 4
@@ -113,7 +113,7 @@ Estos son los números que cada quien le pasa a `/opsx:apply impl-service solo t
 | Quién | Ola 1 (jue 19) | Ola 2 (vie 20) | Ola 3 (sáb 21) | Ola 4 (dom 22) y E | Total | Hechas (20 nov) |
 | --- | --- | --- | --- | --- | --- | --- |
 | **L** Osvaldo | 6.1, 6.2, 6.3 | — | — | 7.1, 7.6, 8.1, 8.2, 8.3 | 8 | 3 |
-| **R** Juan Carlos | 4.1, 4.2, 4.5 | — | 3.3, 3.4, 7.2, 7.3, 7.4, 7.5 | — | 9 | 0 |
-| **D** Isaac | 4.3, 4.6 | — | 3.2, 3.5, 3.6 | 5.1, 5.2, 5.3 | 8 | 2 |
-| **S** Isidro | 1.1, 1.2, 1.3, 4.4 | 2.1, 2.3, 3.1, 2.2 | 3.7 | — | 9 | 6 |
-| **Total** | 12 | 4 | 10 | 8 | **34** | **12** |
+| **R** Juan Carlos | 4.1, 4.2, 4.5 | — | 3.3, 3.4, 7.2, 7.3, 7.4, 7.5 | — | 9 | 9 |
+| **D** Isaac | 4.3, 4.6 | — | 3.2, 3.5, 3.6 | 5.1, 5.2, 5.3 | 8 | 5 |
+| **S** Isidro | 1.1, 1.2, 1.3, 4.4 | 2.1, 2.3, 3.1, 2.2 | 3.7 | — | 9 | 8 |
+| **Total** | 12 | 4 | 10 | 8 | **34** | **25** |
