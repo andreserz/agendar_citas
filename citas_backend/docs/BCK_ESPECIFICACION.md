@@ -71,6 +71,21 @@ El contrato `openspec/changes/impl-backend/specs/backend-esquema-contrato` lleg�
 | Reserva no encontrada (SP13) | 54002 | **54003** |
 | Últimos dígitos inválidos (SP13) | 53006 | El contrato no tiene código: se registra en `BitacoraErrores` y se lanza **50000** (el servicio ya validó la tarjeta) |
 | Clasificación y duración | En `Eventos` (§3.1 anterior) | En `Funciones` (§3.1) |
+| SP03 `spEventos_Listar` | `@ClaveSitio` opcional e `@IdEvento` opcional; devolvía `Clasificacion` y `DuracionMin` | Sólo `@Sitio`. Devuelve `IdEvento`, `ClaveSitio`, `Nombre`, `Descripcion` y `Recinto`; el servicio filtra por evento si lo necesita |
+| SP04 `spFunciones_ListarPorEvento` | `@IdEvento`, `@Ahora` y `AsientosDisponibles`; evento inexistente 54005 | `@EventoId`, sin `@Ahora` (la forma Función del contrato no tiene disponibles). Dos conjuntos: funciones con `ClaveSitio`, formato, idioma, clasificación, duración y sala, y zonas con precio de cada función. Evento inexistente **54002** |
+| SP05 `spFunciones_Obtener` | `@IdFuncion`, `@Ahora` | `@FuncionId`; mismas columnas que SP04 más `NombreEvento`, y sus zonas con precio |
+| SP01 `spCompradores_Registrar` | Sin sitio | `@Sitio`: 53007 si no es válido y **53006** si el sitio no usa comprador (tarea 5.8) |
+| Columna de SP01 y SP02 | `IdComprador` (regla C9) | **`Id`**, como dice el contrato (`→ Id`; SP02 `→ fila con Id y HashContrasena`). Excepción a C9 aprobada por la usuaria el 20 nov 2026 |
+| SP08, SP11 y SP14 | Sin sitio; orden no encontrada 54003 | Reciben `@Sitio`: una reserva u orden de otro sitio responde igual que una inexistente (**54003** reserva, **54004** orden) |
+| SP11 con reserva vencida | Se liberaba | **52001** y no se libera (contrato «Liberar reserva») |
+| SP12 `@Resultado` | No existía | `@Resultado` sólo acepta `'rechazado'`; otro valor o dígitos inválidos → 50000 |
+| SP13 y SP15 | — | SP13 revisa que el comprador de la reserva cuadre con `RequiereComprador` (53005/53006); SP15 con `@CompradorId` nulo → 53005 (tarea 5.8) |
+| SP16 `spBoletos_Consolidar` | `@ClaveSitio` opcional, sin fechas | `@Sitio`, `@Desde` y `@Hasta` (días locales de CDMX por `FechaCompra`); rango inválido → **53002** |
+| SP17 `spReservas_LimpiarVencidas` | Marcaba las vencidas como `Liberada` | Sólo limpia `AsientosFuncion` de las reservas `Activa` vencidas, sin cambiar su estado, porque el contrato exige que una reserva vencida se siga viendo vencida. Devuelve `AsientosLimpiados` |
+| SP18 | `spOrdenes_ObtenerPorCodigo` (`@Codigo`) | **`spOrdenes_Buscar`** con `@Folio` o `@Codigo` (exactamente uno, si no 53002); el script borra el procedimiento anterior si existe |
+| SP19 rango inválido | 53007 | **53002** (el contrato usa 53007 para «sitio no válido») |
+| Límite de 10 | SP07 y SP10 con la misma suma escrita dos veces | Ambos usan la función interna `fnReservas_ContarAsientosComprador`. SP13 también bloquea al comprador (orden: `Reservas` → `Compradores` → `AsientosFuncion`) para que el límite no cuente de menos mientras una reserva pasa a comprada (revisión `sqlserver-dba`) |
+| SP17 en producción | Una sola transacción | Lotes de 500 con `READPAST` y `DEADLOCK_PRIORITY LOW`, para no bloquear a SP07 y SP13 (revisión `sqlserver-dba`) |
 
 Las formas R y O (§5.3) se arman con funciones en línea internas (`fnReservas_Encabezado`, `fnReservas_Asientos`, `fnOrdenes_Encabezado`, `fnOrdenes_Boletos`), que no forman parte del contrato y que el rol del servicio no puede llamar directamente.
 

@@ -25,14 +25,14 @@ Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y report
 - [x] 4.3 SP13 `spOrdenes_Pagar` atómico: intento, reserva pagada, orden, boletos y asientos comprados (Requirement: Procedimientos del contrato).
 
 ## 5. Resto de procedimientos (04_sps.sql)
-- [ ] 5.1 SP01 a SP05 con las firmas de la tabla del contrato.
-- [ ] 5.2 SP08 a SP11 incluyendo `52002` en SP11 (Requirement: Códigos de error del contrato).
-- [ ] 5.3 SP12 `spIntentosPago_Registrar` con `@UltimosDigitos`.
-- [ ] 5.4 SP14 y SP15.
-- [ ] 5.5 SP16 y SP17 (SP17 opcional).
-- [ ] 5.6 SP18 `spOrdenes_Buscar` con `@Folio` o `@Codigo`, sustituyendo `spOrdenes_ObtenerPorCodigo`.
-- [ ] 5.7 SP19 `spReservas_ContarPorDia` en zona CDMX.
-- [ ] 5.8 Validar `RequiereComprador` en SP01, SP07, SP13 y SP15 (`53005` y `53006`).
+- [x] 5.1 SP01 a SP05 con las firmas de la tabla del contrato.
+- [x] 5.2 SP08 a SP11 incluyendo `52002` en SP11 (Requirement: Códigos de error del contrato).
+- [x] 5.3 SP12 `spIntentosPago_Registrar` con `@UltimosDigitos`.
+- [x] 5.4 SP14 y SP15.
+- [x] 5.5 SP16 y SP17 (SP17 opcional).
+- [x] 5.6 SP18 `spOrdenes_Buscar` con `@Folio` o `@Codigo`, sustituyendo `spOrdenes_ObtenerPorCodigo`.
+- [x] 5.7 SP19 `spReservas_ContarPorDia` en zona CDMX.
+- [x] 5.8 Validar `RequiereComprador` en SP01, SP07, SP13 y SP15 (`53005` y `53006`).
 
 ## 6. Datos iniciales (05_datos_iniciales.sql)
 - [ ] 6.1 Semilla de web_1: 1 evento, 3 zonas, 120 asientos, 120 funciones, 360 precios (Requirement: Semilla de web_1 y web_2).

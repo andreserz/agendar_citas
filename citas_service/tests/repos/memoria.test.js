@@ -24,6 +24,7 @@ describe('crearRepos (selección por REPOSITORIO)', () => {
     await a.reservasRepo.crear({
       sitio: 'web_1', compradorId: 'c', funcionId: 'fun-2026-11-06-1900',
       asientoIds: ['A1'], ahora, expiraEn: new Date(ahora.getTime() + 300000),
+      limitePorComprador: null,
     });
     const [a1] = (await b.asientosRepo.listarAsientos('fun-2026-11-06-1900', ahora)).filter((x) => x.id === 'A1');
     expect(a1.estado).toBe('disponible');
