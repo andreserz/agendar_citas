@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1220">
+  <meta name="description" content="Consulta funciones del cineclub, elige tus butacas y compra tus boletos.">
+  <title>Cineclub · Boletos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2318324A'/%3E%3Cpath d='M16 17h32v8a7 7 0 0 0 0 14v8H16v-8a7 7 0 0 0 0-14z' fill='%23E0A44B'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <div class="ambient" aria-hidden="true"><span></span><span></span><span></span></div>
+  <header class="site-header">
+    <a class="brand" href="#main" data-view="cartelera" aria-label="Cineclub, cartelera">
+      <span class="brand__mark" aria-hidden="true">C</span><span>Cineclub<span class="brand__dot">.</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <button type="button" class="nav-link is-active" data-view="cartelera">Cartelera</button>
+      <button type="button" class="nav-link" data-view="recuperar">Recuperar boleto</button>
+      <button type="button" class="nav-link" data-view="reporte">Reporte diario</button>
+    </nav>
+    <span class="header-note">Una buena historia empieza aquí</span>
+  </header>
+  <main id="main" class="main-shell" tabindex="-1">
+    <div id="app" aria-live="polite"><div class="loading-card"><span class="loader"></span><p>Preparando la cartelera…</p></div></div>
+  </main>
+  <footer class="site-footer"><span>© Cineclub</span><span>Compra de prueba · Pago simulado</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">Activa JavaScript para consultar funciones y comprar boletos.</p></noscript>
+  <script src="config.js"></script>
+  <script src="js/vendor/qrcode.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

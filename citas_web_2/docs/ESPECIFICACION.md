@@ -1,261 +1,205 @@
 # Especificación — citas_web_2
 
-Estado: define las pantallas, la integración con el contrato y los criterios de aceptación de RF01 a RF11. Es la base para construir `app/` y para las pruebas de `tests/`. Pendiente de validación del equipo; la Definición sigue abierta hasta la confirmación del cliente sobre folio y conteo diario.
+**Estado:** borrador para revisión del equipo.
+**Etapa:** Especificación.
+**Alcance:** interfaz web del cineclub en `citas_web_2`.
 
-## 1. Alcance de la interfaz
+Esta especificación convierte los requisitos RF01–RF11 de `DEFINICION.md` en pantallas, flujos, integración y criterios de aceptación para la construcción. La API y sus reglas son responsabilidad de `citas_service`; se consumen conforme al contrato `impl-web2` versión `1.0.0`. No se modifica el contrato desde este documento.
 
-SPA del cineclub para consultar la cartelera de *Spider-Man*, elegir función y sala, seleccionar butacas numeradas, apartarlas cinco minutos, pagar de forma simulada, ver el boleto con QR y recuperarlo por folio, sin cuenta. Incluye la vista de conteo diario para el operador.
+## 1. Alcance y restricciones
 
-No incluye cuentas, historial de compras, límite de butacas por persona, cobros reales, correos, administración de cartelera ni backoffice. El sitio nunca se conecta a la base de datos: sólo consume la API de `citas_service` (contrato `1.0.0`).
+La aplicación permitirá consultar las funciones, elegir hasta diez butacas, crear una reserva temporal, realizar un pago simulado, consultar el boleto y recuperar una orden con su folio. También mostrará el conteo diario de reservas.
 
-## 2. Rutas y navegación
+- Se implementará como sitio web responsivo con HTML5, CSS3 y JavaScript vanilla.
+- La interfaz usará glassmorphism con la paleta y tipografías propuestas en `docs/PROPUESTA.md`; la aprobación del equipo queda pendiente.
+- No habrá registro, inicio de sesión, cuentas, historial de compras ni envío por correo.
+- No se conectará directamente con la base de datos ni con `citas_web_1`.
+- No se integrará una pasarela de pago real ni audio MP3.
+- La API será la fuente de verdad para precios, disponibilidad, estado y vencimiento de reservas.
+- La aplicación deberá poder abrirse en pantallas móviles desde 390 px de ancho, sin desplazamiento horizontal.
 
-| Ruta | Vista | Requisito |
-| --- | --- | --- |
-| `#/` | Cartelera y funciones del día | RF01 |
-| `#/funcion/:funcionId` | Mapa de butacas y resumen | RF02, RF03, RF05 |
-| `#/checkout/:reservaId` | Cuenta regresiva, pago simulado | RF04, RF06, RF07 |
-| `#/orden/:ordenId` | Confirmación, boleto y QR | RF08 |
-| `#/recuperar` | Recuperación por folio | RF09 |
-| `#/operador` | Conteo diario de reservas | RF10 |
-| Cualquier otra | Página no encontrada con salida a la cartelera | — |
+## 2. Roles y navegación
 
-La navegación usa `location.hash`, así que el servidor estático no necesita reescritura de rutas. Recargar una vista conserva sólo lo que esté en la URL; la reserva activa se recupera de `sessionStorage` (§6.1).
-
-## 3. Pantallas
-
-### 3.1 Cartelera (RF01)
-
-- Consulta `GET /eventos` y muestra el evento del sitio (`sitio = "web_2"`), con nombre y recinto si existe.
-- Selector de fecha con las fechas que devuelvan las funciones; abre en la fecha de hoy en `America/Mexico_City`. Cada fecha muestra sus **30 funciones** (10 salas × 3 horarios), agrupadas por formato 2D y 3D y ordenadas por sala y hora.
-- Cada función muestra: sala, horario, formato, idioma, clasificación y precio por butaca. Idioma y clasificación se muestran tal como llegan; mientras el servicio entregue `Por confirmar`, se muestran así, sin inventar valores.
-- El precio sale de `zonas[0].precio` de la función: $100 MXN en 2D y $150 MXN en 3D.
-- Estados: esqueletos durante la carga, aviso con reintento si falla la petición, mensaje «No hay funciones para esta fecha» si la lista viene vacía.
-- Si el modo es demo, se muestra el aviso de §8.
-
-### 3.2 Mapa de butacas y resumen (RF02, RF03)
-
-- Encabezado con película, sala, fecha, horario, formato y precio.
-- Mapa de 80 butacas en filas A–H y números 1–10, cada una como botón con etiqueta `A1`…`H10` y `aria-pressed`.
-- Estados visuales: **disponible**, **seleccionada** (sólo local), **apartada** y **vendida**. Se mapea `apartado` → apartada y `comprado` → vendida; las butacas seleccionadas no se envían al servicio hasta el checkout.
-- Leyenda visible y estados que combinan color, borde y glifo; no dependen sólo del color.
-- Selección de hasta **10 butacas por reserva** (límite de formato del contrato); no hay límite por persona ni historial (RN04).
-- Resumen fijo con butacas elegidas, precio por butaca y total; «Continuar al pago» se habilita con al menos una butaca.
-- Cambiar de función o de fecha descarta la selección local y no crea reserva.
-
-### 3.3 Checkout (RF04, RF06, RF07)
-
-- Al entrar, `POST /reservas` con `{ funcionId, asientoIds }`. La respuesta `201` trae la reserva con `id`, `expiraEn`, `segundosRestantes` y `total`; se guardan en `sessionStorage`.
-- Cuenta regresiva `mm:ss` visible desde `segundosRestantes` (reloj del servicio) y sincronizada al volver a la pestaña. Se anuncia por accesibilidad al minuto restante y a los 10 segundos, no en cada segundo.
-- Formulario de pago: número de tarjeta, titular, vencimiento `MM/AA` y CVV de 3 dígitos. Se indica siempre que el pago es simulado y que no hay cargos reales.
-- Acciones: pagar, reintentar tras un rechazo y «Liberar butacas» para volver al mapa.
-- Al vencer la reserva o recibir `410 RESERVA_VENCIDA` / `410 RESERVA_LIBERADA`, se bloquea el pago y se ofrece «Elegir butacas de nuevo».
-- Si el pago responde `409 RESERVA_PAGADA`, se avisa que la reserva ya se pagó y se ofrece recuperar el boleto por folio.
-- Un pago aprobado navega a `#/orden/:ordenId` con la orden de la respuesta.
-
-### 3.4 Confirmación (RF08)
-
-- Muestra folio `ORD-` + 6 dígitos, total, función y un boleto por butaca con sala, etiqueta, precio, código de 12 caracteres y QR.
-- Acciones: imprimir, copiar folio, copiar códigos, ir a la cartelera o recuperar otro boleto.
-- La confirmación no depende de que el QR se dibuje: si falla, el código textual sigue visible (§5).
-- La orden se puede volver a consultar con `GET /ordenes/{ordenId}` al recargar.
-
-### 3.5 Recuperación por folio (RF09)
-
-- Campo con máscara `ORD-000000`; se normaliza a mayúsculas y se valida el formato antes de enviar.
-- Consulta `GET /ordenes/buscar?folio=ORD-000123` (exactamente un parámetro) y muestra la orden con sus boletos y QR.
-- `404` se explica como «No encontramos una orden con ese folio»; `400` como folio inválido. No se revela si existe una orden de otro sitio.
-- Enlace a la vista de operador y a la cartelera.
-
-### 3.6 Conteo diario (RF10)
-
-- Dos campos de fecha `AAAA-MM-DD` (`desde`, `hasta`), con hoy como valor inicial y un máximo de 92 días.
-- Consulta `GET /reportes/reservas-por-dia?desde=&hasta=` y muestra una tabla por día con el total de reservas creadas, incluidas vencidas y liberadas, y la suma del rango.
-- Aclara que la cifra mide demanda, no ventas, y que no hay desglose por sala.
-- `400` por rango inválido se muestra junto a los campos, sin perder los valores capturados.
-- Vista sin autenticación, definida como uso interno del operador (RF10); el acceso público queda como riesgo aceptado en la Definición.
-
-## 4. Integración con `citas_service`
-
-### 4.1 Configuración (RF11)
-
-`app/config.js` expone estos valores, sobrescribibles con `window.CITAS_CONFIG`:
-
-| Clave | Valor | Uso |
-| --- | --- | --- |
-| `apiBaseUrl` | `http://localhost:3000/api/v1` | Base del contrato |
-| `swaggerUrl` | `http://localhost:3000/docs` | Enlace de documentación en el pie |
-| `sitio` | `web_2` | Encabezado `X-Sitio` |
-| `modo` | `auto` | `auto`, `demo` o `api` |
-| `tiempoEsperaMs` | `2200` | Tiempo máximo por petición |
-| `duracionReservaSegundos` | `300` | Vigencia que se muestra; la real la fija el servicio |
-| `maxButacasPorReserva` | `10` | Límite de formato del contrato |
-
-El sitio se sirve en `http://localhost:5502`, origen aceptado por CORS (PR8, PR9). La URL no se escribe dentro del código de la interfaz.
-
-### 4.2 Peticiones
-
-- Toda petición envía `Accept: application/json` y `X-Sitio: web_2`; los `POST` agregan `Content-Type: application/json`.
-- Ninguna petición envía `Authorization` ni se guarda token (RN04, D18).
-- Tiempo máximo por petición con `AbortController` (`tiempoEsperaMs`). No se reintentan `POST` ni `DELETE` para no duplicar reservas, pagos o liberaciones.
-- Los errores del contrato se normalizan a `{ codigo, mensaje, detalles }`; los fallos de red o tiempo de espera se tratan como servicio no disponible.
-
-### 4.3 Rutas consumidas
-
-| Método | Ruta | Uso |
-| --- | --- | --- |
-| GET | `/eventos` | Catálogo del sitio y prueba de conexión |
-| GET | `/eventos/{id}/funciones` | Funciones del evento |
-| GET | `/funciones/{id}/asientos` | Mapa de la sala |
-| POST | `/reservas` | Apartar butacas |
-| GET | `/reservas/{id}` | Estado y tiempo restante |
-| DELETE | `/reservas/{id}` | Liberar butacas |
-| POST | `/reservas/{id}/pago` | Pago simulado |
-| GET | `/ordenes/{id}` | Orden y boletos |
-| GET | `/ordenes/buscar?folio=` | Recuperación por folio |
-| GET | `/reportes/reservas-por-dia` | Conteo diario |
-
-### 4.4 Formas de datos
-
-Se consumen las formas del contrato sin agregar campos:
-
-```jsonc
-// Función
-{ "id": "fun-...", "eventoId": "evt-...", "inicio": "2026-11-23T13:00:00-06:00",
-  "formato": "2D", "idioma": "Por confirmar", "clasificacion": "Por confirmar",
-  "zonas": [{ "id": "sala-1", "nombre": "Sala 1", "precio": 100, "moneda": "MXN" }] }
-
-// Asiento
-{ "id": "A1", "zonaId": "sala-1", "fila": "A", "numero": 1, "etiqueta": "A1",
-  "precio": 100, "estado": "disponible" }
-
-// Reserva (201)
-{ "id": "uuid", "sitio": "web_2", "funcionId": "fun-...", "estado": "activa",
-  "asientos": [{ "asientoId": "A1", "etiqueta": "A1", "zonaId": "sala-1", "precio": 100 }],
-  "total": 100, "moneda": "MXN", "creadaEn": "...", "expiraEn": "...", "segundosRestantes": 300 }
-
-// Pago aprobado
-{ "resultado": "aprobado", "simulado": true, "reserva": { "...": "..." },
-  "orden": { "id": "...", "folio": "ORD-000123", "total": 100, "moneda": "MXN",
-             "boletos": [{ "codigo": "H32G3S9X2QB9", "etiqueta": "A1", "zonaId": "sala-1",
-                           "precio": 100, "eventoNombre": "Spider-Man", "inicio": "..." }] } }
-```
-
-Las fechas se muestran en `America/Mexico_City` tal como llegan, con desplazamiento `-06:00` (D13). Los campos opcionales ausentes no se muestran como «null».
-
-### 4.5 Asientos y precios
-
-- El estado del asiento lo calcula el servicio con su reloj; el sitio lo refleja y no lo recalcula.
-- El precio por butaca es `zonas[0].precio` de la función; el total oficial es el de la reserva. El resumen previo puede sumar butacas × precio, pero al crear la reserva manda el total del servicio.
-- Si una butaca aparece con un estado distinto entre dos consultas, se vuelve a pedir el mapa antes de confirmar.
-
-### 4.6 Errores y mensajes
-
-| HTTP | `codigo` | Mensaje en la interfaz | Acción |
-| --- | --- | --- | --- |
-| 409 | `ASIENTO_NO_DISPONIBLE` | «Alguien más tomó una de tus butacas. Elige de nuevo.» | Volver al mapa, marcar `detalles.asientoIds`, pedir nueva selección |
-| 410 | `RESERVA_VENCIDA` | «Tu apartado venció. Las butacas se liberaron.» | Bloquear el pago y ofrecer elegir butacas |
-| 410 | `RESERVA_LIBERADA` | «Este apartado ya se liberó.» | Igual que el anterior |
-| 409 | `RESERVA_PAGADA` | «Esta reserva ya se pagó.» | Ofrecer recuperar el boleto por folio |
-| 404 | `NO_ENCONTRADO` | «No encontramos esa información.» | Reintentar o volver a la cartelera |
-| 400 | `SOLICITUD_INVALIDA` | «Revisa los datos.» | Señalar `detalles.campo` si existe |
-| 422 | `LIMITE_EXCEDIDO` | «Esta compra supera el máximo de butacas por reserva.» | Volver al mapa |
-| 500 | `ERROR_INTERNO` | «Tuvimos un problema. Intenta de nuevo.» | Reintento manual |
-| — | Red o tiempo de espera | «No pudimos conectar con el servicio.» | Reintento manual; en `auto`, demo (§8) |
-
-Los mensajes no muestran códigos HTTP, trazas ni datos de otros compradores.
-
-## 5. Boleto y QR (RF08, PR7)
-
-- El código del boleto lo genera el servicio: 12 caracteres `[A-Z2-9]`. El sitio no lo altera ni lo regenera.
-- El QR se dibuja en JavaScript vanilla con la librería vendorizada que ya usa `citas_web_1` (`app/js/vendor/qrcode.js`), copiada sin dependencias de red. Contenido del QR: el código del boleto, sin URL ni datos personales.
-- Presentación: lienzo cuadrado de 200 px sobre una tarjeta clara `#F2F6FF`, módulos `#0A0F18`, zona de silencio de 4 módulos y corrección de errores nivel M, para que se lea desde la pantalla o impreso.
-- Respaldo textual: si la librería no está disponible, el lienzo no soporta dibujo o el QR no se completa en 1 segundo, se oculta el lienzo y se muestra el código en tipografía monoespaciada grande con el texto «Muestra este código en taquilla». La confirmación nunca se bloquea por el QR.
-- La hoja de impresión oculta la navegación y muestra folio, datos de la función y un boleto por página, conservando el código textual al lado del QR.
-
-## 6. Reserva, temporizador y abandono
-
-### 6.1 Estado local
-
-`sessionStorage["citas_web_2.reserva"]` guarda `{ reservaId, funcionId, expiraEn, guardadaEn }`. Es la única forma de retomar el pago tras recargar sin cuenta (design.md, decisión 2). Al liberar, vencer o pagar, se elimina la entrada.
-
-### 6.2 Cuenta regresiva (RF04)
-
-- Se calcula con `segundosRestantes` de la última respuesta y el tiempo transcurrido local; no se confía en el reloj del equipo para decidir el vencimiento.
-- Al volver a la pestaña o recuperar foco, se consulta `GET /reservas/{id}` y se resincroniza.
-- En `0` se bloquea el pago y se muestra el aviso de vencimiento; el servicio sigue siendo la autoridad final (RN01).
-
-### 6.3 Abandono y liberación (RF07)
-
-- «Liberar butacas» llama a `DELETE /reservas/{id}` y vuelve al mapa con la selección vacía.
-- Al cerrar o recargar el checkout, se intenta la misma liberación con `fetch(..., { keepalive: true })`; si no se completa, la reserva vence a los 5 minutos por el servicio. No se usa `sendBeacon` porque no permite enviar `X-Sitio`.
-- Un `410` al liberar se trata como reserva ya vencida: se informa y se limpia el estado local.
-
-### 6.4 Conflicto de selección completa (RF05, RN02)
-
-- Ante `409 ASIENTO_NO_DISPONIBLE`, se descarta **toda** la selección: no se guarda ni se aparta ninguna butaca.
-- Se vuelve a pedir el mapa, se marcan las butacas de `detalles.asientoIds` como «en conflicto» durante al menos 8 segundos, se actualiza la leyenda y se pide una nueva elección.
-- No existe apartado parcial ni reintento automático con las butacas disponibles.
-
-## 7. Pago simulado (RF06)
-
-| Campo | Validación local |
+| Rol | Acciones disponibles |
 | --- | --- |
-| `numeroTarjeta` | Sólo `4242 4242 4242 4242` (aprobada) o `4000 0000 0000 0002` (rechazada); cualquier otra se marca inválida sin enviar |
-| `titular` | No vacío, hasta 80 caracteres |
-| `vencimiento` | `MM/AA`, mes 01–12 y no anterior al mes actual |
-| `cvv` | Exactamente 3 dígitos |
+| Visitante / comprador | Consultar funciones y asientos, reservar, pagar y ver o recuperar boletos sin cuenta. |
+| Operador | Consultar el conteo diario de reservas por rango de fechas. El reporte no presenta información personal. |
 
-- La validación local evita peticiones inútiles; el servicio vuelve a validar y es la autoridad.
-- Un rechazo (`resultado = "rechazado"`) no consume la reserva: se muestra el mensaje y se permite reintentar mientras quede tiempo.
-- El número de tarjeta y el CVV no se guardan en el almacenamiento del sitio ni se registran en consola.
-- La interfaz repite en el formulario y en el resultado que el pago es simulado.
+La navegación debe ofrecer acceso a **Cartelera**, **Recuperar boleto** y **Reporte diario**. El flujo de compra guía al usuario desde una función seleccionada hasta la confirmación. No se solicitarán credenciales para ninguna de estas vistas; la autorización y exposición del reporte no están separadas por rol en el contrato actual.
 
-## 8. Modo demo
+## 3. Pantallas y componentes
 
-- Se activa con `modo = "demo"`, o con `modo = "auto"` cuando la API no responde dentro de `tiempoEsperaMs` o falla la red.
-- Usa la semilla del contrato: 1 evento *Spider-Man*, 10 salas «Sala 1» a «Sala 10» con 80 butacas (filas A–H, 1–10), 2D $100 en salas 1–5 y 3D $150 en 6–10, 30 funciones diarias (2D 13:00/16:00/20:00; 3D 12:30/15:30/18:30) del 19 nov al 18 dic 2026, con idioma y clasificación «Por confirmar».
-- Las butacas ocupadas de la semilla son deterministas y dejan libres A1–A4 de cada sala para las pruebas.
-- Persiste en `localStorage["citas_web_2.demo.v1"]`; si el almacenamiento falla, usa memoria. «Reiniciar demo» en el pie vuelve a la semilla.
-- En demo se respetan las mismas reglas: conflicto `409`, vencimiento a 300 s, pago aprobado/rechazado, folio y códigos.
-- El aviso «Modo demo: datos de ejemplo, sin servicio conectado» es visible en todas las vistas, con acción para reintentar la conexión. En `modo = "api"` no hay respaldo demo y los fallos se muestran como error.
+### 3.1 Cartelera
 
-## 9. Accesibilidad y respuesta
+- Mostrar la película disponible, *Spider-Man*, y las funciones devueltas por la API para la fecha consultada.
+- Permitir consultar una fecha disponible y agrupar las funciones por formato: 2D y 3D.
+- Cada tarjeta de función mostrará sala, fecha y hora local, formato, idioma, clasificación y precio por butaca.
+- Si idioma o clasificación llegan como `Por confirmar`, mostrar ese texto sin ocultar la función.
+- Mostrar el precio entregado por el servicio; la referencia de negocio es $100 MXN en 2D y $150 MXN en 3D.
+- Si la API no está disponible y el modo lo permite, mostrar la cartelera demo e indicar claramente **Modo demo**.
 
-- HTML semántico, un `h1` por vista, salto al contenido y foco programático en el título al cambiar de ruta.
-- Avisos con `aria-live="polite"`; los errores de formulario se asocian con `aria-describedby`.
-- Foco visible de 2 px en acento; objetivos táctiles de al menos 44 px; mapa operable con teclado.
-- Estados de butaca con color, borde y glifo; contraste mínimo 4.5:1 en texto y 3:1 en componentes, según `PROPUESTA.md`.
-- `prefers-reduced-motion` desactiva animaciones; la cuenta regresiva no parpadea.
-- Sin desplazamiento horizontal a 390 px; revisión también a 320 px y escritorio. La hoja de impresión cubre el boleto.
+La semilla acordada cubre del 19 de noviembre al 18 de diciembre de 2026; la aplicación mostrará únicamente las fechas y funciones disponibles que devuelva la fuente activa.
 
-## 10. Criterios de aceptación
+### 3.2 Mapa y selección de butacas
 
-| ID | Criterio | Requisito | Evidencia |
-| --- | --- | --- | --- |
-| CA01 | La cartelera muestra la película, el selector de fecha y las 30 funciones del día agrupadas por formato, con sala, horario, formato y precio | RF01 | Revisión en navegador y prueba de datos |
-| CA02 | El mapa dibuja 80 butacas por función y traduce `apartado` → apartada y `comprado` → vendida | RF02 | Prueba de mapeo y recorrido |
-| CA03 | El resumen muestra butacas, precio unitario y total; 3 butacas 3D suman $450 MXN | RF03 | Prueba de cálculo |
-| CA04 | Al pasar a pagar se crea la reserva y la cuenta regresiva arranca en 5 minutos | RF04 | Petición `POST /reservas` y temporizador |
-| CA05 | Ante `409 ASIENTO_NO_DISPONIBLE` no queda ninguna butaca apartada, se marca el conflicto y se pide nueva elección | RF05 | Mock del contrato con `detalles.asientoIds` |
-| CA06 | El pago rechazado permite reintentar y el aprobado genera orden con folio y boletos | RF06 | Tarjetas `4000…0002` y `4242…4242` |
-| CA07 | Al vencer el apartado se bloquea el pago, se avisa y se ofrecen butacas nuevas | RF07 | Reserva vencida y `410 RESERVA_VENCIDA` |
-| CA08 | La confirmación muestra folio, un boleto por butaca y el QR del código de 12 caracteres | RF08 | Recorrido de compra completa |
-| CA09 | Si el QR no se dibuja, el código textual sigue visible y la confirmación no se bloquea | RF08 | Simulación de fallo de la librería |
-| CA10 | La recuperación por folio devuelve la orden y sus boletos; un folio inexistente da un mensaje claro | RF09 | Consulta real y `404` |
-| CA11 | El conteo diario suma todas las reservas creadas del día, incluidas vencidas y liberadas | RF10 | Rango con reservas en distintos estados |
-| CA12 | El sitio funciona en `5502` con `X-Sitio: web_2` y sin `Authorization` en ninguna petición | RF11, RN04 | Inspección de red y mock del contrato |
-| CA13 | Ninguna vista muestra registro, inicio de sesión ni historial de compras | RN04 | Revisión de rutas |
-| CA14 | Con el servicio apagado y `modo = auto`, la app usa la semilla demo y muestra el aviso | Modo demo | Recorrido sin servicio |
-| CA15 | No hay desplazamiento horizontal a 390 px y la navegación por teclado es completa | Accesibilidad | Revisión con herramientas del navegador |
-| CA16 | Los datos demo y los mensajes respetan el contrato: estados, precios, folio y códigos | Contrato | Pruebas de dominio y cliente |
+- Al elegir una función, mostrar la sala y sus 80 butacas numeradas en ocho filas (A–H), diez butacas por fila.
+- Presentar los estados disponible, seleccionada, apartada y vendida. `apartado` de la API se presenta como **Apartada** y `comprado` como **Vendida**.
+- Sólo las butacas disponibles pueden seleccionarse. La selección local no cambia la disponibilidad del servidor.
+- Permitir seleccionar de una a diez butacas. Mostrar las butacas elegidas, precio unitario y total en MXN antes de reservar.
+- El precio unitario se obtiene de `funcion.zonas[0].precio`; el total mostrado es la suma de los precios de las butacas seleccionadas.
+- Proveer una leyenda comprensible y no depender únicamente del color para comunicar estados.
 
-## 11. Fuera de alcance y supuestos
+### 3.3 Reserva y pago
 
-- No hay cuentas, por lo que no hay historial, límite por persona ni recuperación por correo; el folio es la única llave.
-- La compra no se puede cancelar después de pagar; no hay reembolsos.
-- El conteo diario es de sólo lectura y sin desglose por sala, como se acordó.
-- La vista de operador no tiene autenticación en esta entrega (RF10).
-- El pago es local y simulado; el sitio nunca recibe ni almacena datos completos de tarjeta.
-- El nombre comercial del cineclub y el logotipo definitivo están pendientes; se usa «Cineclub».
-- Si el cineclub cambia horarios o precios, cambian juntos la semilla del servicio y este documento; el sitio sólo lee lo que devuelve la API.
+- Al confirmar la selección, solicitar la reserva al servicio. La selección no se considera apartada hasta recibir una respuesta exitosa.
+- Tras crearla, mostrar el tiempo restante basado en `expiraEn` o `segundosRestantes` del servicio. El límite de cinco minutos lo controla la API.
+- Mostrar el resumen de función, sala, butacas, total y un formulario de pago simulado.
+- Indicar junto al formulario que el pago es simulado. Admitir las tarjetas de prueba definidas por contrato: `4242 4242 4242 4242` (aprobado) y `4000 0000 0000 0002` (rechazado). No almacenar ni registrar el número completo ni el CVV en la aplicación.
+- Tras un rechazo, permitir reintentar mientras la reserva permanezca activa y vigente.
+- Ofrecer una acción explícita para abandonar la compra y liberar una reserva activa. No depender exclusivamente del cierre de pestaña para liberar asientos.
+- Guardar en `sessionStorage` el identificador y vencimiento de la reserva para poder retomar el checkout en la misma sesión; no guardar datos de tarjeta.
+
+### 3.4 Conflicto y expiración
+
+- Si la reserva devuelve `409 ASIENTO_NO_DISPONIBLE`, descartar toda la selección local, volver a consultar el mapa y destacar las butacas indicadas en `error.detalles.asientoIds`.
+- Explicar que algunas butacas dejaron de estar disponibles y pedir una nueva selección. Nunca presentar como reservadas las butacas disponibles de una solicitud rechazada.
+- Si la reserva vence o fue liberada (`410 RESERVA_VENCIDA` o `410 RESERVA_LIBERADA`), detener el checkout y ofrecer volver al mapa.
+- Al vencer el contador, consultar o reflejar el estado del servicio; no autorizar nuevos intentos de pago desde la interfaz.
+
+### 3.5 Confirmación y boleto
+
+- Después de un pago aprobado, mostrar el folio de orden, el total y un boleto por cada asiento comprado.
+- Cada boleto mostrará película, función, fecha y hora local, sala, asiento, precio y código generado por el servicio.
+- El código de boleto tiene 12 caracteres del conjunto `[A-Z2-9]`. La SPA lo convierte en QR; si el QR no se puede mostrar, debe seguir visible el código textual.
+- Dar una indicación clara para guardar el folio, ya que no existe cuenta ni recuperación por correo.
+
+### 3.6 Recuperación de boleto
+
+- Ofrecer un formulario que solicite el folio de orden (`ORD-` seguido de seis dígitos).
+- Consultar la orden con `GET /ordenes/buscar?folio={folio}` y presentar el mismo detalle de boleto que en la confirmación.
+- Si el folio no existe o no corresponde al sitio, informar que no se encontró la compra sin revelar datos de otras órdenes.
+
+### 3.7 Reporte diario
+
+- Permitir consultar el conteo con fecha inicial y fecha final (`desde`, `hasta`).
+- Mostrar el total por día calendario en `America/Mexico_City`, sin desglose por sala ni estado y sin datos de compradores.
+- Aceptar rangos de hasta 92 días, conforme al contrato. Validar fechas y orden del rango antes de consultar.
+- Si el reporte no está disponible en modo demo, identificar los datos como demo; no presentarlos como cifras reales.
+
+## 4. Flujos principales
+
+### 4.1 Compra
+
+1. El visitante abre la cartelera y elige fecha y función.
+2. La SPA consulta y presenta los asientos de la sala.
+3. El visitante selecciona de una a diez butacas y revisa el precio y total.
+4. Al confirmar, la SPA envía la solicitud de reserva.
+5. Si se crea, inicia el checkout con el vencimiento informado por el servicio.
+6. El visitante envía el pago simulado.
+7. Si se aprueba, la SPA presenta la confirmación y los boletos. Si se rechaza, permite reintentar mientras la reserva siga vigente.
+
+### 4.2 Recuperación
+
+1. El visitante abre **Recuperar boleto** e ingresa el folio.
+2. La SPA consulta la orden para `web_2`.
+3. Si existe, muestra los boletos y códigos QR; si no, informa que no se encontró.
+
+### 4.3 Reporte
+
+1. El operador indica el rango de fechas.
+2. La SPA valida que las fechas sean válidas y que el rango no supere 92 días.
+3. La SPA consulta el reporte y muestra el total por día con zona horaria `America/Mexico_City`.
+
+## 5. Integración con la API
+
+### 5.1 Configuración
+
+La configuración local estará en `app/config.js` y tendrá estos valores iniciales:
+
+| Propiedad | Valor |
+| --- | --- |
+| `apiBaseUrl` | `http://localhost:3000/api/v1` |
+| `sitio` | `web_2` |
+| `modo` | `auto`, `demo` o `api` |
+| `tiempoEsperaMs` | `2200` |
+| `duracionReservaSegundos` | `300` |
+
+La SPA se servirá en `http://localhost:5502`. La URL base se configura y no se duplica en los módulos que consumen API. No se guardarán secretos en el frontend.
+
+### 5.2 Encabezados, rutas y datos
+
+- Todas las solicitudes de negocio incluirán `X-Sitio: web_2`.
+- Ninguna solicitud incluirá `Authorization`; no hay identidad de comprador en este sitio.
+- Usar únicamente rutas del contrato v1 necesarias para la interfaz:
+
+| Uso | Método y ruta |
+| --- | --- |
+| Cartelera | `GET /eventos` |
+| Funciones de una película | `GET /eventos/{eventoId}/funciones` |
+| Detalle de función y precio | `GET /funciones/{funcionId}` |
+| Mapa de butacas | `GET /funciones/{funcionId}/asientos` |
+| Crear reserva | `POST /reservas` |
+| Consultar reserva y vencimiento | `GET /reservas/{reservaId}` |
+| Liberar reserva activa | `DELETE /reservas/{reservaId}` |
+| Pagar | `POST /reservas/{reservaId}/pago` |
+| Recuperar orden por folio | `GET /ordenes/buscar?folio={folio}` |
+| Conteo diario | `GET /reportes/reservas-por-dia?desde={AAAA-MM-DD}&hasta={AAAA-MM-DD}` |
+
+El servicio devuelve fechas ISO 8601 con desplazamiento `-06:00`. La SPA las presentará en `America/Mexico_City`. Para el QR se utilizará el código de boleto recibido; la SPA no genera folios ni códigos de boleto.
+
+### 5.3 Errores
+
+Los mensajes visibles serán claros, en español y no mostrarán trazas ni detalles internos.
+
+| Respuesta | Comportamiento de interfaz |
+| --- | --- |
+| `400 SOLICITUD_INVALIDA` | Mostrar validación asociada al dato corregible; no repetir automáticamente la solicitud. |
+| `404 NO_ENCONTRADO` | Informar que no se encontró la función, reserva, orden o reporte solicitado y ofrecer volver a la cartelera cuando aplique. |
+| `409 ASIENTO_NO_DISPONIBLE` | Aplicar el rechazo completo y refrescar el mapa como se define en 3.4. |
+| `409 RESERVA_PAGADA` | Informar que la reserva ya fue pagada y consultar la orden asociada si la respuesta permite identificarla. |
+| `410 RESERVA_VENCIDA` / `410 RESERVA_LIBERADA` | Cerrar el checkout e invitar a elegir de nuevo. |
+| Error de red / `5xx` | Mostrar indisponibilidad temporal y permitir reintentar manualmente; no duplicar pagos ni reservas de forma automática. |
+
+### 5.4 Modo demo
+
+- `api`: consumir la API y mostrar sus errores de conexión.
+- `demo`: usar datos demo y mostrar el aviso **Modo demo**.
+- `auto`: intentar la API; si no responde, usar datos demo y mostrar el mismo aviso.
+- La demo reflejará la semilla del contrato: una película, diez salas, 80 asientos por sala, horarios y precios acordados. No debe presentarse como disponibilidad o ventas reales.
+
+## 6. Criterios de aceptación
+
+Los siguientes criterios corresponden a RF01–RF11. Se verificarán durante Pruebas; no constituyen resultados de ejecución en esta etapa.
+
+| ID | Requisito | Criterio verificable |
+| --- | --- | --- |
+| CA-01 | RF01 Cartelera | Dada una fecha con funciones, al consultarla se muestran las funciones recibidas agrupadas por formato, con sala, hora, idioma, clasificación y precio; los datos pendientes aparecen como `Por confirmar`. |
+| CA-02 | RF02 Mapa | Al elegir una función, se muestran las 80 butacas de su sala con filas A–H, números 1–10 y estados disponibles, apartadas o vendidas, usando el mapeo del contrato. |
+| CA-03 | RF03 Selección y total | Al seleccionar butacas disponibles (máximo diez), el resumen enumera cada butaca, muestra el precio de la función y calcula correctamente la suma en MXN; butacas no disponibles no se pueden seleccionar. |
+| CA-04 | RF04 Reserva | Al confirmar una selección válida, se solicita la reserva y, al recibir éxito, el checkout refleja el vencimiento de cinco minutos proporcionado por el servicio. |
+| CA-05 | RF05 Conflicto | Si una butaca entra en conflicto, no queda ninguna de la selección apartada; el mapa se actualiza, las butacas reportadas se destacan y se solicita una nueva selección. |
+| CA-06 | RF06 Pago | El checkout informa que el pago es simulado; un pago rechazado permite reintentar mientras la reserva continúe activa, y uno aprobado lleva a la confirmación. |
+| CA-07 | RF07 Liberación | Al abandonar expresamente un checkout activo, la SPA solicita liberar la reserva; al vencer, informa que los asientos ya no se pueden pagar y permite volver a elegir. |
+| CA-08 | RF08 Confirmación | Tras pago aprobado, se muestran folio, total y un boleto por asiento con código QR; si falla la representación QR, el código de 12 caracteres permanece legible. |
+| CA-09 | RF09 Recuperación | Al ingresar un folio válido existente, se consultan y muestran los boletos asociados; un folio inválido o inexistente produce un mensaje de no encontrado sin exponer otra orden. |
+| CA-10 | RF10 Reporte diario | Para un rango válido de hasta 92 días, se presentan conteos diarios en `America/Mexico_City`, incluyendo reservas pagadas, vencidas y liberadas, sin desglose por sala. |
+| CA-11 | RF11 Configuración e integración | La SPA usa la URL configurada, corre en el puerto 5502, envía `X-Sitio: web_2`, omite `Authorization` y, en modo `auto` sin API, muestra los datos demo con aviso visible. |
+| CA-12 | Responsividad y estilo | En viewport de 390 px la interfaz no requiere desplazamiento horizontal, conserva controles utilizables y mantiene los estados legibles; la presentación usa glassmorphism y la paleta aprobada en Propuesta. |
+
+## 7. Pendientes y condiciones para construcción
+
+- Validar esta especificación con el equipo y registrar la aprobación antes de dar por cerrada la etapa.
+- Aprobar la identidad visual de `docs/PROPUESTA.md` con el equipo y revisar contraste sobre las superficies reales antes de cerrar la etapa.
+- Revisar que `docs/DEFINICION.md` presente las 30 funciones diarias y marque idioma y clasificación como `Por confirmar`.
+- Confirmar que el endpoint de reporte y búsqueda por folio se mantienen en el contrato v1 referenciado por el change `impl-web2`.
+- El alcance de la demo no simula una autorización de operador; el reporte no incluye datos personales y el contrato actual no define un mecanismo de autenticación para esa vista.
+
+## 8. Referencias
+
+- `DEFINICION.md` — requisitos funcionales y reglas de negocio RF01–RF11 / RN01–RN08.
+- `ANTEPROYECTO.md` — negocio, alcance, horarios y restricciones aprobadas.
+- `contexto_negocio/RESPUESTA_P4.md` — datos entregados al servicio y acuerdos de web_2.
+- `../../openspec/specs/web2-cineclub/spec.md` — requisitos base de la capacidad del cineclub.
+- `../../openspec/changes/impl-web2/specs/contrato-entre-capas/spec.md` — contrato API, datos, rutas y errores.
+- `../../openspec/changes/impl-web2/specs/web2-integracion-contrato/spec.md` — configuración y requisitos del consumidor web_2.
+- `../../openspec/changes/impl-web2/tasks.md` — tareas de implementación vinculadas.

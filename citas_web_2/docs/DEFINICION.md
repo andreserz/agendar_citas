@@ -16,18 +16,20 @@ El sitio del cineclub permitirá consultar la cartelera de *Spider-Man*, elegir 
 
 Una sola película en cartelera por ahora: *Spider-Man*. El cineclub abre de lunes a domingo con 10 salas de 80 butacas numeradas (800 en total) y 30 funciones diarias de dos horas.
 
-| Sala | Formato | Precio por butaca | Función 1 | Función 2 | Función 3 |
-| --- | --- | ---: | --- | --- | --- |
-| 1 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
-| 2 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
-| 3 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
-| 4 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
-| 5 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 |
-| 6 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 |
-| 7 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 |
-| 8 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 |
-| 9 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 |
-| 10 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 |
+| Sala | Formato | Precio por butaca | Función 1 | Función 2 | Función 3 | Idioma | Clasificación |
+| --- | --- | ---: | --- | --- | --- | --- | --- |
+| 1 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 | Por confirmar | Por confirmar |
+| 2 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 | Por confirmar | Por confirmar |
+| 3 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 | Por confirmar | Por confirmar |
+| 4 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 | Por confirmar | Por confirmar |
+| 5 | 2D | $100 MXN | 13:00–15:00 | 16:00–18:00 | 20:00–22:00 | Por confirmar | Por confirmar |
+| 6 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 | Por confirmar | Por confirmar |
+| 7 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 | Por confirmar | Por confirmar |
+| 8 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 | Por confirmar | Por confirmar |
+| 9 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 | Por confirmar | Por confirmar |
+| 10 | 3D | $150 MXN | 12:30–14:30 | 15:30–17:30 | 18:30–20:30 | Por confirmar | Por confirmar |
+
+Cada sala tiene tres funciones diarias: **10 salas × 3 = 30 funciones al día**. La operación es de lunes a domingo.
 
 - Todas las butacas de una función cuestan lo mismo: el precio lo determina el formato de la función, no la butaca.
 - Cada función pertenece a una sala y muestra película, fecha, horario, formato y precio.
