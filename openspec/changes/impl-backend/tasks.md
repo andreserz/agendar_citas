@@ -35,9 +35,9 @@ Cada tarea indica el requisito que cumple. Marcar con `[x]` al terminar y report
 - [x] 5.8 Validar `RequiereComprador` en SP01, SP07, SP13 y SP15 (`53005` y `53006`).
 
 ## 6. Datos iniciales (05_datos_iniciales.sql)
-- [ ] 6.1 Semilla de web_1: 1 evento, 3 zonas, 120 asientos, 120 funciones, 360 precios (Requirement: Semilla de web_1 y web_2).
-- [ ] 6.2 Semilla de web_2: 1 evento, 10 salas con capacidad 80, 800 asientos, 900 funciones del 19 nov al 18 dic 2026, y 900 precios (uno por función, el de su sala: RN30 y contrato «Semilla de datos acordada»), más los campos de formato. Corregido el 20 nov 2026: decía 9,000 (10 salas × 900 funciones).
-- [ ] 6.3 Confirmar que la carga es idempotente.
+- [x] 6.1 Semilla de web_1: 1 evento, 3 zonas, 120 asientos, 120 funciones, 360 precios (Requirement: Semilla de web_1 y web_2).
+- [x] 6.2 Semilla de web_2: 1 evento, 10 salas con capacidad 80, 800 asientos, 900 funciones del 19 nov al 18 dic 2026, y 900 precios (uno por función, el de su sala: RN30 y contrato «Semilla de datos acordada»), más los campos de formato. Corregido el 20 nov 2026: decía 9,000 (10 salas × 900 funciones).
+- [x] 6.3 Confirmar que la carga es idempotente.
 
 ## 7. Pruebas (tests/)
 - [ ] 7.1 Apartado concurrente: dos ejecuciones por el mismo asiento (Requirement: Pruebas de base de datos).

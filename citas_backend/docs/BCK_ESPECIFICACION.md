@@ -86,6 +86,8 @@ El contrato `openspec/changes/impl-backend/specs/backend-esquema-contrato` lleg�
 | SP19 rango inválido | 53007 | **53002** (el contrato usa 53007 para «sitio no válido») |
 | Límite de 10 | SP07 y SP10 con la misma suma escrita dos veces | Ambos usan la función interna `fnReservas_ContarAsientosComprador`. SP13 también bloquea al comprador (orden: `Reservas` → `Compradores` → `AsientosFuncion`) para que el límite no cuente de menos mientras una reserva pasa a comprada (revisión `sqlserver-dba`) |
 | SP17 en producción | Una sola transacción | Lotes de 500 con `READPAST` y `DEADLOCK_PRIORITY LOW`, para no bloquear a SP07 y SP13 (revisión `sqlserver-dba`) |
+| Semilla de web_2 (§8.3) | Del 9 al 15 nov 2026 (7 días, 210 funciones), clasificación `B`, idioma «Español» | Del **19 nov al 18 dic 2026** (30 días, **900** funciones y 900 precios, 72,000 asientos-función), `Idioma` y `Clasificacion` = «Por confirmar», 120 min (contrato «Semilla de datos acordada», 22 nov 2026) |
+| Codificación de `04_sps.sql` y `05_datos_iniciales.sql` | — | Se guardan en UTF-8 **con BOM**: sin BOM, `sqlcmd` los lee con la página de códigos de Windows y los acentos quedan mal guardados («Balcón», «Aquí», «¡» en la semilla; «Función no encontrada», «Sitio no válido» en los mensajes de los SP). Aprobado por la usuaria el 22 nov 2026 |
 
 Las formas R y O (§5.3) se arman con funciones en línea internas (`fnReservas_Encabezado`, `fnReservas_Asientos`, `fnOrdenes_Encabezado`, `fnOrdenes_Boletos`), que no forman parte del contrato y que el rol del servicio no puede llamar directamente.
 
@@ -536,18 +538,20 @@ Los Id de `EstadosReserva` y `ResultadosPago` se insertan con `SET IDENTITY_INSE
 
 ### 8.3 web_1 y web_2
 
-| Dato | web_1 (D7, sin cambios) | web_2 (propuesta del backend, QB6–QB8) |
-| --- | --- | --- |
-| Evento | «¡Que no se entere la suegra!»; clasificación y duración nulas | «Spider-Man»; clasificación `B`; 120 min |
-| Zonas | Preferente, General, Balcón | Sala 1 … Sala 10 |
-| Asientos | Preferente A–C, General D–I y Balcón J–L, 10 por fila: **120** | Filas A–H de 10 en cada sala: **800** |
-| Días | Jueves, viernes y sábados del 1 oct al 31 dic 2026: **40** | Del lun 9 al dom 15 nov 2026: **7** |
-| Horarios locales → UTC | 15:00 → 21:00; 19:00 → 01:00 (+1 día); 21:00 → 03:00 (+1 día) | Salas 1–5 (2D): 13:00 → 19:00; 16:00 → 22:00; 20:00 → 02:00 (+1 día). Salas 6–10 (3D): 12:30 → 18:30; 15:30 → 21:30; 18:30 → 00:30 (+1 día) |
-| Funciones | 40 × 3 = **120**, `IdZona`, `Formato` e `Idioma` nulos | 7 × 10 × 3 = **210**, `IdZona` = sala, `Formato` 2D o 3D, `Idioma` «Español» |
-| Precios | 120 × 3 = **360**: $800, $500 y $300 MXN | **210**: $100 MXN en 2D y $150 MXN en 3D, sólo para la sala de la función (RN30) |
-| `AsientosFuncion` | 120 × 120 = **14,400** | 210 × 80 = **16,800**, sólo los asientos de la sala |
+Actualizado el 22 nov 2026 con el contrato «Semilla de datos acordada» (§2.4); la columna de web_2 decía antes 7 días y 210 funciones.
 
-Si web_2 responde QB6–QB8 con otros valores, sólo cambian las constantes al inicio del bloque de web_2: fechas, filas, clasificación, duración e idioma.
+| Dato | web_1 (D7, sin cambios) | web_2 (contrato) |
+| --- | --- | --- |
+| Evento | «¡Que no se entere la suegra!» | «Spider-Man» |
+| Zonas | Preferente, General, Balcón; `Capacidad` nula | Sala 1 … Sala 10; `Capacidad` 80 |
+| Asientos | Preferente A–C, General D–I y Balcón J–L, 10 por fila: **120** | Filas A–H de 10 en cada sala: **800** |
+| Días | Jueves, viernes y sábados del 1 oct al 31 dic 2026: **40** | Del jue 19 nov al vie 18 dic 2026: **30** |
+| Horarios locales → UTC | 15:00 → 21:00; 19:00 → 01:00 (+1 día); 21:00 → 03:00 (+1 día) | Salas 1–5 (2D): 13:00 → 19:00; 16:00 → 22:00; 20:00 → 02:00 (+1 día). Salas 6–10 (3D): 12:30 → 18:30; 15:30 → 21:30; 18:30 → 00:30 (+1 día) |
+| Funciones | 40 × 3 = **120**; `IdZona`, `Formato`, `Idioma`, `Clasificacion` y `DuracionMinutos` nulos | 30 × 10 × 3 = **900**; `IdZona` = sala, `Formato` 2D o 3D, `Idioma` y `Clasificacion` «Por confirmar», `DuracionMinutos` 120 |
+| Precios | 120 × 3 = **360**: $800, $500 y $300 MXN | **900**: $100 MXN en 2D y $150 MXN en 3D, sólo para la sala de la función (RN30) |
+| `AsientosFuncion` | 120 × 120 = **14,400** | 900 × 80 = **72,000**, sólo los asientos de la sala |
+
+Si el cineclub entrega otros valores (idioma, clasificación, duración o fechas), sólo cambian las constantes `@Web2…` al inicio del bloque de web_2.
 
 ### 8.4 Totales esperados (verificación)
 
@@ -559,9 +563,9 @@ Si web_2 responde QB6–QB8 con otros valores, sólo cambian las constantes al i
 | `Eventos` | 2 |
 | `Zonas` | 13 |
 | `Asientos` | 920 |
-| `Funciones` | 330 |
-| `PreciosZonaFuncion` | 570 |
-| `AsientosFuncion` | 31,200 |
+| `Funciones` | 1,020 |
+| `PreciosZonaFuncion` | 1,260 |
+| `AsientosFuncion` | 86,400 |
 | `Compradores`, `Reservas`, `ReservasAsientos`, `IntentosPago`, `Ordenes`, `Boletos`, `BitacoraErrores` | 0 |
 
 ### 8.5 Funciones nuevas después de la carga (riesgo R2)
@@ -599,7 +603,7 @@ No hay un SP para crear funciones, porque ningún sitio lo pidió. Si hace falta
 | Operaciones de `ReservasRepo` | SP07–SP12 |
 | Operaciones de `OrdenesRepo` | SP13–SP16, más SP18 (P17) |
 | Barrido opcional | SP17 |
-| Volumen y consultas frecuentes | §4. 31,200 asientos-función en total. |
+| Volumen y consultas frecuentes | §4. 86,400 asientos-función en total (semilla del contrato, §8.4). |
 | Datos iniciales | §8 |
 | «Vencida» no se guarda | `Vencida` calculada en la forma R (RN02) |
 
