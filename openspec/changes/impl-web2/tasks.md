@@ -3,9 +3,9 @@
 Marcar con `[x]` al terminar. Reportar el avance en `citas_web_2/TODOLIST.md`.
 
 ## 1. Documentación previa
-- [ ] 1.1 Completar `docs/PROPUESTA.md`: experiencia, paleta primario y acento validados en contraste, tipografías.
-- [ ] 1.2 Cerrar `docs/DEFINICION.md`: corregir la tabla de horarios para mostrar las 30 funciones diarias y el texto «Por confirmar» de idioma y clasificación.
-- [ ] 1.3 Completar `docs/ESPECIFICACION.md` con pantallas y criterios de aceptación que cubran RF01 a RF11.
+- [x] 1.1 Completar `docs/PROPUESTA.md`: experiencia, paleta primario y acento validados en contraste, tipografías.
+- [x] 1.2 Cerrar `docs/DEFINICION.md`: corregir la tabla de horarios para mostrar las 30 funciones diarias y el texto «Por confirmar» de idioma y clasificación.
+- [x] 1.3 Completar `docs/ESPECIFICACION.md` con pantallas y criterios de aceptación que cubran RF01 a RF11.
 
 ## 2. Configuración
 - [ ] 2.1 `app/config.js` con los valores del requisito «Configuración del sitio» (Requirement: Configuración del sitio).
