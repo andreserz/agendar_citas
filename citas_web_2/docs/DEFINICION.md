@@ -1,6 +1,6 @@
 # Definición — citas_web_2
 
-Estado: borrador en elaboración para revisión del equipo y del cliente. Registra los requisitos y reglas de negocio del sitio del cineclub. El contexto y los datos vienen del `ANTEPROYECTO.md` cerrado el 3 de noviembre de 2026 y de las respuestas del cliente. Los puntos que dependen de otros equipos se marcan como **condicional** o **pendiente** y se siguen en `RESPUESTA_P4.md` y en `../../citas_service/docs/specs/ACUERDOS.md`. El detalle de pantallas y criterios de aceptación se fija en la Especificación.
+Estado: requisitos y reglas de negocio acordados por el equipo el 6 de noviembre de 2026; falta la confirmación formal del cliente sobre el folio y el conteo diario para cerrar la etapa. El contexto y los datos vienen del `ANTEPROYECTO.md` cerrado el 3 de noviembre de 2026 y de las respuestas del cliente. Los puntos que dependían de otros equipos quedaron resueltos por el contrato de OpenSpec (D13–D24, 18 nov 2026), registrado en `../../citas_service/docs/specs/ACUERDOS.md`. El detalle de pantallas y criterios de aceptación se fija en la Especificación.
 
 ## Objetivo y límites
 
@@ -33,13 +33,14 @@ Cada sala tiene tres funciones diarias: **10 salas × 3 = 30 funciones al día**
 
 - Todas las butacas de una función cuestan lo mismo: el precio lo determina el formato de la función, no la butaca.
 - Cada función pertenece a una sala y muestra película, fecha, horario, formato y precio.
-- Resultado: 210 funciones por semana y 2,400 butacas disponibles por día.
+- Idioma: **Por confirmar**. Clasificación: **Por confirmar**. El servicio entrega ambos textos así hasta que el cineclub los defina.
+- Resultado: **30 funciones diarias** (10 salas × 3 funciones), 210 por semana y 2,400 butacas-función por día.
 
 ## Requisitos funcionales
 
 | # | Requisito |
 | --- | --- |
-| RF01 | Mostrar la cartelera con la película vigente, sus funciones por sala, fecha, horario, formato, idioma y clasificación, y el precio según el formato. |
+| RF01 | Mostrar la cartelera con la película vigente, sus funciones por sala, fecha, horario, formato, idioma y clasificación (idioma y clasificación como «Por confirmar» mientras el cineclub no los entregue), y el precio según el formato. |
 | RF02 | Permitir elegir una función y dibujar el mapa de las 80 butacas de esa sala con su estado: disponible, apartada o vendida. |
 | RF03 | Permitir seleccionar butacas y mostrar un resumen con las butacas elegidas, el precio por butaca y el total. |
 | RF04 | Al pasar a pagar, solicitar la reserva al servicio, iniciar la cuenta regresiva de cinco minutos y bloquear al comprador el flujo contra el vencimiento. |
@@ -70,7 +71,7 @@ La interfaz comunica la cuenta regresiva, el conflicto de disponibilidad (RN02),
 
 ## Condiciones de diseño y tecnología
 
-Interfaz responsiva con glassmorphism, HTML5, CSS3 y JavaScript vanilla; sin audio MP3 por el momento. Paleta por confirmar: el `AGENTS.md` exige colores primario y de acento que se definen en la etapa de **Propuesta** y se validan en contraste. El contrato genérico del servicio (evento, función, zona, asiento) admite una sola zona por función sin cambios, como lo confirma `RESPUESTA_P4.md`.
+Interfaz responsiva con glassmorphism, HTML5, CSS3 y JavaScript vanilla; sin audio MP3 por el momento. La paleta y las tipografías se definen en la etapa de **Propuesta** (`PROPUESTA.md`): primario `#1B4D6B` y acento `#F2B544`, validados en contraste WCAG AA, sujetos a la aprobación del equipo y del cliente. El contrato genérico del servicio (evento, función, zona, asiento) admite una sola zona por función sin cambios, como lo confirma `RESPUESTA_P4.md`.
 
 ## Correspondencia con el servicio
 
@@ -94,7 +95,7 @@ Interfaz responsiva con glassmorphism, HTML5, CSS3 y JavaScript vanilla; sin aud
 | Resultado del pago simulado (P10) | P10 | Coordinación con `citas_service` |
 | Consulta de orden por folio sin comprador | RN05 | Propuesta nueva al servicio |
 | Exposición del conteo diario de reservas | RN06 | Coordinación con `citas_service` |
-| Paleta primario y acento, tipografías y marca | — | Propuesta |
+| Aprobación de la paleta, las tipografías y el nombre comercial | `PROPUESTA.md` | Propuesta y cliente |
 | Formato del código de boleto para el QR | RN08 | Especificación (PR7) |
 | Pantallas, flujos y criterios de aceptación | — | Especificación |
 

@@ -33,9 +33,9 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 - [x] Decidir la recuperación del boleto sin cuenta: **folio de la orden** (RN05); correo descartado porque no hay cuentas ni envíos.
 - [x] Definir el conteo diario (RN06): **reservas creadas por día calendario en `America/Mexico_City`, sin importar su estado final y sin desglose por sala**.
 - [x] Mapear cada requisito y regla de web_2 contra el servicio, marcando lo condicional (folio de orden, conteo diario, P10).
-- [x] Validar la `DEFINICION.md` con el equipo: confirmadas el 6 nov 2026 las decisiones de RN05 (folio) y RN06 (conteo diario). Falta cierre formal al confirmar el cliente.
-- [ ] Confirmar con el cliente que el folio y el conteo diario quedan como acordados; registrar la confirmación.
-- [ ] Confirmar con el servicio: consulta de orden por folio, órdenes sin comprador identificado y exposición del conteo diario (añadir a `ACUERDOS.md`).
+- [x] Validar la `DEFINICION.md` con el equipo: confirmadas el 6 nov 2026 las decisiones de RN05 (folio) y RN06 (conteo diario).
+- [ ] Confirmar con el cliente que el folio y el conteo diario quedan como acordados; registrar la confirmación. **Único pendiente para cerrar la Definición.**
+- [x] Confirmar con el servicio la consulta de orden por folio, las órdenes sin comprador y la exposición del conteo diario. **Cerrado el 18 nov 2026 por el contrato: D18, D20 y D21; registrado en `ACUERDOS.md`.**
 
 ## Pendientes trasladados
 
@@ -44,12 +44,14 @@ Negocio: cineclub con 10 salas de 80 butacas (800 en total), numeradas en una so
 - [x] Definir cómo se recupera un boleto sin cuenta: folio de la orden. **Decidido el 6 nov 2026 (RN05 de `DEFINICION.md`).**
 - [x] Precisar el conteo diario: incluye reservas vencidas y liberadas (toda reserva creada del día), sin desglose por sala. **Decidido el 6 nov 2026 (RN06 de `DEFINICION.md`).**
 
-### Coordinación con `citas_service`
+### Coordinación con `citas_service` — cerrada el 18 nov 2026
 
-- [ ] Enviar `docs/RESPUESTA_P4.md` al equipo de servicio para que la registre en `ACUERDOS.md`.
-- [ ] Registrar P5 (compra sin cuentas) y P9 (rechazo de la reserva completa) en `ACUERDOS.md`.
-- [ ] Confirmar si el servicio crea órdenes sin cuenta de usuario y si expone el conteo diario de reservas.
-- [ ] Acordar la zona horaria (P8) y el resultado del pago simulado (P10).
+El contrato de OpenSpec resolvió las preguntas y propuestas abiertas; no hubo que acordar nada por chat (D25 y D26).
+
+- [x] Enviar `docs/RESPUESTA_P4.md` al equipo de servicio para que la registre en `ACUERDOS.md`. **Registrada como D15 el 18 nov 2026.**
+- [x] Registrar P5 (compra sin cuentas) y P9 (rechazo de la reserva completa) en `ACUERDOS.md`. **D16/D18 y D17.**
+- [x] Confirmar si el servicio crea órdenes sin cuenta de usuario y si expone el conteo diario de reservas. **Sí: D18 (`RequiereComprador = 0`) y D21 (`/reportes/reservas-por-dia`).**
+- [x] Acordar la zona horaria (P8) y el resultado del pago simulado (P10). **D13 (6 nov) y D14 (6 nov).**
 
 ### Propuesta
 

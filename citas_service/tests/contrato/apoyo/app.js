@@ -141,9 +141,12 @@ function crearContexto() {
       expect({ preparacion: 'crear reserva', status: res.status }).toEqual({ preparacion: 'crear reserva', status: 201 });
       return res.body;
     },
-    /** Reserva y paga con la tarjeta aprobada; exige 201 y devuelve la orden. */
-    async ordenCreada(sitio, compradorId) {
-      const reserva = await ctx.reservaCreada(sitio, { compradorId, n: 2 });
+    /**
+     * Reserva y paga con la tarjeta aprobada; exige 201 y devuelve la orden. Sin `asientoIds`
+     * usa los 2 primeros asientos; para dos compras en la misma función, pasa asientos distintos.
+     */
+    async ordenCreada(sitio, compradorId, asientoIds) {
+      const reserva = await ctx.reservaCreada(sitio, { compradorId, n: 2, asientoIds });
       const res = await ctx.pagar(sitio, reserva.id, {}, compradorId);
       expect({ preparacion: 'pagar', status: res.status, resultado: res.body.resultado }).toEqual({
         preparacion: 'pagar',

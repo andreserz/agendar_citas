@@ -14,7 +14,7 @@ describeSiRouter(['reservas', 'pagos', 'ordenes'], 'Órdenes', () => {
     ctx = crearContexto();
   });
 
-  const comprar = (sitio, compradorId) => ctx.ordenCreada(sitio, compradorId);
+  const comprar = (sitio, compradorId, asientoIds) => ctx.ordenCreada(sitio, compradorId, asientoIds);
 
   describe("'obtenerOrden' GET /ordenes/{ordenId}", () => {
     test.each(['web_1', 'web_2'])('200 en %s con sus boletos', async (sitio) => {
@@ -74,7 +74,8 @@ describeSiRouter(['reservas', 'pagos', 'ordenes'], 'Órdenes', () => {
   describe("'listarMisOrdenes' GET /ordenes", () => {
     test('200 en web_1 con sólo las órdenes del comprador', async () => {
       const propia = await comprar('web_1', 'comprador-a');
-      await comprar('web_1', 'comprador-b');
+      // Otros asientos: los 2 primeros ya los compró comprador-a.
+      await comprar('web_1', 'comprador-b', ctx.datos.web_1.asientoIds.slice(2, 4));
       const res = await ctx.pedir('get', '/ordenes', ctx.identidad('web_1', 'comprador-a'));
       esperarContrato('listarMisOrdenes', res, 200);
       expect(res.body.ordenes.map((o) => o.id)).toEqual([propia.id]);
