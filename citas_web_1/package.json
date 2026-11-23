@@ -6,7 +6,7 @@
   "description": "Frontend del Teatro Aquí nadie actúa normal — demo resiliente con datos locales y adaptador para citas_service.",
   "scripts": {
     "start": "node tools/serve.js",
-    "test": "node --test tests"
+    "test": "node --test \"tests/**/*.test.js\""
   },
   "engines": {
     "node": ">=20"

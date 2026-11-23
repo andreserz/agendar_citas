@@ -43,7 +43,7 @@ La navegación se adaptará a dispositivos móviles y escritorio. El diseño con
 
 ## Identidad y componentes
 
-La identidad aprobada combina humor teatral con glassmorphism: paneles translúcidos y legibles, fondo nocturno y detalles de iluminación. Paleta: ciruela `#3B174C` como primario, coral `#FF6B5E` como acento, fondo `#170F24`, texto `#FFF8F2` y dorado `#F5C77A` para detalles. La marca gráfica propuesta incluye un telón y una sonrisa.
+La identidad aprobada combina humor teatral con glassmorphism: paneles translúcidos y legibles, fondo nocturno y detalles de iluminación. Paleta: ciruela `#3B174C` como primario, verde `#3ECF7F` como acento, fondo `#170F24`, texto `#FFF8F2` y dorado `#F5C77A` para detalles. La marca gráfica propuesta incluye un telón y una sonrisa.
 
 Se plantea una colección propia de componentes reutilizables: botones, campos, tarjetas, diálogos, avisos, calendario, selector de horario, asiento, leyenda, resumen, temporizador y boleto. Se tomarán como referencia los patrones de composición de shadcn/ui y las microinteracciones de interior.dev, respetando el uso de HTML5, CSS3 y JavaScript vanilla. Las transiciones serán breves y admitirán movimiento reducido. No se contempla audio MP3.
 

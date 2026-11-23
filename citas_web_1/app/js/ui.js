@@ -54,7 +54,7 @@ export function marca() {
         <path d="M24 39c2.6 3 13.4 3 16 0" stroke="#170F24" stroke-width="2.6" stroke-linecap="round"/>
         <defs>
           <linearGradient id="telonGrad" x1="10" y1="16" x2="54" y2="48" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FF6B5E"/><stop offset="1" stop-color="#F5C77A"/>
+            <stop stop-color="#3ECF7F"/><stop offset="1" stop-color="#F5C77A"/>
           </linearGradient>
         </defs>
       </svg>

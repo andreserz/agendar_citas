@@ -46,7 +46,7 @@ La interfaz deberá comunicar el tiempo restante, el rechazo del pago y el venci
 
 ## Condiciones de diseño y tecnología
 
-Interfaz responsiva con glassmorphism, HTML5, CSS3 y JavaScript vanilla; sin audio MP3 por el momento. Paleta aprobada: primario `#3B174C`, acento `#FF6B5E`, fondo `#170F24`, texto `#FFF8F2` y detalle `#F5C77A`. Se proponen componentes reutilizables y microinteracciones discretas inspiradas en shadcn/ui e interior.dev, con movimiento reducido y estados accesibles. Los detalles y su validación se definirán en etapas posteriores.
+Interfaz responsiva con glassmorphism, HTML5, CSS3 y JavaScript vanilla; sin audio MP3 por el momento. Paleta aprobada: primario `#3B174C`, acento `#3ECF7F`, fondo `#170F24`, texto `#FFF8F2` y detalle `#F5C77A`. Se proponen componentes reutilizables y microinteracciones discretas inspiradas en shadcn/ui e interior.dev, con movimiento reducido y estados accesibles. Los detalles y su validación se definirán en etapas posteriores.
 
 ## Pendientes para los equipos responsables
 
