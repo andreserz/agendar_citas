@@ -45,7 +45,7 @@ La consolidación deberá presentarse en un backoffice para saber quién compró
 - Interfaz web responsiva, con diseño glassmorphism.
 - HTML5, CSS3 y JavaScript vanilla.
 - Sin capacidad de audio MP3 por el momento.
-- Colores primario y de acento aprobados: ciruela oscuro y coral, respectivamente.
+- Colores primario y de acento aprobados: ciruela oscuro y verde, respectivamente.
 - Pago simulado; no se ha definido una integración real con Mercado Pago.
 
 ## Pendientes para etapas posteriores
@@ -59,7 +59,7 @@ Los integrantes responsables definirán los detalles de accesibilidad y pasillos
 
 **Concepto:** una noche de teatro cómico con un aire moderno y cálido. La personalidad de «Aquí nadie actúa normal» combina humor cercano con una experiencia clara para elegir y comprar boletos. La obra destacada es «¡Que no se entere la suegra!».
 
-**Paleta aprobada:** primario ciruela oscuro `#3B174C`, acento coral `#FF6B5E`, fondo nocturno `#170F24`, texto claro `#FFF8F2` y dorado suave `#F5C77A` para detalles teatrales. Verificar contraste en cada combinación durante el diseño; no depender únicamente del color para comunicar estados.
+**Paleta aprobada:** primario ciruela oscuro `#3B174C`, acento verde `#3ECF7F`, fondo nocturno `#170F24`, texto claro `#FFF8F2` y dorado suave `#F5C77A` para detalles teatrales. Los estados usan verdes distintos entre sí: acento `#3ECF7F`, acento oscuro `#1F8F57`, éxito `#7DD8A5` y alerta `#0FAE7C`. Verificar contraste en cada combinación durante el diseño; no depender únicamente del color para comunicar estados.
 
 **Estilo:** glassmorphism con paneles translúcidos, bordes luminosos discretos y desenfoque sobre fondos oscuros de iluminación teatral. Usar superficies suficientemente opacas para conservar legibilidad y una alternativa sólida si el desenfoque no está disponible. Títulos expresivos y texto sencillo; tipografías y logotipo por definir. Propuesta de marca: un telón estilizado y un gesto de sonrisa, sin perder legibilidad en tamaños pequeños.
 

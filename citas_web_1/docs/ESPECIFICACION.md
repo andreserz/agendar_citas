@@ -134,6 +134,7 @@ El cliente reconoce códigos como `NO_AUTENTICADO`, `NO_ENCONTRADO`, `SOLICITUD_
 
 - HTML semántico, salto al contenido, `aria-live` para avisos, foco visible y foco programático en el título de cada vista.
 - Los estados de asiento combinan color, borde y texto/leyenda; no dependen sólo del color.
+- La paleta no usa la familia roja: acento `#3ECF7F`, acento oscuro `#1F8F57`, éxito `#7DD8A5` y alerta `#0FAE7C` sobre el fondo `#170F24`; los tres verdes de estado son distintos entre sí y cumplen 4.5:1 de contraste.
 - Diálogos con atrapar foco, cierre con `Escape` y retorno de foco.
 - `prefers-reduced-motion` desactiva animaciones; existe hoja de impresión para boletos.
 - Diseño fluido desde 320 px; sin desplazamiento horizontal en 390 px.

@@ -22,7 +22,7 @@ const POSTER = `
         <text x="120" y="176" text-anchor="middle" fill="#F5C77A" font-size="13" font-family="Georgia, serif" letter-spacing="2">COMEDIA</text>
         <defs>
           <linearGradient id="posterTelon" x1="52" y1="34" x2="188" y2="161" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FF6B5E"/><stop offset=".55" stop-color="#B53A55"/><stop offset="1" stop-color="#3B174C"/>
+            <stop stop-color="#3ECF7F"/><stop offset=".55" stop-color="#1F8F57"/><stop offset="1" stop-color="#3B174C"/>
           </linearGradient>
         </defs>
       </svg>

@@ -5,12 +5,12 @@
 - [x] Definición: acordar requisitos y reglas de negocio. **Cerrada con los acuerdos disponibles y supuestos documentados.**
 - [x] Especificación: detallar interfaz, integración y criterios de aceptación. **Ver `docs/ESPECIFICACION.md`.**
 - [x] Construcción: implementar la aplicación aprobada. **SPA vanilla completa en `app/`.**
-- [x] Pruebas: validar los criterios acordados. **10 pruebas automáticas y recorrido completo en navegador (escritorio y móvil).**
+- [x] Pruebas: validar los criterios acordados. **14 pruebas automáticas y recorrido completo en navegador (escritorio y móvil).**
 
 ## Detalle de Construcción
 
 - [x] Estructura del SPA, rutas hash (`#/`, `#/cartelera`, `#/checkout/:id`, `#/orden/:id`, `#/cuenta`).
-- [x] Diseño glassmorphism responsivo con la paleta aprobada, movimiento reducido, foco visible e impresión de boletos.
+- [x] Diseño glassmorphism responsivo con la paleta aprobada (acento verde `#3ECF7F` sobre ciruela `#3B174C`), movimiento reducido, foco visible e impresión de boletos.
 - [x] Inicio: presentación de la obra, zonas, precios y llamados a la acción.
 - [x] Cartelera: calendario octubre–diciembre 2026, horarios 15:00/19:00/21:00, aforo y disponibilidad por función.
 - [x] Mapa de 120 asientos (A–L, 10 por fila), estados disponible/seleccionado/apartado/comprado, límite de 10 y total por zona.
@@ -27,7 +27,7 @@
 
 ## Detalle de Pruebas
 
-- [x] `npm test`: catálogo, ocupación, mapa de asientos, precios, vigencia de reservas, límite de 10, tarjetas, registro/login, folios/códigos y filtro de funciones.
+- [x] `npm test`: catálogo, ocupación, mapa de asientos, precios, vigencia de reservas, límite de 10, tarjetas, registro/login, folios/códigos, filtro de funciones y paleta sin rojos.
 - [x] Navegador: inicio, cartelera, selección de asientos, creación de reserva, rechazo y aprobación de pago.
 - [x] Navegador: página de orden, QR, código de boleto, cuenta con historial y reinicio de demo.
 - [x] Responsivo: vista móvil de 390 px sin desbordamiento horizontal y sin errores de consola.
@@ -52,3 +52,16 @@ Fuente: `openspec/changes/impl-web1/` (`tasks.md` tiene el detalle). El contrato
 - [ ] 5. Documentación: especificación §4 y §8, y encabezado de `AGENTS.md` (tareas 5.1–5.2)
 - [ ] 6. Pruebas: 10 pruebas actuales, cliente contra mock del contrato, modo y recorrido en navegador (tareas 6.1–6.4)
 - [ ] 7. Entrega: avance registrado aquí (tarea 7.1)
+
+---
+
+## Plan de implementación — change `cambio-paleta-verde` (actualizado 23 nov 2026)
+
+Fuente: `openspec/changes/cambio-paleta-verde/` (`tasks.md` tiene el detalle). Issues #37 («cambio de color») y #39 (el cambio aplica sólo a `citas_web_1`).
+
+- [x] 1. Paleta: tokens `--verde-acento`, `--verde-oscuro`, `--verde-claro` y `--verde-alerta`; reemplazos de hexadecimales, `rgba(...)` y `stop-color` en `app/css/styles.css`, `app/js/ui.js`, `app/js/views/home.js` y `app/index.html`.
+- [x] 2. Pruebas: `tests/paleta.test.js` con 4 pruebas (sin rojos, verdes declarados y distintos, contraste mínimo AA) y `npm test` con 14 pruebas en verde. Se corrigió el script `test` de `package.json` a `node --test "tests/**/*.test.js"`, porque `node --test tests` no resolvía el directorio con Node 24.
+- [x] 3. Documentación: paleta verde en `docs/ANTEPROYECTO.md`, `docs/PROPUESTA.md`, `docs/DEFINICION.md` y `docs/ESPECIFICACION.md`.
+- [x] 4. Revisión visual: portada, cartelera y selector de asientos revisados en navegador con la paleta verde.
+
+> Nota de alcance: `citas_web_2` conserva su paleta original (issue #39); no se modificó ningún archivo de ese sitio.

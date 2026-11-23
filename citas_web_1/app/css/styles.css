@@ -1,21 +1,21 @@
 /* ==========================================================================
    citas_web_1 — Teatro Aquí nadie actúa normal
-   Glassmorphism nocturno, coral y dorado. HTML/CSS/JS vanilla.
+   Glassmorphism nocturno, verde y dorado. HTML/CSS/JS vanilla.
    ========================================================================== */
 
 :root {
   --ciruela: #3b174c;
   --ciruela-claro: #5a2b6d;
-  --coral: #ff6b5e;
-  --coral-oscuro: #d94b4c;
+  --verde-acento: #3ecf7f;
+  --verde-oscuro: #1f8f57;
   --fondo: #170f24;
   --fondo-2: #1f132e;
   --texto: #fff8f2;
   --texto-suave: rgba(255, 248, 242, 0.72);
   --texto-tenue: rgba(255, 248, 242, 0.52);
   --dorado: #f5c77a;
-  --verde: #7dd8a5;
-  --rojo: #ff8b7f;
+  --verde-claro: #7dd8a5;
+  --verde-alerta: #0fae7c;
   --borde: rgba(255, 248, 242, 0.13);
   --borde-fuerte: rgba(255, 248, 242, 0.24);
   --glass: linear-gradient(155deg, rgba(80, 44, 101, 0.48), rgba(26, 16, 38, 0.62));
@@ -97,15 +97,15 @@ h1 em,
 h2 em,
 h3 em {
   font-style: italic;
-  background: linear-gradient(120deg, var(--coral), var(--dorado));
+  background: linear-gradient(120deg, var(--verde-acento), var(--dorado));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 ::selection {
-  background: var(--coral);
-  color: #2a0f24;
+  background: var(--verde-acento);
+  color: #06281a;
 }
 
 :focus-visible {
@@ -152,7 +152,7 @@ h3 em {
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(1000px 700px at 78% -5%, rgba(255, 107, 94, 0.16), transparent 62%),
+    radial-gradient(1000px 700px at 78% -5%, rgba(62, 207, 127, 0.16), transparent 62%),
     radial-gradient(900px 700px at 8% 22%, rgba(90, 43, 109, 0.35), transparent 65%),
     radial-gradient(900px 800px at 55% 110%, rgba(245, 199, 122, 0.09), transparent 60%),
     linear-gradient(180deg, #1c1029 0%, var(--fondo) 46%, #120b1c 100%);
@@ -166,12 +166,12 @@ h3 em {
   mix-blend-mode: screen;
 }
 
-.ambient__glow--coral {
+.ambient__glow--verde {
   width: 46vw;
   height: 46vw;
   right: -12vw;
   top: -16vw;
-  background: radial-gradient(circle, rgba(255, 107, 94, 0.42), transparent 65%);
+  background: radial-gradient(circle, rgba(62, 207, 127, 0.42), transparent 65%);
 }
 
 .ambient__glow--gold {
@@ -349,18 +349,18 @@ h3 em {
 }
 
 .btn--primary {
-  border-color: rgba(255, 107, 94, 0.55);
-  background: linear-gradient(135deg, #ff7d6c 0%, var(--coral) 52%, #e65255 100%);
-  color: #2b0e24;
+  border-color: rgba(62, 207, 127, 0.55);
+  background: linear-gradient(135deg, #7ee8a8 0%, var(--verde-acento) 52%, #179b5f 100%);
+  color: #06281a;
   box-shadow:
-    0 14px 34px rgba(255, 107, 94, 0.28),
+    0 14px 34px rgba(62, 207, 127, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.36);
 }
 
 .btn--primary:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 20px 42px rgba(255, 107, 94, 0.38),
+    0 20px 42px rgba(62, 207, 127, 0.38),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
@@ -382,13 +382,13 @@ h3 em {
 }
 
 .btn--peligro {
-  border-color: rgba(255, 107, 94, 0.45);
-  background: rgba(255, 107, 94, 0.16);
-  color: #ffd9d4;
+  border-color: rgba(62, 207, 127, 0.45);
+  background: rgba(62, 207, 127, 0.16);
+  color: #dff8e9;
 }
 
 .btn--peligro:hover {
-  background: rgba(255, 107, 94, 0.26);
+  background: rgba(62, 207, 127, 0.26);
 }
 
 .btn--lg {
@@ -560,7 +560,7 @@ h3 em {
   width: 16px;
   height: 2px;
   border-radius: 2px;
-  background: var(--coral);
+  background: var(--verde-acento);
   transform: translateX(-50%);
 }
 
@@ -603,7 +603,7 @@ h3 em {
 }
 
 .mode-chip--api .mode-chip__dot {
-  background: var(--verde);
+  background: var(--verde-claro);
   box-shadow: 0 0 0 3px rgba(125, 216, 165, 0.16);
 }
 
@@ -633,8 +633,8 @@ h3 em {
   width: 31px;
   height: 31px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--coral), var(--dorado));
-  color: #2b0e24;
+  background: linear-gradient(135deg, var(--verde-acento), var(--dorado));
+  color: #06281a;
   font-weight: 800;
   font-size: 0.84rem;
 }
@@ -681,7 +681,7 @@ h3 em {
   display: inline-block;
   padding-right: 0.03em;
   font-weight: 400;
-  background: linear-gradient(100deg, var(--coral) 5%, #ff9a7d 45%, var(--dorado) 96%);
+  background: linear-gradient(100deg, var(--verde-acento) 5%, #7ee8a8 45%, var(--dorado) 96%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -759,7 +759,7 @@ h3 em {
   box-shadow:
     0 45px 90px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    0 0 80px rgba(255, 107, 94, 0.12);
+    0 0 80px rgba(62, 207, 127, 0.12);
   transform: rotate(-2.2deg);
 }
 
@@ -799,8 +799,8 @@ h3 em {
   z-index: 2;
   width: 28%;
   background:
-    repeating-linear-gradient(90deg, rgba(255, 107, 94, 0.62) 0 11px, rgba(160, 42, 74, 0.55) 11px 24px),
-    linear-gradient(180deg, #8e2b52, #451638);
+    repeating-linear-gradient(90deg, rgba(62, 207, 127, 0.62) 0 11px, rgba(15, 110, 64, 0.55) 11px 24px),
+    linear-gradient(180deg, #1f6f45, #0d3a25);
   box-shadow: inset -12px 0 25px rgba(0, 0, 0, 0.35);
 }
 
@@ -840,7 +840,7 @@ h3 em {
   padding: 8px 12px;
   border-radius: 999px;
   background: var(--dorado);
-  color: #2b0e24;
+  color: #06281a;
   font-size: 0.64rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -922,7 +922,7 @@ h3 em {
   font-size: 0.75rem;
   font-style: normal;
   font-weight: 700;
-  color: var(--coral);
+  color: var(--verde-acento);
 }
 
 .hero__curtain {
@@ -933,7 +933,7 @@ h3 em {
   height: 70px;
   background:
     linear-gradient(180deg, transparent, rgba(23, 15, 36, 0.85)),
-    repeating-linear-gradient(90deg, rgba(255, 107, 94, 0.06) 0 3px, transparent 3px 46px);
+    repeating-linear-gradient(90deg, rgba(62, 207, 127, 0.06) 0 3px, transparent 3px 46px);
   pointer-events: none;
 }
 
@@ -1028,8 +1028,8 @@ h3 em {
 }
 
 .hora-pill:hover {
-  border-color: var(--coral);
-  background: rgba(255, 107, 94, 0.13);
+  border-color: var(--verde-acento);
+  background: rgba(62, 207, 127, 0.13);
   transform: translateY(-1px);
 }
 
@@ -1115,7 +1115,7 @@ h3 em {
   font-family: var(--fuente-titulo);
   font-size: 3.4rem;
   line-height: 1;
-  color: var(--coral);
+  color: var(--verde-acento);
   opacity: 0.8;
 }
 
@@ -1163,8 +1163,8 @@ h3 em {
 }
 
 .zonas-lista__punto--preferente {
-  background: var(--coral);
-  box-shadow: 0 0 0 4px rgba(255, 107, 94, 0.16);
+  background: var(--verde-acento);
+  box-shadow: 0 0 0 4px rgba(62, 207, 127, 0.16);
 }
 
 .zonas-lista__punto--general {
@@ -1245,7 +1245,7 @@ h3 em {
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 107, 94, 0.16), transparent 70%);
+  background: radial-gradient(circle, rgba(62, 207, 127, 0.16), transparent 70%);
 }
 
 .paso__num {
@@ -1297,7 +1297,7 @@ h3 em {
   padding: clamp(28px, 5vw, 54px);
   overflow: hidden;
   background:
-    radial-gradient(80% 160% at 90% 0%, rgba(255, 107, 94, 0.24), transparent 60%),
+    radial-gradient(80% 160% at 90% 0%, rgba(62, 207, 127, 0.24), transparent 60%),
     radial-gradient(60% 120% at 8% 110%, rgba(245, 199, 122, 0.14), transparent 60%),
     var(--glass);
 }
@@ -1495,14 +1495,14 @@ h3 em {
 }
 
 .cal__dia.activo {
-  border-color: var(--coral);
-  background: linear-gradient(140deg, var(--coral), #e25357);
-  color: #2b0e24;
-  box-shadow: 0 8px 20px rgba(255, 107, 94, 0.28);
+  border-color: var(--verde-acento);
+  background: linear-gradient(140deg, var(--verde-acento), #179b5f);
+  color: #06281a;
+  box-shadow: 0 8px 20px rgba(62, 207, 127, 0.28);
 }
 
 .cal__dia.activo small {
-  color: #4a1226;
+  color: #06281a;
 }
 
 .horarios {
@@ -1534,8 +1534,8 @@ h3 em {
 }
 
 .hora-opcion:hover:not([disabled]) {
-  border-color: rgba(255, 107, 94, 0.55);
-  background: rgba(255, 107, 94, 0.1);
+  border-color: rgba(62, 207, 127, 0.55);
+  background: rgba(62, 207, 127, 0.1);
   transform: translateY(-1px);
 }
 
@@ -1549,13 +1549,13 @@ h3 em {
 }
 
 .hora-opcion.activo {
-  border-color: var(--coral);
-  background: rgba(255, 107, 94, 0.18);
-  box-shadow: inset 0 0 0 1px rgba(255, 107, 94, 0.25);
+  border-color: var(--verde-acento);
+  background: rgba(62, 207, 127, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(62, 207, 127, 0.25);
 }
 
 .hora-opcion.activo small {
-  color: #ffd1ca;
+  color: #dff8e9;
 }
 
 .hora-opcion[disabled] {
@@ -1596,9 +1596,9 @@ h3 em {
 }
 
 .seat-demo--seleccionado {
-  border-color: var(--coral);
-  background: var(--coral);
-  color: #2b0e24;
+  border-color: var(--verde-acento);
+  background: var(--verde-acento);
+  color: #06281a;
 }
 
 .seat-demo--seleccionado .icon {
@@ -1774,17 +1774,17 @@ h3 em {
 
 .seat:hover:not([disabled]) {
   z-index: 2;
-  border-color: var(--coral);
-  background: rgba(255, 107, 94, 0.16);
+  border-color: var(--verde-acento);
+  background: rgba(62, 207, 127, 0.16);
   transform: translateY(-2px) scale(1.06);
 }
 
 .seat.is-selected {
   z-index: 2;
-  border-color: rgba(255, 200, 190, 0.9);
-  background: linear-gradient(145deg, #ff8a76, var(--coral));
-  color: #2b0e24;
-  box-shadow: 0 6px 16px rgba(255, 107, 94, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border-color: rgba(200, 250, 220, 0.9);
+  background: linear-gradient(145deg, #7ee8a8, var(--verde-acento));
+  color: #06281a;
+  box-shadow: 0 6px 16px rgba(62, 207, 127, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.4);
   transform: translateY(-2px) scale(1.04);
 }
 
@@ -1873,9 +1873,9 @@ h3 em {
 }
 
 .resumen__contador.activo {
-  border-color: rgba(255, 107, 94, 0.45);
-  background: rgba(255, 107, 94, 0.13);
-  color: #ffc2b9;
+  border-color: rgba(62, 207, 127, 0.45);
+  background: rgba(62, 207, 127, 0.13);
+  color: #d5f5e1;
 }
 
 .resumen__funcion {
@@ -1945,8 +1945,8 @@ h3 em {
   min-width: 34px;
   padding: 3px 6px;
   border-radius: 6px;
-  background: rgba(255, 107, 94, 0.17);
-  color: #ffc9c1;
+  background: rgba(62, 207, 127, 0.17);
+  color: #d5f5e1;
   font-size: 0.7rem;
   font-weight: 800;
 }
@@ -2091,8 +2091,8 @@ h3 em {
   height: 128px;
   flex: none;
   border-radius: 50%;
-  background: conic-gradient(from -90deg, var(--coral) calc(var(--progreso) * 360deg), rgba(255, 248, 242, 0.08) 0);
-  box-shadow: 0 0 40px rgba(255, 107, 94, 0.18);
+  background: conic-gradient(from -90deg, var(--verde-acento) calc(var(--progreso) * 360deg), rgba(255, 248, 242, 0.08) 0);
+  box-shadow: 0 0 40px rgba(62, 207, 127, 0.18);
 }
 
 .timer__ring::before {
@@ -2124,12 +2124,12 @@ h3 em {
 }
 
 .timer__ring--urgente {
-  background: conic-gradient(from -90deg, #ff8b7f calc(var(--progreso) * 360deg), rgba(255, 248, 242, 0.08) 0);
+  background: conic-gradient(from -90deg, #0fae7c calc(var(--progreso) * 360deg), rgba(255, 248, 242, 0.08) 0);
   animation: latido 1.4s ease-in-out infinite;
 }
 
 .timer__ring--agotado {
-  background: conic-gradient(from -90deg, rgba(255, 139, 127, 0.35) 0, rgba(255, 248, 242, 0.06) 0);
+  background: conic-gradient(from -90deg, rgba(15, 174, 124, 0.35) 0, rgba(255, 248, 242, 0.06) 0);
   box-shadow: none;
   animation: none;
 }
@@ -2137,10 +2137,10 @@ h3 em {
 @keyframes latido {
   0%,
   100% {
-    box-shadow: 0 0 32px rgba(255, 107, 94, 0.14);
+    box-shadow: 0 0 32px rgba(62, 207, 127, 0.14);
   }
   50% {
-    box-shadow: 0 0 52px rgba(255, 107, 94, 0.4);
+    box-shadow: 0 0 52px rgba(62, 207, 127, 0.4);
   }
 }
 
@@ -2170,7 +2170,7 @@ h3 em {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--coral), var(--dorado));
+  background: linear-gradient(90deg, var(--verde-acento), var(--dorado));
   transition: width 900ms linear;
 }
 
@@ -2254,11 +2254,11 @@ h3 em {
 }
 
 .demo-card--ok span {
-  color: var(--verde);
+  color: var(--verde-claro);
 }
 
 .demo-card--no span {
-  color: var(--rojo);
+  color: var(--verde-alerta);
 }
 
 /* ------------------------------- Formularios ---------------------------- */
@@ -2282,7 +2282,7 @@ h3 em {
 .form__general {
   margin: 0;
   font-size: 0.78rem;
-  color: var(--rojo);
+  color: var(--verde-alerta);
 }
 
 .form__general:empty {
@@ -2353,7 +2353,7 @@ h3 em {
 }
 
 .field__control input[aria-invalid='true'] {
-  border-color: rgba(255, 139, 127, 0.7);
+  border-color: rgba(15, 174, 124, 0.7);
 }
 
 .field__icon {
@@ -2393,7 +2393,7 @@ h3 em {
   min-height: 14px;
   margin: 0;
   font-size: 0.68rem;
-  color: var(--rojo);
+  color: var(--verde-alerta);
 }
 
 .field__error:empty {
@@ -2494,7 +2494,7 @@ h3 em {
   overflow: hidden;
   text-align: center;
   background:
-    radial-gradient(60% 100% at 50% 0%, rgba(255, 107, 94, 0.24), transparent 70%),
+    radial-gradient(60% 100% at 50% 0%, rgba(62, 207, 127, 0.24), transparent 70%),
     radial-gradient(40% 80% at 85% 100%, rgba(245, 199, 122, 0.14), transparent 70%);
 }
 
@@ -2516,7 +2516,7 @@ h3 em {
   border: 1px solid rgba(125, 216, 165, 0.5);
   border-radius: 50%;
   background: radial-gradient(circle at 30% 25%, rgba(125, 216, 165, 0.32), rgba(125, 216, 165, 0.08));
-  color: var(--verde);
+  color: var(--verde-claro);
   box-shadow: 0 0 60px rgba(125, 216, 165, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   animation: aparecerSello 600ms cubic-bezier(0.2, 1.4, 0.4, 1) both;
 }
@@ -2590,7 +2590,7 @@ h3 em {
   width: 7px;
   height: 13px;
   border-radius: 2px;
-  background: var(--coral);
+  background: var(--verde-acento);
   opacity: 0.5;
   animation: caer 5s linear infinite;
   animation-delay: calc(var(--i) * -0.4s);
@@ -2780,7 +2780,7 @@ h3 em {
   font-family: var(--fuente-titulo);
   font-size: 1.5rem;
   line-height: 1.1;
-  color: var(--coral);
+  color: var(--verde-acento);
 }
 
 .boleto__pie {
@@ -2989,11 +2989,11 @@ h3 em {
   margin: 0 auto 14px;
   border: 1px solid rgba(255, 248, 242, 0.24);
   border-radius: 50%;
-  background: linear-gradient(140deg, var(--coral), var(--dorado));
-  color: #2b0e24;
+  background: linear-gradient(140deg, var(--verde-acento), var(--dorado));
+  color: #06281a;
   font-family: var(--fuente-titulo);
   font-size: 2rem;
-  box-shadow: 0 12px 30px rgba(255, 107, 94, 0.25);
+  box-shadow: 0 12px 30px rgba(62, 207, 127, 0.25);
 }
 
 .perfil h2 {
@@ -3106,9 +3106,9 @@ h3 em {
   flex-direction: column;
   align-items: center;
   padding: 10px 8px;
-  border: 1px solid rgba(255, 107, 94, 0.28);
+  border: 1px solid rgba(62, 207, 127, 0.28);
   border-radius: 13px;
-  background: rgba(255, 107, 94, 0.08);
+  background: rgba(62, 207, 127, 0.08);
   text-align: center;
 }
 
@@ -3155,8 +3155,8 @@ h3 em {
   min-width: 30px;
   padding: 2px 5px;
   border-radius: 5px;
-  background: rgba(255, 107, 94, 0.15);
-  color: #ffc9c1;
+  background: rgba(62, 207, 127, 0.15);
+  color: #d5f5e1;
   font-size: 0.64rem;
   font-weight: 800;
 }
@@ -3230,7 +3230,7 @@ h3 em {
   font-size: 0.58rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--verde);
+  color: var(--verde-claro);
 }
 
 .tag-exito .icon {
@@ -3290,9 +3290,9 @@ h3 em {
 }
 
 .estado-panel__icon--alerta {
-  border-color: rgba(255, 139, 127, 0.35);
-  background: rgba(255, 139, 127, 0.08);
-  color: var(--rojo);
+  border-color: rgba(15, 174, 124, 0.35);
+  background: rgba(15, 174, 124, 0.08);
+  color: var(--verde-alerta);
 }
 
 .estado-panel__icon .icon {
@@ -3376,7 +3376,7 @@ h3 em {
   width: 70px;
   height: 70px;
   border-radius: 18px;
-  background: linear-gradient(140deg, var(--coral), var(--ciruela));
+  background: linear-gradient(140deg, var(--verde-acento), var(--ciruela));
   animation: respirar 2s ease-in-out infinite;
 }
 
@@ -3428,9 +3428,9 @@ h3 em {
 }
 
 .aviso--error {
-  border-color: rgba(255, 139, 127, 0.32);
-  background: rgba(255, 139, 127, 0.08);
-  color: #ffd1ca;
+  border-color: rgba(15, 174, 124, 0.32);
+  background: rgba(15, 174, 124, 0.08);
+  color: #dff8e9;
 }
 
 .aviso--aviso {
@@ -3451,7 +3451,7 @@ h3 em {
 }
 
 .aviso--error .aviso__icon {
-  color: var(--rojo);
+  color: var(--verde-alerta);
 }
 
 .aviso--aviso .aviso__icon {
@@ -3459,7 +3459,7 @@ h3 em {
 }
 
 .aviso--exito .aviso__icon {
-  color: var(--verde);
+  color: var(--verde-claro);
 }
 
 .aviso__body {
@@ -3540,11 +3540,11 @@ h3 em {
 }
 
 .toast--exito .toast__icon {
-  color: var(--verde);
+  color: var(--verde-claro);
 }
 
 .toast--error .toast__icon {
-  color: var(--rojo);
+  color: var(--verde-alerta);
 }
 
 .toast--aviso .toast__icon {
@@ -3784,7 +3784,7 @@ h3 em {
 }
 
 .conexion__estado--api .conexion__dot {
-  background: var(--verde);
+  background: var(--verde-claro);
   box-shadow: 0 0 0 4px rgba(125, 216, 165, 0.14);
 }
 
